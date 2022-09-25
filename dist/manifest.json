@@ -1,0 +1,30 @@
+{
+    "name": "rambler-navigation",
+    "manifest_version": 3,
+    "version": "1.0.0",
+    "description": "rambler navigation extension",
+    "permissions": ["storage", "bookmarks", "tabs", "scripting"],
+    "optional_permissions": [],
+    "host_permissions": ["http://www.suhaoblog.cn/"],
+    "background": {
+        "service_worker": "js/background.js"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/imgs/icon_16.png",
+            "32": "/imgs/icon_32.png",
+            "48": "/imgs/icon_48.png",
+            "128": "/imgs/icon_128.png"
+        }
+    },
+    "icons": {
+        "16": "imgs/icon_16.png",
+        "32": "imgs/icon_32.png",
+        "48": "imgs/icon_48.png",
+        "128": "imgs/icon_128.png"
+    },
+    "chrome_url_overrides": {
+        "newtab": "navigation.html"
+    }
+}
