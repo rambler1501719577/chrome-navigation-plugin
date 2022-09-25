@@ -1,0 +1,88 @@
+html {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "微软雅黑", Arial, sans-serif !important;
+}
+
+/* 重载进度条样式 */
+#nprogress .bar {
+    background-image: -webkit-linear-gradient(top, #9baef2, #68ccdb);
+    height: 5px !important;
+}
+
+::selection {
+    color: #fff;
+    background: rgb(140, 153, 179);
+}
+
+::-moz-selection {
+    color: #fff;
+    background: #088;
+}
+
+.markdown-body pre code {
+    font-size: 15px !important;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+    padding: 0 !important;
+}
+
+/* mavonEditor去掉box-shadow */
+.markdown-body {
+    box-shadow: none !important;
+}
+
+/* 首页流星 */
+.star {
+    display: block;
+    width: 1px;
+    background: transparent;
+    position: relative;
+    opacity: 0;
+    /* 过渡动画 */
+    animation: star-fall 3s linear infinite;
+    -webkit-animation: star-fall 3s linear infinite;
+    -moz-animation: star-fall 3s linear infinite;
+}
+
+.star:after {
+    content: "";
+    display: block;
+    border: 0px solid #fff;
+    border-width: 0px 60px 2px 60px;
+    border-color: transparent transparent transparent #68ccdb;
+    box-shadow: 0 0 1px 0 rgba(255, 255, 255, 0.1);
+    /* 变形 */
+    transform: rotate(-45deg) translate3d(1px, 3px, 0);
+    -webkit-transform: rotate(-45deg) translate3d(1px, 3px, 0);
+    -moz-transform: rotate(-45deg) translate3d(1px, 3px, 0);
+    transform-origin: 0% 100% -webkit-transform-origin 0% 100%;
+    -moz-transform-origin: 0% 100%;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    cursor: url('../assets/cur/default.cur'), auto;
+}
+
+a {
+    cursor: url('../assets/cur/pointer.cur'), auto
+}
+
+.markdown-body pre code {
+    overflow: hidden !important;
+}
+
+.rambler-message {
+    position: fixed;
+    left: 40%;
+    top: 50%;
+    padding: 15px 30px;
+    background-color: #06495c;
+    color: #fff;
+    z-index: 99;
+    border-radius: 5px;
+}

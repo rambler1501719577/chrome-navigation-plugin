@@ -1,0 +1,52 @@
+/*  重置滚动条样式  */
+/* 谷歌浏览器 */
+::-webkit-scrollbar {
+    width: 15px;
+    height: 18px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 4px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color:#887e7e;
+    min-height: 20px;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* 兼容火狐浏览器 */
+::-ms-scrollbar {
+    width: 16px;
+    height: 18px;
+}
+
+::-ms-scrollbar-track,
+::-ms-scrollbar-thumb {
+    border-radius: 999px;
+    border: 4px solid transparent;
+}
+
+::-ms-scrollbar-track {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;
+}
+
+::-ms-scrollbar-thumb {
+    background-color:#887e7e;
+    min-height: 20px;
+    background-clip: content-box;
+}
+
+::-ms-scrollbar-corner {
+    background: transparent;
+}

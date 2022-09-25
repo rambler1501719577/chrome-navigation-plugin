@@ -1,0 +1,75 @@
+body .markdown-body {
+    font-size: 20px !important;
+    line-height: 40px;
+}
+
+.markdown-body blockquote {
+    border-left-color: #2c69a6 !important;
+}
+
+.markdown-body pre code span {
+    font-size: 20px !important;
+    line-height: 30px !important;
+}
+
+.markdown-body ul {
+    padding-left: 0 !important;
+}
+
+.markdown-body ol {
+    padding-left: 0 !important;
+}
+
+.markdown-body ul li {
+    list-style: none !important;
+    margin-left: 15px;
+    position: relative;
+    cursor: url('../assets/cur/pointer.cur'), auto;
+    color: #333;
+    transition: all .4s;
+}
+
+.markdown-body ol li {
+    list-style: none !important;
+    margin-left: 15px;
+    position: relative;
+    cursor: url('../assets/cur/pointer.cur'), auto;
+    color: #333;
+    transition: all .4s;
+}
+
+.markdown-body ul li:hover {
+    color: #3973ad;
+    margin-left: 20px;
+}
+
+.markdown-body ol li:hover {
+    color: #3973ad;
+    margin-left: 20px;
+}
+
+.markdown-body ul li::before {
+    position: absolute;
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #3973ad;
+    left: -17px;
+    top: 20px;
+}
+
+.markdown-body ol li::before {
+    position: absolute;
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #3973ad;
+    left: -17px;
+    top: 20px;
+}
+
+.v-note-wrapper {
+    min-height: 20px !important;
+}
