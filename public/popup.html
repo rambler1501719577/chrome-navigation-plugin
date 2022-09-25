@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <!-- font-awesome -->
+        <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <% if (process.env.NODE_ENV !== 'development') { %>
+        <!-- NProgress -->
+        <link href="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet" />
+        <!-- wangEditor -->
+        <link href="https://cdn.bootcdn.net/ajax/libs/wangEditor/3.1.1/wangEditor.min.css" rel="stylesheet" />
+        <% }%>
+    </head>
+    <body>
+        <noscript>
+            <strong>We're sorry but blog doesn't work properly without JavaScript enabled. Please enable it to
+                continue.</strong>
+        </noscript>
+        <div id="app"></div>
+        <% if (process.env.NODE_ENV !== 'development') { %>
+        <!-- Vue -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
+        <!-- Vue Router -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.4.8/vue-router.min.js"></script>
+        <!-- Vuex -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/vuex/3.5.1/vuex.min.js"></script>
+        <!-- axios -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <!-- NProgress -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+        <!-- qs -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/qs/6.9.4/qs.min.js"></script>
+        <!-- turndown -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
+        <!-- wangEditor -->
+        <script src="https://cdn.bootcdn.net/ajax/libs/wangEditor/3.1.1/wangEditor.min.js"></script>
+        <% }%>
+    </body>
+</html>

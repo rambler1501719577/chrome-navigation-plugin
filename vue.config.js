@@ -1,4 +1,4 @@
-const { ADMIN_SERVER, WEB_SERVER } = require("./src/settings.js");
+const { WEB_SERVER } = require("./src/settings.js");
 const path = require("path");
 const port = process.env.port || 3000;
 const CompressionPlugin = require("compression-webpack-plugin");
@@ -17,12 +17,17 @@ module.exports = {
     productionSourceMap: false,
     // 将webpack部分配置提取出来,如entry和template等
     pages: {
-        index: {
-            entry: "src/main.js",
-            template: "public/index.html",
-            filename: "index.html",
-            title: "New Tab",
-            chunks: ["chunk-vendors", "chunk-common", "index"]
+        navigation: {
+            entry: "src/entries/navigation/main.js",
+            template: "public/navigation.html",
+            filename: "navigation.html",
+            title: "New Tab"
+        },
+        popup: {
+            entry: "src/entries/popup/main.js",
+            template: "public/popup.html",
+            filename: "popup.html",
+            title: "Popup"
         }
     },
     devServer: {
@@ -90,7 +95,7 @@ module.exports = {
                 new CompressionPlugin({
                     test: /\.js$|\.html$|\.css/,
                     threshold: 10240,
-                    deleteOriginalAssets: true
+                    deleteOriginalAssets: false
                 })
             );
             externals = {
