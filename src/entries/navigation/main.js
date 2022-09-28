@@ -1,6 +1,5 @@
 import Vue from "vue";
-import Layout from "./layout";
-import router from "./router";
+import Navigation from "./navigation";
 import store from "../../store";
 import axios from "axios";
 // 全局css样式
@@ -20,7 +19,6 @@ Vue.config.productionTip = false;
 Vue.component("RamblerIcon", Icon);
 
 new Vue({
-    router,
     store,
-    render: h => h(Layout)
+    render: h => h(Navigation)
 }).$mount("#app");

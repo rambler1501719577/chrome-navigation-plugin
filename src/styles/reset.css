@@ -2,8 +2,9 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-body{
-    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,微软雅黑,Arial,sans-serif;
+body {
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+        Microsoft YaHei, 微软雅黑, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
     color: #515a6e;
@@ -11,7 +12,7 @@ body{
     -webkit-font-smoothing: antialiased;
 }
 
-div{
+div {
     box-sizing: border-box;
 }
 
@@ -138,4 +139,10 @@ q:after {
 table {
     border-collapse: collapse;
     border-spacing: 0;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
 }

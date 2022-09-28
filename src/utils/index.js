@@ -4,6 +4,7 @@
  * @param {string} cFormat
  * @returns {string | null}
  */
+import axios from "axios";
 export function parseTime(time, cFormat) {
     if (arguments.length === 0) {
         return null;
@@ -39,6 +40,38 @@ export function parseTime(time, cFormat) {
         return value.toString().padStart(2, "0");
     });
     return time_str;
+}
+
+/**
+ * 获取站点favicon
+ * @param {*} url
+ * @returns
+ */
+export function getFaviconByUrl(url) {
+    return new Promise((resolve, reject) => {
+        axios(`https://favicongrabber.com/api/grab/${url}?pretty=true`)
+            .then(res => {
+                // resolve(res.data);
+                const icons = res.data.icons;
+                if (icons.length > 0) {
+                    const iconArr = icons.map(icon => ({
+                        src: icon.src,
+                        type: icon.src.substr(
+                            icon.src.lastIndexOf(".") + 1,
+                            icon.src.length
+                        )
+                    }));
+                    resolve(iconArr);
+                    // icons.forEach(icon => ({
+                    //     src: icon.src,
+                    //     type: src.substr(src.lastIndexOf('.'), src.length)
+                    // }))
+                } else resolve([]);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
 }
 
 /**

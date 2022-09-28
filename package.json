@@ -1,68 +1,70 @@
 {
-  "name": "blog",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "animate.css": "^3.6.0",
-    "axios": "^0.19.2",
-    "compression-webpack-plugin": "^5.0.0",
-    "core-js": "^3.12.1",
-    "mavon-editor": "^2.9.1",
-    "nprogress": "^0.2.0",
-    "qs": "^6.10.1",
-    "turndown": "^6.0.0",
-    "vue": "^2.6.12",
-    "vue-router": "^3.5.1",
-    "vuex": "^3.6.2",
-    "wangeditor": "^3.1.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.13",
-    "@vue/cli-plugin-eslint": "^4.5.13",
-    "@vue/cli-plugin-router": "^4.5.13",
-    "@vue/cli-plugin-vuex": "^4.5.13",
-    "@vue/cli-service": "^4.5.13",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-component": "^1.1.1",
-    "copy-webpack-plugin": "^6.1.1",
-    "css-loader": "^3.6.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "image-webpack-loader": "^6.0.0",
-    "stylus": "^0.54.8",
-    "stylus-loader": "^3.0.2",
-    "svg-sprite-loader": "^6.0.11",
-    "vue-template-compiler": "^2.6.12"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
+    "name": "blog",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
     },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {
-      "no-console": "off",
-      "vue/no-parsing-error": [
-        2,
-        {
-          "x-invalid-end-tag": false
+    "dependencies": {
+        "animate.css": "^3.6.0",
+        "axios": "^0.19.2",
+        "compression-webpack-plugin": "^5.0.0",
+        "core-js": "^3.12.1",
+        "lodash": "^4.17.21",
+        "mavon-editor": "^2.9.1",
+        "nprogress": "^0.2.0",
+        "qs": "^6.10.1",
+        "turndown": "^6.0.0",
+        "vue": "^2.6.12",
+        "vue-class-component": "^7.2.6",
+        "vue-router": "^3.5.1",
+        "vuex": "^3.6.2",
+        "wangeditor": "^3.1.1"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "^4.5.13",
+        "@vue/cli-plugin-eslint": "^4.5.13",
+        "@vue/cli-plugin-router": "^4.5.13",
+        "@vue/cli-plugin-vuex": "^4.5.13",
+        "@vue/cli-service": "^4.5.13",
+        "babel-eslint": "^10.1.0",
+        "babel-plugin-component": "^1.1.1",
+        "copy-webpack-plugin": "^6.1.1",
+        "css-loader": "^3.6.0",
+        "eslint": "^5.16.0",
+        "eslint-plugin-vue": "^5.0.0",
+        "image-webpack-loader": "^6.0.0",
+        "stylus": "^0.54.8",
+        "stylus-loader": "^3.0.2",
+        "svg-sprite-loader": "^6.0.11",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "eslintConfig": {
+        "root": true,
+        "env": {
+            "node": true
+        },
+        "extends": [
+            "plugin:vue/essential",
+            "eslint:recommended"
+        ],
+        "rules": {
+            "no-console": "off",
+            "vue/no-parsing-error": [
+                2,
+                {
+                    "x-invalid-end-tag": false
+                }
+            ]
+        },
+        "parserOptions": {
+            "parser": "babel-eslint"
         }
-      ]
     },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "browserslist": [
+        "> 1%",
+        "last 2 versions"
+    ]
 }
