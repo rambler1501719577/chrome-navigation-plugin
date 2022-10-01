@@ -46,16 +46,18 @@ export default {
         ],
         frequentBookmarks: [
             {
-                icon: "",
                 name: "Vue Doc",
-                url: "www.suhaoblog.cn",
-                order: ""
+                url: "http://www.suhaoblog.cn?id=212"
             },
             {
-                icon: "",
                 name: "Element",
-                url: "element.eleme.cn/#/zh-CN/component/datetime-picker",
-                order: ""
+                url:
+                    "https://element.eleme.cn/#/zh-CN/component/datetime-picker"
+            },
+            {
+                name: "账号收益",
+                url:
+                    "http://wb.renwozuan.com/?_time=1657893845237&id=11123955&password=dami1234"
             }
         ]
     },

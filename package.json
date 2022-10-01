@@ -36,6 +36,8 @@
         "eslint": "^5.16.0",
         "eslint-plugin-vue": "^5.0.0",
         "image-webpack-loader": "^6.0.0",
+        "less": "^4.0.0",
+        "less-loader": "^7.1.0",
         "stylus": "^0.54.8",
         "stylus-loader": "^3.0.2",
         "svg-sprite-loader": "^6.0.11",

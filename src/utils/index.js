@@ -1,6 +1,6 @@
 /**
  * Parse the time to string
- * @param {(Object|string|number)} time
+ * @param {( Object | string | number )} time
  * @param {string} cFormat
  * @returns {string | null}
  */
@@ -42,6 +42,47 @@ export function parseTime(time, cFormat) {
     return time_str;
 }
 
+// 获取url中主机名称
+export function getHostFromUrl(url) {
+    return url.replace(/https?:\/\/([^?#\/]+).*/g, (match, p1) => p1);
+}
+
+// 根据规则筛选数组中较大图标
+function getBiggerIcon(iconArr) {
+    let finalIcon = "";
+    // 返回size信息，直接根据sizes进行匹配
+    if (iconArr[0].sizes) {
+        // 降序排序后返回第一位
+        iconArr.sort((icon1, icon2) => {
+            let size1 = icon1.sizes.split("x")[0];
+            let size2 = icon2.sizes.split("x")[0];
+            return size2 - size1;
+        });
+        finalIcon = iconArr[0].src;
+    } else {
+        // 根据src中大小进行匹配
+        let size = 0;
+        iconArr.forEach(icon => {
+            const src = icon.src;
+            let reg = /\d+/gm;
+            // 从后向前匹配数字，分两种情况
+            // 如果存在多个图标，从后面匹配是图标正确大小
+            // 如果只有一个图标，匹配的数字也不会影响结果
+            let matchUrl = [...src.matchAll(reg)];
+            if (matchUrl.length > 0) {
+                let sizeStr = Number(matchUrl[matchUrl.length - 1][0]);
+                if (sizeStr > size) {
+                    size = sizeStr;
+                    finalIcon = src;
+                }
+            }
+        });
+    }
+    // 异常情况的默认值
+    if (!finalIcon) finalIcon = iconArr[0].src;
+    return finalIcon;
+}
+
 /**
  * 获取站点favicon
  * @param {*} url
@@ -51,22 +92,10 @@ export function getFaviconByUrl(url) {
     return new Promise((resolve, reject) => {
         axios(`https://favicongrabber.com/api/grab/${url}?pretty=true`)
             .then(res => {
-                // resolve(res.data);
-                const icons = res.data.icons;
-                if (icons.length > 0) {
-                    const iconArr = icons.map(icon => ({
-                        src: icon.src,
-                        type: icon.src.substr(
-                            icon.src.lastIndexOf(".") + 1,
-                            icon.src.length
-                        )
-                    }));
-                    resolve(iconArr);
-                    // icons.forEach(icon => ({
-                    //     src: icon.src,
-                    //     type: src.substr(src.lastIndexOf('.'), src.length)
-                    // }))
-                } else resolve([]);
+                console.log(res);
+                if (res.data.icons.length > 0)
+                    resolve(getBiggerIcon(res.data.icons));
+                else resolve("");
             })
             .catch(err => {
                 reject(err);
