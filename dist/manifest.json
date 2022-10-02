@@ -1,5 +1,5 @@
 {
-    "name": "rambler-navigation",
+    "name": "rambler-navigation-vue",
     "manifest_version": 3,
     "version": "1.0.0",
     "description": "rambler navigation extension",

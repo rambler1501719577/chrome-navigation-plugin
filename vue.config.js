@@ -89,7 +89,6 @@ module.exports = {
     },
     configureWebpack: config => {
         let plugins = [];
-        let externals = {};
         if (process.env.NODE_ENV === "production") {
             plugins.push(
                 new CompressionPlugin({
@@ -98,23 +97,7 @@ module.exports = {
                     deleteOriginalAssets: false
                 })
             );
-            externals = {
-                vue: "Vue",
-                "vue-router": "VueRouter",
-                vuex: "Vuex",
-                axios: "axios",
-                "element-ui": "ELEMENT",
-                nprogress: "NProgress",
-                qs: "Qs",
-                turndown: "TurndownService",
-                wangeditor: "wangEditor",
-                "view-designer": "iview"
-            };
         }
         config.plugins = [...config.plugins, ...plugins];
-        config.externals = {
-            ...config.externals,
-            ...externals
-        };
     }
 };

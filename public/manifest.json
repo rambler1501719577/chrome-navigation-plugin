@@ -1,18 +1,11 @@
 {
-    "name": "rambler-navigation",
+    "name": "rambler-navigation-vue",
     "manifest_version": 3,
     "version": "1.0.0",
     "description": "rambler navigation extension",
-    "permissions": [
-        "storage",
-        "bookmarks",
-        "tabs",
-        "scripting",
-        "chrome://favicon/"
-    ],
+    "permissions": ["storage", "bookmarks", "tabs", "scripting"],
     "optional_permissions": [],
     "host_permissions": ["http://www.suhaoblog.cn/"],
-    "content_security_policy": "img-src chrome://favicon;",
     "background": {
         "service_worker": "js/background.js"
     },
