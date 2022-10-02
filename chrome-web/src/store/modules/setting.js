@@ -58,6 +58,16 @@ export default {
                 name: "账号收益",
                 url:
                     "http://wb.renwozuan.com/?_time=1657893845237&id=11123955&password=dami1234"
+            },
+            {
+                name: "bilibili",
+                url:
+                    "https://www.bilibili.com/medialist/play/ml1717621061/BV1D4411K7mA?spm_id_from=333.788.0.0&oid=54876984&otype=2"
+            },
+            {
+                name: "CSDN",
+                url:
+                    "https://blog.csdn.net/qq_44204058/article/details/109611297"
             }
         ]
     },
@@ -68,7 +78,9 @@ export default {
     },
     getters: {
         engines: state => state.engines,
-        frequentBookmarks: state => state.frequentBookmarks
+        frequentBookmarks: state => {
+            return state.frequentBookmarks;
+        }
     },
     actions: {
         setEngines({ commit }, param) {

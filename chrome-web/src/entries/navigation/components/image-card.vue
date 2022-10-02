@@ -12,48 +12,28 @@
 </template>
 
 <script>
-import { getHostFromUrl } from "@/utils/index";
-import { getFaviconByUrl } from "@/utils/index";
 export default {
     name: "ImageCard",
     props: {
         url: String,
-        name: String
+        name: String,
+        icon: String
     },
     data() {
         return {
             loadOver: false
         };
     },
-    methods: {
-        getImageUrl: function(host) {
-            const key = "iconMap";
-            return new Promise(async (resolve, reject) => {
-                try {
-                    let iconMap = {};
-                    const cacheMap = localStorage.getItem(key);
-                    if (cacheMap) {
-                        iconMap = JSON.parse(cacheMap);
-                    }
-                    if (iconMap[host]) resolve(iconMap[host]);
-                    else {
-                        let icon = await getFaviconByUrl(host);
-                        iconMap[host] = icon;
-                    }
-                    localStorage.setItem(key, JSON.stringify(iconMap));
-                    resolve(icon);
-                } catch (e) {
-                    reject(e);
-                }
-            });
+    watch: {
+        "this.url": function(newVal) {
+            console.log(newVal);
         }
     },
+    methods: {},
     async created() {
-        const host = getHostFromUrl(this.url);
-        const url = await this.getImageUrl(host);
-        if (url) {
+        if (this.icon) {
             const image = new Image();
-            image.src = url;
+            image.src = this.icon;
             image.onload = () => {
                 this.loadOver = true;
                 image.setAttribute("width", "100%");

@@ -44,7 +44,7 @@ export function parseTime(time, cFormat) {
 
 // 获取url中主机名称
 export function getHostFromUrl(url) {
-    return url.replace(/https?:\/\/([^?#\/]+).*/g, (match, p1) => p1);
+    return url.replace(/https?:\/\/([^?#/]+).*/g, (match, p1) => p1);
 }
 
 // 根据规则筛选数组中较大图标
@@ -90,7 +90,7 @@ function getBiggerIcon(iconArr) {
  */
 export function getFaviconByUrl(url) {
     return new Promise((resolve, reject) => {
-        axios(`https://favicongrabber.com/api/grab/${url}?pretty=true`)
+        axios(`http://82.156.8.154/favicon/api/grab/${url}`)
             .then(res => {
                 console.log(res);
                 if (res.data.icons.length > 0)
