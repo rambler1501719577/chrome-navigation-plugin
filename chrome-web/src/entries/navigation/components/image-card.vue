@@ -12,28 +12,52 @@
 </template>
 
 <script>
+import { getFaviconByUrl } from "@/utils/index";
+import { getHostFromUrl } from "@/utils/index";
 export default {
     name: "ImageCard",
     props: {
         url: String,
-        name: String,
-        icon: String
+        name: String
     },
     data() {
         return {
             loadOver: false
         };
     },
-    watch: {
-        "this.url": function(newVal) {
-            console.log(newVal);
+    methods: {
+        getImageUrl: function(url) {
+            const host = getHostFromUrl(url);
+            const key = "iconMap";
+            return new Promise(async (resolve, reject) => {
+                try {
+                    let iconMap = {};
+                    const cacheMap = localStorage.getItem(key);
+                    if (cacheMap) {
+                        iconMap = JSON.parse(cacheMap);
+                    }
+                    let icon = "";
+                    // 有限从缓存中读取
+                    if (iconMap[host]) icon = iconMap[host];
+                    else icon = await getFaviconByUrl(host);
+                    this.$store.dispatch("setting/updateFavicon", {
+                        src: host,
+                        icon: icon
+                    });
+                    resolve(icon);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         }
     },
-    methods: {},
     async created() {
-        if (this.icon) {
+        // 获取主机并根据主机查询对应favicon
+        const url = await this.getImageUrl(this.url);
+        // 加载图标并关闭loading
+        if (url) {
             const image = new Image();
-            image.src = this.icon;
+            image.src = url;
             image.onload = () => {
                 this.loadOver = true;
                 image.setAttribute("width", "100%");

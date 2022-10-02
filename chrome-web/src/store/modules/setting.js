@@ -74,6 +74,15 @@ export default {
     mutations: {
         UPDATE_ENGINES(state, param) {
             state.showSidebar = param.showSidebar;
+        },
+        UPDATE_FAVICON(state, param) {
+            let cacheMap = localStorage.getItem("iconMap");
+            let iconMap = {};
+            if (cacheMap) iconMap = JSON.parse(cacheMap);
+            if (!iconMap[param.src]) {
+                iconMap[param.src] = param.icon;
+                localStorage.setItem("iconMap", JSON.stringify(iconMap));
+            }
         }
     },
     getters: {
@@ -85,6 +94,9 @@ export default {
     actions: {
         setEngines({ commit }, param) {
             commit("UPDATE_ENGINES", param);
+        },
+        updateFavicon({ commit }, payload) {
+            commit("UPDATE_FAVICON", payload);
         }
     }
 };

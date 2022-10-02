@@ -2,14 +2,13 @@
     <div class="frequent-bookmarks-container">
         <div
             class="bookitem"
-            v-for="bookmark of commonBookmark"
+            v-for="bookmark of frequentBookmarks"
             :key="bookmark.url"
         >
             <a :href="bookmark.url" target="_blank">
                 <image-card
                     :name="bookmark.name"
                     :url="bookmark.url"
-                    :icon="bookmark.icon"
                 ></image-card>
             </a>
         </div>
@@ -17,9 +16,6 @@
 </template>
 
 <script>
-import _ from "lodash";
-import { getFaviconByUrl } from "@/utils/index";
-import { getHostFromUrl } from "@/utils/index";
 import ImageCard from "../components/image-card";
 import { mapGetters } from "vuex";
 export default {
@@ -35,36 +31,8 @@ export default {
     components: {
         ImageCard
     },
-    methods: {
-        loadIcons: async function() {
-            const icons = _.cloneDeep(this.frequentBookmarks);
-            let iconMap = {};
-            // 从localstorage读取缓存
-            const cacheMap = localStorage.getItem("iconMap");
-            if (cacheMap) {
-                try {
-                    iconMap = JSON.parse(cacheMap);
-                } catch (e) {
-                    iconMap = {};
-                    throw new Error("解析缓存iconMap失败");
-                }
-            }
-            for (let icon of icons) {
-                const host = getHostFromUrl(icon.url);
-                if (iconMap[host]) {
-                    icon["icon"] = iconMap[host];
-                } else {
-                    const iconSrc = await getFaviconByUrl(host);
-                    iconMap[host] = iconSrc;
-                }
-            }
-            this.commonBookmark = icons;
-            localStorage.setItem("iconMap", JSON.stringify(iconMap));
-        }
-    },
-    created() {
-        this.loadIcons();
-    }
+    methods: {},
+    created() {}
 };
 </script>
 <style lang="less" scoped>

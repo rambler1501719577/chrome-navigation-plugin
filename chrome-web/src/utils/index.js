@@ -92,7 +92,6 @@ export function getFaviconByUrl(url) {
     return new Promise((resolve, reject) => {
         axios(`http://82.156.8.154/favicon/api/grab/${url}`)
             .then(res => {
-                console.log(res);
                 if (res.data.icons.length > 0)
                     resolve(getBiggerIcon(res.data.icons));
                 else resolve("");
