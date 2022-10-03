@@ -8,6 +8,9 @@
         <div class="frequent-bookmarks">
             <frequent-bookmarks />
         </div>
+        <div class="affix">
+            <rambler-icon name="setting" class="affix-icon"></rambler-icon>
+        </div>
     </div>
 </template>
 
@@ -45,14 +48,25 @@ export default {
     background-repeat: no-repeat;
     background-attachment: fixed;
     overflow-x: hidden;
-}
-.search {
-    max-width: 60%;
-    margin: 30px auto;
-    overflow-x: hidden;
-}
-.frequent-bookmarks {
-    width: 80%;
-    margin: 0 auto;
+    position: relative;
+    .search {
+        max-width: 60%;
+        margin: 30px auto;
+        overflow-x: hidden;
+    }
+    .frequent-bookmarks {
+        width: 80%;
+        margin: 0 auto;
+    }
+    .affix {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        .affix-icon {
+            width: 25px;
+            height: 25px;
+            fill: #ddd;
+        }
+    }
 }
 </style>
