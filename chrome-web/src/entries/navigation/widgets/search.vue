@@ -69,26 +69,29 @@ export default {
 </script>
 <style lang="less" scoped="scoped">
 .search-container {
-    .engine-list ul {
-        list-style: none;
-        display: flex;
-        margin-bottom: 10px;
-        padding-left: 25px;
-        li {
-            background-color: #fff;
-            color: #333;
-            font-size: 14px;
-            height: 35px;
-            padding: 0 15px;
-            line-height: 35px;
-            user-select: none;
-            margin-right: 10px;
-            transition: all 0.5s;
-            cursor: pointer;
-        }
-        li.selected {
-            background-color: #333;
-            color: #fff;
+    .engine-list {
+        overflow: hidden;
+        ul {
+            list-style: none;
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            li {
+                background-color: #fff;
+                color: #333;
+                font-size: 14px;
+                height: 35px;
+                padding: 0 15px;
+                line-height: 35px;
+                user-select: none;
+                margin-right: 10px;
+                transition: all 0.5s;
+                cursor: pointer;
+            }
+            li.selected {
+                background-color: #333;
+                color: #fff;
+            }
         }
     }
     .search-form {

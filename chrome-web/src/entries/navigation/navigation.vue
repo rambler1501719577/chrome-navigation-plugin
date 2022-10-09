@@ -8,26 +8,45 @@
         <div class="frequent-bookmarks">
             <frequent-bookmarks />
         </div>
+        <el-dialog
+            title="个性化设置"
+            :modal="false"
+            :visible.sync="dialogVisible"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+        >
+            <rambler-setting></rambler-setting>
+        </el-dialog>
+
         <div class="affix">
-            <rambler-icon name="setting" class="affix-icon"></rambler-icon>
+            <rambler-icon
+                @click.native="openSetting"
+                name="setting"
+                class="affix-icon"
+            ></rambler-icon>
         </div>
     </div>
 </template>
 
 <script>
+import Setting from "./settings/index";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
 export default {
     name: "IndexLayout",
     data() {
-        return {};
+        return {
+            dialogVisible: true
+        };
     },
     // 加载engines和bookmarkds以及todos
     // 加载本地个性化配置
+    // 同步到vuex中
     created() {},
     components: {
         RamblerSearch: Search,
-        frequentBookmarks: frequentBookmarks
+        frequentBookmarks: frequentBookmarks,
+        RamblerSetting: Setting
     },
     watch: {
         $route: {
@@ -35,7 +54,11 @@ export default {
         },
         "$store.getters.showSidebar": function() {}
     },
-    methods: {}
+    methods: {
+        openSetting: function() {
+            this.dialogVisible = true;
+        }
+    }
 };
 </script>
 <style scoped lang="less">
@@ -66,6 +89,7 @@ export default {
             width: 25px;
             height: 25px;
             fill: #ddd;
+            cursor: pointer;
         }
     }
 }

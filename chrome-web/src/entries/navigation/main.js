@@ -6,8 +6,9 @@ import axios from "axios";
 import "styl/scroll.css";
 import "styl/reset.css";
 import "styl/global.css"; //全局样式表(重置某些样式)
+import "./load-element";
 // 注册图标
-import Icon from "@/icon";
+import SvgIcon from "@/icon";
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$store = store;
@@ -16,7 +17,7 @@ Vue.config.productionTip = false;
 /**
  * 公共组件
  */
-Vue.component("RamblerIcon", Icon);
+Vue.component("RamblerIcon", SvgIcon);
 
 new Vue({
     store,
