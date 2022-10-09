@@ -30,9 +30,7 @@ export default {
     },
     components: {
         ImageCard
-    },
-    methods: {},
-    created() {}
+    }
 };
 </script>
 <style lang="less" scoped>

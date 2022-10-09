@@ -1,3 +1,4 @@
+import settings from "@/settings";
 export default {
     namespaced: true,
     state: {
@@ -44,32 +45,7 @@ export default {
                 searchUrl: "https://search.bilibili.com/all?keyword="
             }
         ],
-        frequentBookmarks: [
-            {
-                name: "Vue Doc",
-                url: "http://www.suhaoblog.cn?id=212"
-            },
-            {
-                name: "Element",
-                url:
-                    "https://element.eleme.cn/#/zh-CN/component/datetime-picker"
-            },
-            {
-                name: "账号收益",
-                url:
-                    "http://wb.renwozuan.com/?_time=1657893845237&id=11123955&password=dami1234"
-            },
-            {
-                name: "bilibili",
-                url:
-                    "https://www.bilibili.com/medialist/play/ml1717621061/BV1D4411K7mA?spm_id_from=333.788.0.0&oid=54876984&otype=2"
-            },
-            {
-                name: "CSDN",
-                url:
-                    "https://blog.csdn.net/qq_44204058/article/details/109611297"
-            }
-        ]
+        frequentBookmarks: []
     },
     mutations: {
         UPDATE_ENGINES(state, param) {
@@ -83,6 +59,13 @@ export default {
                 iconMap[param.src] = param.icon;
                 localStorage.setItem("iconMap", JSON.stringify(iconMap));
             }
+        },
+        UPDATE_FREQUENT_BOOKMARKS(state, payload) {
+            localStorage.setItem(
+                settings.keys.FREQUENT_BOOKMARKS,
+                JSON.stringify(payload)
+            );
+            state.frequentBookmarks = payload;
         }
     },
     getters: {
@@ -97,6 +80,9 @@ export default {
         },
         updateFavicon({ commit }, payload) {
             commit("UPDATE_FAVICON", payload);
+        },
+        updateFrequentBookmarks({ commit }, payload) {
+            commit("UPDATE_FREQUENT_BOOKMARKS", payload);
         }
     }
 };

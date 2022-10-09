@@ -51,7 +51,7 @@ export function getHostFromUrl(url) {
 function getBiggerIcon(iconArr) {
     let finalIcon = "";
     // 返回size信息，直接根据sizes进行匹配
-    if (iconArr[0].sizes) {
+    if (iconArr[0].sizes && iconArr[0].sizes !== "any") {
         // 降序排序后返回第一位
         iconArr.sort((icon1, icon2) => {
             let size1 = icon1.sizes.split("x")[0];
@@ -215,4 +215,14 @@ export function message(message) {
  */
 export function batchImport(req) {
     req.keys().forEach(req);
+}
+
+// get localstorage data
+export function getCachedData(key) {
+    if (!key) return undefined;
+    const cachedData = localStorage.getItem(key);
+    if (cachedData) {
+        return JSON.parse(cachedData);
+    }
+    return undefined;
 }

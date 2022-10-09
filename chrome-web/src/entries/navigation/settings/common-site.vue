@@ -17,9 +17,9 @@
                         <el-input
                             size="small"
                             v-if="scope.row.isEdit"
-                            v-model="scope.row.address"
+                            v-model="scope.row.url"
                         ></el-input>
-                        <span v-else>{{ scope.row.address }}</span>
+                        <span v-else>{{ scope.row.url }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="160">
@@ -54,30 +54,15 @@
 </template>
 <script>
 import _ from "lodash";
+import { mapGetters } from "vuex";
 export default {
     data() {
-        const tableData = [
-            {
-                id: 1,
-                name: "Vue官网",
-                address: "上海市普陀区金沙江路 1518 弄",
-                order: 1
-            },
-            {
-                id: 2,
-                name: "Vue",
-                address: "上沙江路 1518 弄",
-                order: 2
-            }
-        ];
         return {
-            tableData: tableData.map(item => {
-                return {
-                    ...item,
-                    isEdit: false
-                };
-            })
+            tableData: []
         };
+    },
+    computed: {
+        ...mapGetters("setting", ["frequentBookmarks"])
     },
     methods: {
         // 取消保存， 还原原数据
@@ -110,14 +95,26 @@ export default {
                 ele => ele.id == originData.id
             );
             scope.row.isEdit = false;
-            const { name, address, id, order } = scope.row;
+            const { name, url, id, order } = scope.row;
             this.tableData[index] = {
                 name,
-                address,
+                url,
                 id,
                 order
             };
+            console.log(this.tableData);
+            this.$store.dispatch(
+                "setting/updateFrequentBookmarks",
+                this.tableData
+            );
         }
+    },
+    created() {
+        let data = this.frequentBookmarks;
+        this.tableData = _.cloneDeep(data).map(item => ({
+            ...item,
+            isEdit: false
+        }));
     }
 };
 </script>

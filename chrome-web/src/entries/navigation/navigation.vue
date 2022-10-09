@@ -29,34 +29,86 @@
 </template>
 
 <script>
+import { getCachedData } from "@/utils";
+import settings from "@/settings";
+import { getToken, setToken } from "@/utils/token";
 import Setting from "./settings/index";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
+import M from "minimatch";
 export default {
     name: "IndexLayout",
     data() {
         return {
-            dialogVisible: true
+            dialogVisible: false
         };
     },
     // 加载engines和bookmarkds以及todos
     // 加载本地个性化配置
     // 同步到vuex中
-    created() {},
+    created() {
+        const token = getToken();
+        if (token) {
+            // load remote settings and data
+        } else {
+            // load local settings, sync to vuex
+            const cacheFrequentBookmark = getCachedData(
+                settings.keys.FREQUENT_BOOKMARKS
+            );
+            if (cacheFrequentBookmark) {
+                // 同步到 vuex
+                this.$store.dispatch(
+                    "setting/updateFrequentBookmarks",
+                    cacheFrequentBookmark
+                );
+            }
+        }
+    },
     components: {
         RamblerSearch: Search,
         frequentBookmarks: frequentBookmarks,
         RamblerSetting: Setting
     },
-    watch: {
-        $route: {
-            handler: function() {}
-        },
-        "$store.getters.showSidebar": function() {}
-    },
     methods: {
         openSetting: function() {
             this.dialogVisible = true;
+        },
+        loadMookData() {
+            const data = [
+                {
+                    id: 1,
+                    name: "Vue Doc",
+                    url: "http://www.suhaoblog.cn?id=212"
+                },
+                {
+                    id: 2,
+                    name: "Element",
+                    url:
+                        "https://element.eleme.cn/#/zh-CN/component/datetime-picker"
+                },
+                {
+                    id: 3,
+                    name: "账号收益",
+                    url:
+                        "http://wb.renwozuan.com/?_time=1657893845237&id=11123955&password=dami1234"
+                },
+                {
+                    id: 4,
+                    name: "bilibili",
+                    url:
+                        "https://www.bilibili.com/medialist/play/ml1717621061/BV1D4411K7mA?spm_id_from=333.788.0.0&oid=54876984&otype=2"
+                },
+                {
+                    id: 5,
+                    name: "CSDN",
+                    url:
+                        "https://blog.csdn.net/qq_44204058/article/details/109611297"
+                }
+            ];
+            localStorage.setItem(
+                settings.keys.FREQUENT_BOOKMARKS,
+                JSON.stringify(data)
+            );
         }
     }
 };

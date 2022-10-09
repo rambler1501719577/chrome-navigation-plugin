@@ -51,18 +51,34 @@ export default {
             });
         }
     },
-    async created() {
-        // 获取主机并根据主机查询对应favicon
-        const url = await this.getImageUrl(this.url);
-        // 加载图标并关闭loading
-        if (url) {
-            const image = new Image();
-            image.src = url;
-            image.onload = () => {
-                this.loadOver = true;
-                image.setAttribute("width", "100%");
-                this.$el.querySelector(".icon").appendChild(image);
-            };
+    created() {},
+    watch: {
+        name: {
+            handler: function(newVal, oldVal) {
+                console.log(newVal);
+            }
+        },
+        url: {
+            immediate: true,
+            handler: function(newVal) {
+                if (newVal) {
+                    // 获取主机并根据主机查询对应favicon
+                    this.getImageUrl(newVal).then(url => {
+                        // 加载图标并关闭loading
+                        if (url) {
+                            const image = new Image();
+                            image.src = url;
+                            image.onload = () => {
+                                this.loadOver = true;
+                                image.setAttribute("width", "100%");
+                                this.$el
+                                    .querySelector(".icon")
+                                    .appendChild(image);
+                            };
+                        }
+                    });
+                }
+            }
         }
     }
 };
