@@ -1,7 +1,7 @@
 <template>
     <div class="common-site-container">
         <div class="list">
-            <el-table :data="tableData" stripe>
+            <el-table :data="tableData">
                 <el-table-column label="名称" align="left" width="200">
                     <template slot-scope="scope">
                         <el-input
@@ -49,7 +49,40 @@
                 </el-table-column>
             </el-table>
         </div>
-        <div class="add-operation">+</div>
+        <div class="add-area">
+            <div
+                :class="{ 'add-button': true, 'add-button-active': isActive }"
+                @click="switchStatus"
+            >
+                <rambler-icon name="add"></rambler-icon>
+            </div>
+            <div :class="{ 'add-form': true, 'add-form-active': isActive }">
+                <el-form
+                    :inline="true"
+                    :model="form"
+                    class="demo-form-inline"
+                    size="small"
+                >
+                    <el-form-item label="名称">
+                        <el-input
+                            v-model="form.name"
+                            placeholder="名称"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="网址">
+                        <el-input
+                            v-model="form.url"
+                            placeholder="网址"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit"
+                            >确定</el-button
+                        >
+                    </el-form-item>
+                </el-form>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -58,13 +91,34 @@ import { mapGetters } from "vuex";
 export default {
     data() {
         return {
-            tableData: []
+            tableData: [],
+            form: {
+                name: "",
+                url: ""
+            },
+            isActive: true
         };
     },
     computed: {
         ...mapGetters("setting", ["frequentBookmarks"])
     },
     methods: {
+        switchStatus() {
+            this.isActive = !this.isActive;
+        },
+        onSubmit: function() {
+            this.tableData.push({
+                name: this.form.name,
+                url: this.form.url,
+                isEdit: false
+            });
+            this.form.name = "";
+            this.form.url = "";
+            this.$store.dispatch(
+                "setting/updateFrequentBookmarks",
+                this.tableData
+            );
+        },
         // 取消保存， 还原原数据
         cancelEdit: function(scope) {
             if (scope.row.originData) {
@@ -99,10 +153,8 @@ export default {
             this.tableData[index] = {
                 name,
                 url,
-                id,
                 order
             };
-            console.log(this.tableData);
             this.$store.dispatch(
                 "setting/updateFrequentBookmarks",
                 this.tableData
@@ -132,6 +184,40 @@ export default {
         cursor: pointer;
         background: #eee;
         margin-top: 15px;
+    }
+    .add-area {
+        margin-top: 10px;
+        position: relative;
+        height: 40px;
+        overflow: hidden;
+        .add-button {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 100%;
+            width: 40px;
+            background: #57b1bc;
+            font-size: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.5s;
+            z-index: 2;
+        }
+        .add-button-active {
+            transform: rotate(-90deg);
+        }
+        .add-form {
+            position: absolute;
+            right: 40px;
+            bottom: -14px;
+            transition: all 0.5s;
+        }
+        .add-form-active {
+            transform: translateX(553px);
+        }
     }
 }
 </style>

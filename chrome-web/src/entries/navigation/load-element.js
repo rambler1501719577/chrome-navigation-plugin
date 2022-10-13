@@ -88,6 +88,8 @@ Vue.use(TabPane);
 Vue.use(DatePicker);
 Vue.use(Popover);
 Vue.use(Input);
+Vue.use(Form);
+Vue.use(FormItem);
 // Vue.use(Pagination);
 // Vue.use(Autocomplete);
 // Vue.use(Dropdown);
@@ -116,8 +118,7 @@ Vue.use(Input);
 // Vue.use(Tooltip);
 // Vue.use(Breadcrumb);
 // Vue.use(BreadcrumbItem);
-// Vue.use(Form);
-// Vue.use(FormItem);
+
 // Vue.use(Tag);
 // Vue.use(Tree);
 // Vue.use(Alert);

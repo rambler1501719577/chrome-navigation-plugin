@@ -9,8 +9,10 @@
             <frequent-bookmarks />
         </div>
         <el-dialog
+            width="1000px"
             title="个性化设置"
             :modal="false"
+            top="10vh"
             :visible.sync="dialogVisible"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
@@ -35,7 +37,6 @@ import { getToken, setToken } from "@/utils/token";
 import Setting from "./settings/index";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
-import M from "minimatch";
 export default {
     name: "IndexLayout",
     data() {
@@ -49,6 +50,7 @@ export default {
     created() {
         const token = getToken();
         if (token) {
+            console.log("莫名其妙得到一个token?");
             // load remote settings and data
         } else {
             // load local settings, sync to vuex

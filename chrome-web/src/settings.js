@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     formSize: "small",
     keys: {
         FREQUENT_BOOKMARKS: "frequent-bookmarks",
