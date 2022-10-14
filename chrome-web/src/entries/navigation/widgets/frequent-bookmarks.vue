@@ -3,7 +3,7 @@
         <div
             class="bookitem"
             v-for="bookmark of frequentBookmarks"
-            :key="bookmark.url"
+            :key="bookmark.id"
         >
             <a :href="bookmark.url" target="_blank">
                 <image-card
@@ -26,7 +26,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("setting", ["frequentBookmarks"])
+        ...mapGetters("frequentBookmark", ["frequentBookmarks"])
     },
     components: {
         ImageCard

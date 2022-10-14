@@ -97,7 +97,8 @@ export function getFaviconByUrl(url) {
                 else resolve("");
             })
             .catch(err => {
-                reject(err);
+                console.log(err);
+                reject("");
             });
     });
 }

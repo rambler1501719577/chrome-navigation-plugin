@@ -2,6 +2,9 @@
     <div class="common-site-container">
         <div class="list">
             <el-table :data="tableData">
+                <div slot="empty">
+                    啥玩意也没有啊
+                </div>
                 <el-table-column label="名称" align="left" width="200">
                     <template slot-scope="scope">
                         <el-input
@@ -22,26 +25,34 @@
                         <span v-else>{{ scope.row.url }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="160">
+                <el-table-column label="操作" width="150" align="center">
                     <template slot-scope="scope">
                         <div v-if="!scope.row.isEdit">
                             <el-button
                                 size="mini"
+                                type="primary"
                                 @click="editCurrentRow(scope)"
                                 >编辑</el-button
                             >
                             <el-button
                                 size="mini"
+                                type="danger"
                                 @click="deleteRow(scope.row)"
                                 slot="reference"
                                 >删除</el-button
                             >
                         </div>
                         <div v-else>
-                            <el-button size="mini" @click="saveData(scope)"
+                            <el-button
+                                type="success"
+                                size="mini"
+                                @click="saveData(scope)"
                                 >保存</el-button
                             >
-                            <el-button size="mini" @click="cancelEdit(scope)"
+                            <el-button
+                                size="mini"
+                                @click="cancelEdit(scope)"
+                                type="warning"
                                 >取消</el-button
                             >
                         </div>
@@ -86,8 +97,9 @@
     </div>
 </template>
 <script>
+const { v4: uuidv4 } = require("uuid");
 import _ from "lodash";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
     data() {
         return {
@@ -100,31 +112,43 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("setting", ["frequentBookmarks"])
+        ...mapGetters("frequentBookmark", ["frequentBookmarks"])
     },
     methods: {
+        // 映射setting.Action
+        ...mapActions("frequentBookmark", ["update"]),
         switchStatus() {
             this.isActive = !this.isActive;
         },
+        // 新增
         onSubmit: function() {
-            this.tableData.push({
+            let reg = /https?:\/\/(\w+\.?)+/;
+            if (!reg.test(this.form.url))
+                return this.$message.error(
+                    "地址格式错误,请输入包含http的完整地址"
+                );
+            const data = {
                 name: this.form.name,
                 url: this.form.url,
+                id: uuidv4()
+            };
+            this.tableData.push({
+                ...data,
                 isEdit: false
             });
             this.form.name = "";
             this.form.url = "";
-            this.$store.dispatch(
-                "setting/updateFrequentBookmarks",
-                this.tableData
-            );
+            // 同步到vuex
+            this.update({
+                type: "add",
+                data: data
+            });
         },
         // 取消保存， 还原原数据
         cancelEdit: function(scope) {
             if (scope.row.originData) {
                 // 将原来数据还原
                 Object.keys(scope.row.originData).forEach(key => {
-                    if (key == "id") return;
                     scope.row[key] = scope.row.originData[key];
                 });
             }
@@ -135,34 +159,47 @@ export default {
             if (!row.isEdit) {
                 row["isEdit"] = true;
             }
+            // 将当前行数据保存到originData中，如果取消保存在取出数据覆盖现有数据即可
             scope.row.originData = _.cloneDeep(row);
         },
+        // 删除
         deleteRow: function(row) {
             const index = this.tableData.findIndex(
                 element => element.id == row.id
             );
             this.tableData.splice(index, 1);
+            this.update({
+                type: "delete",
+                data: {
+                    id: row.id
+                }
+            });
         },
+        // 更新
         saveData(scope) {
-            const originData = scope.row.originData;
-            const index = this.tableData.findIndex(
-                ele => ele.id == originData.id
-            );
             scope.row.isEdit = false;
-            const { name, url, id, order } = scope.row;
-            this.tableData[index] = {
-                name,
-                url,
-                order
-            };
-            this.$store.dispatch(
-                "setting/updateFrequentBookmarks",
-                this.tableData
+            const index = this.tableData.findIndex(
+                ele => ele.id == scope.row.id
             );
+            const payload = {};
+            Object.keys(scope.row).forEach(key => {
+                if (key !== "originData" && key !== "isEdit") {
+                    payload[key] = scope.row[key];
+                }
+            });
+            this.tableData.splice(index, 1, {
+                ...payload,
+                isEdit: false
+            });
+            this.update({
+                type: "edit",
+                data: payload
+            });
         }
     },
     created() {
         let data = this.frequentBookmarks;
+        // 通过isEdit标识每一行是否是编辑状态
         this.tableData = _.cloneDeep(data).map(item => ({
             ...item,
             isEdit: false

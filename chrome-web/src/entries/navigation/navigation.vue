@@ -15,7 +15,6 @@
             top="10vh"
             :visible.sync="dialogVisible"
             :close-on-click-modal="false"
-            :close-on-press-escape="false"
         >
             <rambler-setting></rambler-setting>
         </el-dialog>
@@ -53,17 +52,17 @@ export default {
             console.log("莫名其妙得到一个token?");
             // load remote settings and data
         } else {
-            // load local settings, sync to vuex
-            const cacheFrequentBookmark = getCachedData(
-                settings.keys.FREQUENT_BOOKMARKS
-            );
-            if (cacheFrequentBookmark) {
-                // 同步到 vuex
-                this.$store.dispatch(
-                    "setting/updateFrequentBookmarks",
-                    cacheFrequentBookmark
-                );
-            }
+            // // load local settings, sync to vuex
+            // const cacheFrequentBookmark = getCachedData(
+            //     settings.keys.FREQUENT_BOOKMARKS
+            // );
+            // if (cacheFrequentBookmark) {
+            //     // 同步到 vuex
+            //     this.$store.dispatch(
+            //         "setting/updateFrequentBookmarks",
+            //         cacheFrequentBookmark
+            //     );
+            // }
         }
     },
     components: {

@@ -1,4 +1,3 @@
-import settings from "@/settings";
 export default {
     namespaced: true,
     state: {
@@ -44,8 +43,7 @@ export default {
                 label: "哔哩哔哩",
                 searchUrl: "https://search.bilibili.com/all?keyword="
             }
-        ],
-        frequentBookmarks: []
+        ]
     },
     mutations: {
         UPDATE_ENGINES(state, param) {
@@ -59,20 +57,10 @@ export default {
                 iconMap[param.src] = param.icon;
                 localStorage.setItem("iconMap", JSON.stringify(iconMap));
             }
-        },
-        UPDATE_FREQUENT_BOOKMARKS(state, payload) {
-            localStorage.setItem(
-                settings.keys.FREQUENT_BOOKMARKS,
-                JSON.stringify(payload)
-            );
-            state.frequentBookmarks = payload;
         }
     },
     getters: {
-        engines: state => state.engines,
-        frequentBookmarks: state => {
-            return state.frequentBookmarks;
-        }
+        engines: state => state.engines
     },
     actions: {
         setEngines({ commit }, param) {
@@ -80,9 +68,6 @@ export default {
         },
         updateFavicon({ commit }, payload) {
             commit("UPDATE_FAVICON", payload);
-        },
-        updateFrequentBookmarks({ commit }, payload) {
-            commit("UPDATE_FREQUENT_BOOKMARKS", payload);
         }
     }
 };
