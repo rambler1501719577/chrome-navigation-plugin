@@ -2,6 +2,7 @@ import Vue from "vue";
 import Navigation from "./navigation";
 import store from "../../store";
 import axios from "axios";
+import "@/directives/drag";
 // 全局css样式
 import "styl/scroll.css";
 import "styl/reset.css";

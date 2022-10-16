@@ -15,6 +15,7 @@
             top="10vh"
             :visible.sync="dialogVisible"
             :close-on-click-modal="false"
+            v-dialogDrag
         >
             <rambler-setting></rambler-setting>
         </el-dialog>
@@ -30,7 +31,6 @@
 </template>
 
 <script>
-import { getCachedData } from "@/utils";
 import settings from "@/settings";
 import { getToken, setToken } from "@/utils/token";
 import Setting from "./settings/index";
@@ -136,13 +136,17 @@ export default {
     }
     .affix {
         position: absolute;
-        right: 20px;
-        bottom: 20px;
+        right: 30px;
+        bottom: 30px;
         .affix-icon {
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             fill: #ddd;
             cursor: pointer;
+            transition: all 0.7s;
+        }
+        &:hover > .affix-icon {
+            transform: rotate(270deg);
         }
     }
 }

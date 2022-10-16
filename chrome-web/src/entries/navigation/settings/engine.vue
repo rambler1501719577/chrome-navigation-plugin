@@ -15,14 +15,14 @@
                         <span v-else>{{ scope.row.name }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="网址" align="left">
+                <el-table-column label="搜索地址" align="left">
                     <template slot-scope="scope">
                         <el-input
                             size="small"
                             v-if="scope.row.isEdit"
-                            v-model="scope.row.url"
+                            v-model="scope.row.searchUrl"
                         ></el-input>
-                        <span v-else>{{ scope.row.url }}</span>
+                        <span v-else>{{ scope.row.searchUrl }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="150" align="center">
@@ -77,7 +77,7 @@
                     </el-form-item>
                     <el-form-item label="网址">
                         <el-input
-                            v-model="form.url"
+                            v-model="form.searchUrl"
                             placeholder="网址"
                         ></el-input>
                     </el-form-item>
@@ -101,30 +101,30 @@ export default {
             tableData: [],
             form: {
                 name: "",
-                url: ""
+                searchUrl: ""
             },
             isActive: true
         };
     },
     computed: {
-        ...mapGetters("frequentBookmark", ["frequentBookmarks"])
+        ...mapGetters("engine", ["engines"])
     },
     methods: {
         // 映射setting.Action
-        ...mapActions("frequentBookmark", ["update"]),
+        ...mapActions("engine", ["update"]),
         switchStatus() {
             this.isActive = !this.isActive;
         },
         // 新增
         onSubmit: function() {
             let reg = /https?:\/\/(\w+\.?)+/;
-            if (!reg.test(this.form.url))
+            if (!reg.test(this.form.searchUrl))
                 return this.$message.error(
                     "地址格式错误,请输入包含http的完整地址"
                 );
             const data = {
                 name: this.form.name,
-                url: this.form.url,
+                searchUrl: this.form.searchUrl,
                 id: uuidv4()
             };
             this.tableData.push({
@@ -132,7 +132,7 @@ export default {
                 isEdit: false
             });
             this.form.name = "";
-            this.form.url = "";
+            this.form.searchUrl = "";
             // 同步到vuex
             this.update({
                 type: "add",
@@ -193,7 +193,7 @@ export default {
         }
     },
     created() {
-        let data = this.frequentBookmarks;
+        let data = this.engines;
         // 通过isEdit标识每一行是否是编辑状态
         this.tableData = _.cloneDeep(data).map(item => ({
             ...item,

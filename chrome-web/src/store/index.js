@@ -4,6 +4,7 @@ import basic from "./modules/basic";
 import setting from "./modules/setting";
 import frequentBookmark from "./modules/frequent-bookmark";
 import createPersistedState from "vuex-persistedstate";
+import engine from "./modules/engine";
 
 import getters from "./getters";
 Vue.use(Vuex);
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     modules: {
         basic,
         setting,
-        frequentBookmark
+        frequentBookmark,
+        engine
     },
     getters,
     strict: true,
@@ -20,7 +22,7 @@ export default new Vuex.Store({
     plugins: [
         createPersistedState({
             key: "cache-data",
-            paths: ["frequentBookmark", "setting", "basic"]
+            paths: ["frequentBookmark", "setting", "basic", "engine"]
         })
     ]
 });

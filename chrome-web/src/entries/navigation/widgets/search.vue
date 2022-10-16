@@ -6,10 +6,10 @@
                 <li
                     v-for="(engine, index) of engines"
                     :key="index"
-                    :class="{ selected: engine.name == currentEngine.name }"
+                    :class="{ selected: engine.name == currentEngine }"
                     @click="switchEngine(engine)"
                 >
-                    {{ engine.label }}
+                    {{ engine.name }}
                 </li>
             </ul>
         </div>
@@ -40,30 +40,28 @@
 import { mapGetters } from "vuex";
 export default {
     name: "Search",
-    components: {},
     data() {
         return {
-            currentEngine: "",
             keywords: ""
         };
     },
     computed: {
-        ...mapGetters("setting", ["engines"])
+        ...mapGetters("engine", ["engines", "currentEngine"])
     },
     methods: {
         switchEngine: function(engine) {
-            this.currentEngine = engine;
+            this.$store.dispatch("engine/updateCurrentEngine", engine.name);
         },
         search: function() {
-            window.open(
-                `${this.currentEngine.searchUrl}${this.keywords}`,
-                "_self"
+            const engine = this.engines.find(
+                item => item.name == this.currentEngine
             );
+            if (!engine) {
+                return this.$message.error("当前搜索引擎错误");
+            }
+            window.open(`${engine.searchUrl}${this.keywords}`, "_self");
             this.keywords = "";
         }
-    },
-    created() {
-        this.currentEngine = this.engines[0];
     }
 };
 </script>

@@ -3,9 +3,16 @@
     "manifest_version": 3,
     "version": "1.0.0",
     "description": "rambler navigation extension",
-    "permissions": ["storage", "bookmarks", "tabs", "scripting"],
+    "permissions": [
+        "storage",
+        "bookmarks",
+        "tabs",
+        "scripting",
+        "cookies",
+        "<all_urls>"
+    ],
     "optional_permissions": [],
-    "host_permissions": ["http://www.suhaoblog.cn/"],
+    "host_permissions": ["http://suhaoblog.cn"],
     "background": {
         "service_worker": "js/background.js"
     },

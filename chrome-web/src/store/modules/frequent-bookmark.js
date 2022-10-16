@@ -20,7 +20,6 @@ export default {
             state.frequentBookmarks.push(payload);
         },
         DELETE_FREQUENT_BOOKMARKS(state, payload) {
-            debugger;
             const index = state.frequentBookmarks.findIndex(
                 item => item.id == payload.id
             );
