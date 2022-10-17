@@ -25,7 +25,12 @@
                         <span v-else>{{ scope.row.searchUrl }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150" align="center">
+                <el-table-column
+                    label="操作"
+                    width="150"
+                    v-if="dataSource == 'local'"
+                    align="center"
+                >
                     <template slot-scope="scope">
                         <div v-if="!scope.row.isEdit">
                             <el-button
@@ -60,7 +65,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <div class="add-area">
+        <div class="add-area" v-show="dataSource == 'local'">
             <div
                 :class="{ 'add-button': true, 'add-button-active': isActive }"
                 @click="switchStatus"
@@ -107,7 +112,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("engine", ["engines"])
+        ...mapGetters(["engines", "dataSource"])
     },
     methods: {
         // 映射setting.Action
@@ -192,13 +197,17 @@ export default {
             });
         }
     },
-    created() {
-        let data = this.engines;
-        // 通过isEdit标识每一行是否是编辑状态
-        this.tableData = _.cloneDeep(data).map(item => ({
-            ...item,
-            isEdit: false
-        }));
+    watch: {
+        engines: {
+            immediate: true,
+            handler(newVal) {
+                // 通过isEdit标识每一行是否是编辑状态
+                this.tableData = _.cloneDeep(newVal).map(item => ({
+                    ...item,
+                    isEdit: false
+                }));
+            }
+        }
     }
 };
 </script>

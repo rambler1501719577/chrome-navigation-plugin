@@ -26,7 +26,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("frequentBookmark", ["frequentBookmarks"])
+        ...mapGetters(["frequentBookmarks"])
     },
     components: {
         ImageCard

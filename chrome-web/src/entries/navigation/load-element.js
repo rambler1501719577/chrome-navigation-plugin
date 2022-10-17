@@ -90,6 +90,8 @@ Vue.use(Popover);
 Vue.use(Input);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Switch);
+Vue.use(Alert);
 // Vue.use(Pagination);
 // Vue.use(Autocomplete);
 // Vue.use(Dropdown);
@@ -107,7 +109,6 @@ Vue.use(FormItem);
 // Vue.use(Checkbox);
 // Vue.use(CheckboxButton);
 // Vue.use(CheckboxGroup);
-// Vue.use(Switch);
 // Vue.use(Select);
 // Vue.use(Option);
 // Vue.use(OptionGroup);
@@ -121,7 +122,7 @@ Vue.use(FormItem);
 
 // Vue.use(Tag);
 // Vue.use(Tree);
-// Vue.use(Alert);
+
 // Vue.use(Slider);
 // Vue.use(Icon);
 // Vue.use(Row);

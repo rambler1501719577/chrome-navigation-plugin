@@ -25,7 +25,12 @@
                         <span v-else>{{ scope.row.url }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150" align="center">
+                <el-table-column
+                    label="操作"
+                    width="150"
+                    align="center"
+                    v-if="dataSource == 'local'"
+                >
                     <template slot-scope="scope">
                         <div v-if="!scope.row.isEdit">
                             <el-button
@@ -60,7 +65,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <div class="add-area">
+        <div class="add-area" v-show="dataSource == 'local'">
             <div
                 :class="{ 'add-button': true, 'add-button-active': isActive }"
                 @click="switchStatus"
@@ -107,7 +112,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("frequentBookmark", ["frequentBookmarks"])
+        ...mapGetters(["frequentBookmarks", "dataSource"])
     },
     methods: {
         // 映射setting.Action

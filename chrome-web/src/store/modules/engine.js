@@ -2,10 +2,20 @@ export default {
     namespaced: true,
     state: {
         currentEngine: "百度",
+        // 本地engine配置
         engines: [
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
                 name: "百度",
+                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd="
+            }
+        ],
+        remoteDefaultEngine: "",
+        // 远程engines配置
+        remoteEngines: [
+            {
+                id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
+                name: "远程Engine测试",
                 searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd="
             }
         ]

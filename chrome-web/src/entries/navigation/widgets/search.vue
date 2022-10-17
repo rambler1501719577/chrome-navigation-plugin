@@ -47,7 +47,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("engine", ["engines", "currentEngine"])
+        ...mapGetters(["engines", "currentEngine"])
     },
     methods: {
         switchEngine: function(engine) {

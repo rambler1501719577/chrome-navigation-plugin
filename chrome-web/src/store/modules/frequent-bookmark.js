@@ -1,7 +1,15 @@
 export default {
     namespaced: true,
     state: {
-        frequentBookmarks: []
+        frequentBookmarks: [],
+        // 远程常用网站
+        remoteFrequentBookmark: [
+            {
+                name: "VUEX",
+                url:
+                    "https://vuex.vuejs.org/zh/guide/getters.html#%E9%80%9A%E8%BF%87%E6%96%B9%E6%B3%95%E8%AE%BF%E9%97%AE"
+            }
+        ]
     },
     mutations: {
         UPDATE_FREQUENT_BOOKMARKS(state, payload) {
@@ -24,11 +32,6 @@ export default {
                 item => item.id == payload.id
             );
             state.frequentBookmarks.splice(index, 1);
-        }
-    },
-    getters: {
-        frequentBookmarks: state => {
-            return state.frequentBookmarks;
         }
     },
     actions: {

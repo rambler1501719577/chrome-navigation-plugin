@@ -1,7 +1,12 @@
 <template>
     <div class="setting-container">
         <el-tabs v-model="activeName">
-            <el-tab-pane label="常用网站" name="first">
+            <el-tab-pane label="账户设置" name="first">
+                <div class="account-config">
+                    <account-setting></account-setting>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="常用网站" name="third">
                 <div class="frequent-site">
                     <common-site></common-site>
                 </div>
@@ -16,6 +21,7 @@
 </template>
 
 <script>
+import AccountSetting from "./account";
 import CommonSite from "./common-site";
 import EngineManage from "./engine";
 export default {
@@ -27,7 +33,8 @@ export default {
     },
     components: {
         CommonSite,
-        EngineManage
+        EngineManage,
+        AccountSetting
     }
 };
 </script>
