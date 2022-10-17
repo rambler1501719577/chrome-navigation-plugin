@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        currentEngine: "baidu",
+        currentEngine: "百度",
         engines: [
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",

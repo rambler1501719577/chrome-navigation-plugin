@@ -1,12 +1,12 @@
 <template>
     <div class="setting-container">
         <el-tabs v-model="activeName">
-            <el-tab-pane label="常用网站配置" name="first">
+            <el-tab-pane label="常用网站" name="first">
                 <div class="frequent-site">
                     <common-site></common-site>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="搜索引擎配置" name="second">
+            <el-tab-pane label="搜索引擎" name="second">
                 <div class="engine-config">
                     <engine-manage></engine-manage>
                 </div>

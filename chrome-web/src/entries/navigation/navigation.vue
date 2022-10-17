@@ -48,9 +48,8 @@ export default {
     // 同步到vuex中
     async created() {
         const token = await getToken();
-        console.log(token);
-        if (token.value) {
-            console.log(`已登录,token为:${token.value.substring(0, 10)}`);
+        if (token && token.value) {
+            console.log(`已登录,token为:${token.value.substring(0, 10)}****`);
             // load remote settings and data
         } else {
             console.log("还未登录");

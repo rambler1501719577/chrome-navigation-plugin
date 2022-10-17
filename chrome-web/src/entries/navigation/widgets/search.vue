@@ -20,7 +20,7 @@
                 type="text"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="keydown keywords to search..."
+                placeholder="搜万物 | 支持在【书签】和【历史记录中搜索】"
                 @keydown.enter="search"
             />
             <img
@@ -28,6 +28,7 @@
                 src="../../../assets/images/search.png"
                 height="100%"
                 alt=""
+                @click="search"
             />
             <div class="search-result">
                 <ul></ul>

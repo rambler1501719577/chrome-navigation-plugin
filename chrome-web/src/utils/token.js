@@ -3,15 +3,19 @@ import Cookies from "js-cookie";
 // chrome或者本地server获取token
 export function getToken() {
     return new Promise(resolve => {
-        chrome.cookies.get(
-            {
-                url: "http://www.suhaoblog.cn",
-                name: "token"
-            },
-            cookie => {
-                resolve(cookie);
-            }
-        );
+        if (chrome.cookies) {
+            chrome.cookies.get(
+                {
+                    url: "http://www.suhaoblog.cn",
+                    name: "token"
+                },
+                cookie => {
+                    resolve(cookie);
+                }
+            );
+        } else {
+            resolve({ value: Cookies.get("token") });
+        }
     });
 }
 
@@ -22,18 +26,26 @@ export function getToken() {
  */
 export function setToken(payload, time = 60 * 60 * 8) {
     return new Promise(resolve => {
-        const expirationDate = parseInt(new Date().getTime() / 1000) + time;
-        chrome.cookies.set(
-            {
-                url: "http://www.suhaoblog.cn",
-                name: "token",
-                value: payload,
-                expirationDate: expirationDate
-            },
-            function(cookie) {
-                resolve(cookie);
-            }
-        );
+        if (chrome.cookies) {
+            const expirationDate = parseInt(new Date().getTime() / 1000) + time;
+            chrome.cookies.set(
+                {
+                    url: "http://www.suhaoblog.cn",
+                    name: "token",
+                    value: payload,
+                    expirationDate: expirationDate
+                },
+                function(cookie) {
+                    resolve(cookie);
+                }
+            );
+        } else {
+            const expire = new Date(new Date().getTime() + time * 60 * 60);
+            Cookies.set("token", payload, {
+                expires: expire
+            });
+            resolve();
+        }
     });
 }
 
