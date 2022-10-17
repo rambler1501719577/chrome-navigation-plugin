@@ -32,7 +32,7 @@
 
 <script>
 import settings from "@/settings";
-import { getToken, setToken } from "@/utils/token";
+import { getToken } from "@/utils/token";
 import Setting from "./settings/index";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
@@ -46,23 +46,15 @@ export default {
     // 加载engines和bookmarkds以及todos
     // 加载本地个性化配置
     // 同步到vuex中
-    created() {
-        const token = getToken();
-        if (token) {
-            console.log("莫名其妙得到一个token?");
+    async created() {
+        const token = await getToken();
+        console.log(token);
+        if (token.value) {
+            console.log(`已登录,token为:${token.value.substring(0, 10)}`);
             // load remote settings and data
         } else {
-            // // load local settings, sync to vuex
-            // const cacheFrequentBookmark = getCachedData(
-            //     settings.keys.FREQUENT_BOOKMARKS
-            // );
-            // if (cacheFrequentBookmark) {
-            //     // 同步到 vuex
-            //     this.$store.dispatch(
-            //         "setting/updateFrequentBookmarks",
-            //         cacheFrequentBookmark
-            //     );
-            // }
+            console.log("还未登录");
+            // 获取数据，替换本地缓存
         }
     },
     components: {

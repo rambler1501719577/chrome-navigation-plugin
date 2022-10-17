@@ -4,7 +4,6 @@ import "nprogress/nprogress.css";
 import axios from "axios";
 import qs from "qs";
 import { message } from "@/utils/index";
-import { getToken } from "@/utils/token";
 NProgress.configure({
     template:
         '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
@@ -23,10 +22,6 @@ const service = axios.create({
 // 请求的拦截器
 service.interceptors.request.use(config => {
     NProgress.start();
-    const token = getToken();
-    if (!token) {
-        config.headers.common["Authorization"] = "true";
-    }
     return config;
 });
 

@@ -9,10 +9,10 @@
         "tabs",
         "scripting",
         "cookies",
-        "<all_urls>"
+        "*://*.google.com"
     ],
     "optional_permissions": [],
-    "host_permissions": ["http://suhaoblog.cn"],
+    "host_permissions": ["http://www.suhaoblog.cn/"],
     "background": {
         "service_worker": "js/background.js"
     },

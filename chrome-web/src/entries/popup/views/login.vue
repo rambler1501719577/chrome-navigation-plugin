@@ -57,8 +57,10 @@ export default {
             }).then(res => {
                 if (res.code == 200) {
                     this.$message.success("登录成功");
-                    setToken(res.data.token);
-                    this.$emit("login-success");
+                    setToken(res.data.token, 5 * 60).then(cookie => {
+                        console.log("cookie设置成功", cookie);
+                        this.$emit("login-success");
+                    });
                 } else {
                     this.$message.error("登录失败, 请检查账号密码");
                 }
