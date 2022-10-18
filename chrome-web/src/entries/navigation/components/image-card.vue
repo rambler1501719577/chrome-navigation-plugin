@@ -34,7 +34,7 @@ export default {
     data() {
         return {
             loadOver: false,
-            loadSucc: false
+            loadSucc: true
         };
     },
     methods: {

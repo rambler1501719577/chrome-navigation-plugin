@@ -51,10 +51,6 @@ export default {
             state.currentEngine = state.engines[0].name;
         }
     },
-    getters: {
-        engines: state => state.engines,
-        currentEngine: state => state.currentEngine
-    },
     actions: {
         update({ commit }, payload) {
             const { type, data } = payload;

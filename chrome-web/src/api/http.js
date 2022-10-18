@@ -9,19 +9,19 @@ import instance from "./axiosConfig";
 export function get({ url, params }) {
     return instance({
         url,
-        method: 'get',
-        params,
-    })
+        method: "get",
+        params
+    });
 }
 
 // post
 export function post({ url, data }) {
     return instance({
         url,
-        method: 'post',
+        method: "post",
         data,
         headers: {
             "Content-Type": "application/json;charset=utf-8"
         }
-    })
+    });
 }

@@ -57,8 +57,8 @@ export default {
             }).then(res => {
                 if (res.code == 200) {
                     this.$message.success("登录成功");
-                    setToken(res.data.token, 5 * 60).then(cookie => {
-                        console.log("cookie设置成功", cookie);
+                    setToken(res.data.token, 8 * 60 * 60).then(() => {
+                        console.log("cookie设置成功");
                         this.$emit("login-success");
                     });
                 } else {

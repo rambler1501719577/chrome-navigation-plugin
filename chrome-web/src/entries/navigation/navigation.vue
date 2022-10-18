@@ -31,11 +31,13 @@
 </template>
 
 <script>
-import settings from "@/settings";
+import { mapActions } from "vuex";
 import { getToken } from "@/utils/token";
 import Setting from "./settings/index";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
+import { getBookmarks } from "@/api/modules/bookmark";
+import { getTodos } from "@/api/modules/todo";
 export default {
     name: "IndexLayout",
     data() {
@@ -50,10 +52,30 @@ export default {
         const token = await getToken();
         if (token && token.value) {
             console.log(`已登录,token为:${token.value.substring(0, 10)}****`);
+            // 获取书签
+            const promises = [
+                getBookmarks(null, token.value),
+                getTodos(null, token.value)
+            ];
+            Promise.allSettled(promises).then(([bookmarkRes, todoRes]) => {
+                if (
+                    bookmarkRes.status == "fulfilled" &&
+                    bookmarkRes.value.code == 200
+                ) {
+                    const bookmarks = bookmarkRes.value.data.records;
+                    this.updateRemoteBookmark(bookmarks);
+                }
+                if (
+                    todoRes.status == "fulfilled" &&
+                    todoRes.value.code == 200
+                ) {
+                    const todos = todoRes.value.data;
+                    this.updateRemoteTodo(todos);
+                }
+            });
             // load remote settings and data
         } else {
-            console.log("还未登录");
-            // 获取数据，替换本地缓存
+            console.log("未登录");
         }
     },
     components: {
@@ -62,45 +84,10 @@ export default {
         RamblerSetting: Setting
     },
     methods: {
+        ...mapActions("bookmark", ["updateRemoteBookmark"]),
+        ...mapActions("todo", ["updateRemoteTodo"]),
         openSetting: function() {
             this.dialogVisible = true;
-        },
-        loadMookData() {
-            const data = [
-                {
-                    id: 1,
-                    name: "Vue Doc",
-                    url: "http://www.suhaoblog.cn?id=212"
-                },
-                {
-                    id: 2,
-                    name: "Element",
-                    url:
-                        "https://element.eleme.cn/#/zh-CN/component/datetime-picker"
-                },
-                {
-                    id: 3,
-                    name: "账号收益",
-                    url:
-                        "http://wb.renwozuan.com/?_time=1657893845237&id=11123955&password=dami1234"
-                },
-                {
-                    id: 4,
-                    name: "bilibili",
-                    url:
-                        "https://www.bilibili.com/medialist/play/ml1717621061/BV1D4411K7mA?spm_id_from=333.788.0.0&oid=54876984&otype=2"
-                },
-                {
-                    id: 5,
-                    name: "CSDN",
-                    url:
-                        "https://blog.csdn.net/qq_44204058/article/details/109611297"
-                }
-            ];
-            localStorage.setItem(
-                settings.keys.FREQUENT_BOOKMARKS,
-                JSON.stringify(data)
-            );
         }
     }
 };

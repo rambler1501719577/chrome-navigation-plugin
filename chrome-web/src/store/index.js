@@ -5,6 +5,8 @@ import setting from "./modules/setting";
 import frequentBookmark from "./modules/frequent-bookmark";
 import createPersistedState from "vuex-persistedstate";
 import engine from "./modules/engine";
+import todo from "./modules/todo";
+import bookmark from "./modules/bookmark";
 
 import getters from "./getters";
 Vue.use(Vuex);
@@ -14,7 +16,9 @@ export default new Vuex.Store({
         basic,
         setting,
         frequentBookmark,
-        engine
+        engine,
+        todo,
+        bookmark
     },
     getters,
     strict: true,
@@ -22,7 +26,14 @@ export default new Vuex.Store({
     plugins: [
         createPersistedState({
             key: "cache-data",
-            paths: ["frequentBookmark", "setting", "basic", "engine"]
+            paths: [
+                "frequentBookmark",
+                "setting",
+                "basic",
+                "engine",
+                "todo",
+                "bookmark"
+            ]
         })
     ]
 });

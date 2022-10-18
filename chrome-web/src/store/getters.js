@@ -28,6 +28,14 @@ const getters = {
         } else {
             return state.frequentBookmark.remoteFrequentBookmark;
         }
+    },
+    // 待办
+    todo: state => {
+        if (state.setting.dataSource == "local") {
+            return state.todo.todo;
+        } else {
+            return state.todo.remoteTodo;
+        }
     }
 };
 export default getters;

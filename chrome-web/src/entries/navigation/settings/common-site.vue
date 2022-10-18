@@ -1,5 +1,8 @@
 <template>
     <div class="common-site-container">
+        <el-alert :closable="false" type="warning" v-if="dataSource == 'remote'"
+            >账户数据无法编辑, 请在管理端进行编辑, 点击跳转(待开发)</el-alert
+        >
         <div class="list">
             <el-table :data="tableData">
                 <div slot="empty">
