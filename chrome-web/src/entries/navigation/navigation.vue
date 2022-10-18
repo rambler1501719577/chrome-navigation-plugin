@@ -51,7 +51,7 @@ export default {
     async created() {
         const token = await getToken();
         if (token && token.value) {
-            console.log(`已登录,token为:${token.value.substring(0, 10)}****`);
+            console.log(`获取用户登录信息成功`);
             // 获取书签
             const promises = [
                 getBookmarks(null, token.value),
@@ -64,6 +64,7 @@ export default {
                 ) {
                     const bookmarks = bookmarkRes.value.data.records;
                     this.updateRemoteBookmark(bookmarks);
+                    console.log(`已更新bookmarks, 共【${bookmarks.length}】条`);
                 }
                 if (
                     todoRes.status == "fulfilled" &&
@@ -71,6 +72,7 @@ export default {
                 ) {
                     const todos = todoRes.value.data;
                     this.updateRemoteTodo(todos);
+                    console.log(`已更新todos, 共【${todos.length}】条`);
                 }
             });
             // load remote settings and data
@@ -106,7 +108,6 @@ export default {
     .search {
         max-width: 60%;
         margin: 30px auto;
-        overflow-x: hidden;
     }
     .frequent-bookmarks {
         width: 80%;

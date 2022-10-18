@@ -18,9 +18,10 @@
             <input
                 id="search"
                 type="text"
+                @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="搜万物 | 支持在【书签】和【历史记录中搜索】"
+                placeholder="搜万物 | 支持在【书签】和【历史记录】中搜索"
                 @keydown.enter="search"
             />
             <img
@@ -31,7 +32,43 @@
                 @click="search"
             />
             <div class="search-result">
-                <ul></ul>
+                <ul>
+                    <li v-for="(result, index) of searchResult">
+                        <a @click="go(history)" class="result-item">
+                            <div
+                                v-if="result.from == 'bookmark'"
+                                class="result-item-detail"
+                            >
+                                <div class="icon">
+                                    <rambler-icon name="date"></rambler-icon>
+                                </div>
+                                <div class="title">
+                                    {{ result.title }}
+                                </div>
+                                <div>
+                                    <el-tag>{{ result.from }}</el-tag>
+                                </div>
+                            </div>
+                            <div
+                                v-else-if="result.from == 'search'"
+                                class="result-item-detail"
+                            >
+                                <div class="icon">
+                                    <rambler-icon name="search"></rambler-icon>
+                                </div>
+                                <div class="title">
+                                    {{ result.title }}
+                                </div>
+                                <div>
+                                    <el-tag>{{ result.from }}</el-tag>
+                                </div>
+                            </div>
+                            <div v-else class="result-item-detail">
+                                <div class="title">{{ result.title }}</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -43,16 +80,26 @@ export default {
     name: "Search",
     data() {
         return {
-            keywords: ""
+            keywords: "",
+            searchResult: []
         };
     },
     computed: {
-        ...mapGetters(["engines", "currentEngine"])
+        ...mapGetters(["engines", "currentEngine", "flatternBookmark"])
     },
     methods: {
+        // 获得访问链接
+        go: function(result) {
+            if (result.from == "bookmark" || result.from == "history") {
+                window.open(result.url, "_self");
+            } else {
+                window.open(`${engine.searchUrl}${this.keywords}`, "_self");
+            }
+        },
         switchEngine: function(engine) {
             this.$store.dispatch("engine/updateCurrentEngine", engine.name);
         },
+        // 搜索
         search: function() {
             const engine = this.engines.find(
                 item => item.name == this.currentEngine
@@ -62,12 +109,61 @@ export default {
             }
             window.open(`${engine.searchUrl}${this.keywords}`, "_self");
             this.keywords = "";
+        },
+        // 在书签中模糊搜索
+        searchInBookmark(keywords) {
+            if (!keywords) return [];
+            let res = [];
+            this.flatternBookmark.forEach(element => {
+                if (element.title.indexOf(keywords) !== -1)
+                    res.push({
+                        ...element,
+                        from: "bookmark"
+                    });
+            });
+            return res;
+        },
+        // chrome history中搜索
+        searchInHistory(keywords, limit) {
+            return new Promise(resolve => {
+                if (!keywords) {
+                    resolve([]);
+                }
+                chrome.history.search(
+                    {
+                        text: keywords,
+                        maxResults: limit
+                    },
+                    res => {
+                        resolve(res.map(ele => ({ ...ele, from: "history" })));
+                    }
+                );
+            });
+        },
+        async handleInput(keywords) {
+            const searchRes = [];
+            if (this.flatternBookmark.length > 0) {
+                searchRes.push(...this.searchInBookmark(this.keywords));
+            }
+            // chrome history对象提供的search匹配机制没理解
+            if (chrome.history) {
+                searchRes.push(
+                    ...(await this.searchInHistory(this.keywords, 20))
+                );
+            }
+            searchRes.push({
+                title: this.keywords,
+                from: "engine"
+            });
+            console.log(searchRes);
+            this.searchResult = searchRes;
         }
     }
 };
 </script>
 <style lang="less" scoped="scoped">
 .search-container {
+    position: relative;
     .engine-list {
         overflow: hidden;
         ul {
@@ -126,35 +222,30 @@ export default {
             cursor: pointer;
         }
         .search-result {
-            box-sizing: border-box;
             position: absolute;
-            top: 55px;
+            top: 51px;
             left: 0;
-            height: 0;
-            max-height: 400px;
-            overflow: hidden;
-            overflow: hidden auto;
+            z-index: 2;
             width: 100%;
+            background: #ffffff;
+            overflow: hidden auto;
             border-radius: 10px;
-            transition: all 0.5s ease-in-out;
-            background-color: #fff;
-            ul {
-                list-style: none;
-                li {
-                    height: 50px;
-                    font-size: 18px;
-                    cursor: pointer;
-                    padding-left: 10px;
-                    a {
-                        display: block;
-                        text-decoration: none;
-                        color: #333;
-                        line-height: 50px;
-                        user-select: none;
-                    }
+            max-height: 400px;
+            .result-item {
+                display: block;
+                height: 45px;
+                &:hover {
+                    background: #ddd;
                 }
-                li:hover {
-                    background-color: #ddd;
+                .result-item-detail {
+                    height: 100%;
+                    padding: 0 10px;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    .icon {
+                        margin-right: 10px;
+                    }
                 }
             }
         }

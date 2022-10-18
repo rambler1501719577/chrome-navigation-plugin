@@ -9,7 +9,7 @@
         "tabs",
         "scripting",
         "cookies",
-        "*://*.google.com"
+        "history"
     ],
     "optional_permissions": [],
     "host_permissions": ["http://www.suhaoblog.cn/"],

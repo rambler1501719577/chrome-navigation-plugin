@@ -36,6 +36,35 @@ const getters = {
         } else {
             return state.todo.remoteTodo;
         }
+    },
+    bookmark: state => {
+        if (state.setting.dataSource == "local") {
+            return state.bookmark.bookmark;
+        } else {
+            return state.bookmark.remoteBookmark;
+        }
+    },
+    flatternBookmark: state => {
+        let treeBookmark;
+        if (state.setting.dataSource == "local") {
+            treeBookmark = state.bookmark.bookmark;
+        } else {
+            treeBookmark = state.bookmark.remoteBookmark;
+        }
+        function getChildren(bookmark) {
+            let arr = [];
+            for (let book of bookmark) {
+                if (book.children) {
+                    arr.push(...getChildren(book.children));
+                    delete book.children;
+                    arr.push(book);
+                }
+            }
+            return arr;
+        }
+        let flatternBookmark = [];
+        flatternBookmark.push(...getChildren(treeBookmark));
+        return flatternBookmark;
     }
 };
 export default getters;

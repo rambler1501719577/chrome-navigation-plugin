@@ -92,6 +92,8 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Switch);
 Vue.use(Alert);
+Vue.use(Tag);
+
 // Vue.use(Pagination);
 // Vue.use(Autocomplete);
 // Vue.use(Dropdown);
@@ -120,7 +122,6 @@ Vue.use(Alert);
 // Vue.use(Breadcrumb);
 // Vue.use(BreadcrumbItem);
 
-// Vue.use(Tag);
 // Vue.use(Tree);
 
 // Vue.use(Slider);

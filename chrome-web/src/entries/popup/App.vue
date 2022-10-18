@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+import { getToken } from "@/utils/token";
 import Login from "./views/login";
 import UserInfo from "./views/user-info";
 export default {
@@ -22,6 +23,12 @@ export default {
     },
     methods: {
         handleLoginSuccess() {
+            this.component = "user-info";
+        }
+    },
+    async created() {
+        const token = await getToken();
+        if (token && token.value) {
             this.component = "user-info";
         }
     }
