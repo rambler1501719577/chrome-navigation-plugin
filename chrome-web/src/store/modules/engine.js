@@ -10,7 +10,6 @@ export default {
                 searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd="
             }
         ],
-        remoteDefaultEngine: "",
         // 远程engines配置
         remoteEngines: [
             {
@@ -48,6 +47,7 @@ export default {
             state.currentEngine = payload;
         },
         SET_DEFAULT_ENGINE(state) {
+            debugger;
             state.currentEngine = state.engines[0].name;
         }
     },

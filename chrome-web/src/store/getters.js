@@ -12,13 +12,15 @@ const getters = {
     // 当前搜索引擎
     currentEngine: state => {
         // 根据数据源选择第一条为默认搜索引擎
+        if (state.engine.currentEngine) return state.engine.currentEngine;
+        let currentEngine = "";
         if (state.setting.dataSource == "local") {
-            return state.engine.currentEngine || state.engine.engines[0].name;
+            currentEngine = state.engine.engines[0].name;
         } else {
-            return (
-                state.engine.remoteDefaultEngine ||
-                state.engine.remoteEngines[0].name
-            );
+            currentEngine = state.engine.remoteEngines[0].name;
+        }
+        if (!currentEngine) {
+            return "百度";
         }
     },
     // 常用网站

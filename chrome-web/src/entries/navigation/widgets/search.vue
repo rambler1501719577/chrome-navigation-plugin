@@ -7,7 +7,7 @@
                     v-for="(engine, index) of engines"
                     :key="index"
                     :class="{ selected: engine.name == currentEngine }"
-                    @click="switchEngine(engine)"
+                    @click="handleEngineClick(engine)"
                 >
                     {{ engine.name }}
                 </li>
@@ -21,8 +21,7 @@
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="搜万物 | 支持在【书签】和【历史记录】中搜索"
-                @keydown.enter="search"
+                placeholder="搜万物 | 使用⬆ ⬇箭头切换结果，⬅ ➡箭头切换搜索引擎"
             />
             <img
                 class="search-icon"
@@ -34,37 +33,48 @@
             <div class="search-result">
                 <ul>
                     <li v-for="(result, index) of searchResult">
-                        <a @click="go(history)" class="result-item">
+                        <a
+                            @click="go(history)"
+                            :class="{
+                                'result-item': true,
+                                'is-current': index == verticalIndex
+                            }"
+                        >
+                            <!-- 书签搜索结果 -->
                             <div
                                 v-if="result.from == 'bookmark'"
                                 class="result-item-detail"
                             >
                                 <div class="icon">
-                                    <rambler-icon name="date"></rambler-icon>
+                                    <el-tag type="warning">书签</el-tag>
                                 </div>
                                 <div class="title">
                                     {{ result.title }}
                                 </div>
-                                <div>
-                                    <el-tag>{{ result.from }}</el-tag>
-                                </div>
                             </div>
+                            <!-- 历史搜索结果 -->
                             <div
                                 v-else-if="result.from == 'search'"
                                 class="result-item-detail"
                             >
                                 <div class="icon">
-                                    <rambler-icon name="search"></rambler-icon>
+                                    <el-tag>历史记录</el-tag>
                                 </div>
                                 <div class="title">
                                     {{ result.title }}
                                 </div>
-                                <div>
-                                    <el-tag>{{ result.from }}</el-tag>
-                                </div>
+                                <div></div>
                             </div>
+                            <!-- 未匹配 -->
                             <div v-else class="result-item-detail">
-                                <div class="title">{{ result.title }}</div>
+                                <div class="icon">
+                                    <el-tag type="info">默认</el-tag>
+                                </div>
+                                <div class="title">
+                                    去【{{ currentEngine }}】中搜索{{
+                                        result.title
+                                    }}
+                                </div>
                             </div>
                         </a>
                     </li>
@@ -75,29 +85,36 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
     name: "Search",
     data() {
         return {
             keywords: "",
-            searchResult: []
+            searchResult: [],
+            horizontalIndex: 0, // 水平方向指针位置，标识搜索引擎
+            verticalIndex: 0 // 竖直方向指针位置，标识搜索结果第几条
         };
     },
     computed: {
         ...mapGetters(["engines", "currentEngine", "flatternBookmark"])
     },
     methods: {
-        // 获得访问链接
-        go: function(result) {
+        ...mapActions("engine", ["updateCurrentEngine"]),
+        // 跳转目标页面
+        go: function() {
+            const result = this.searchResult[this.verticalIndex];
             if (result.from == "bookmark" || result.from == "history") {
                 window.open(result.url, "_self");
             } else {
+                const engine = this.engines.find(
+                    item => item.name == this.currentEngine
+                );
                 window.open(`${engine.searchUrl}${this.keywords}`, "_self");
             }
         },
-        switchEngine: function(engine) {
-            this.$store.dispatch("engine/updateCurrentEngine", engine.name);
+        handleEngineClick: function(engine) {
+            this.updateCurrentEngine(engine.name);
         },
         // 搜索
         search: function() {
@@ -151,13 +168,57 @@ export default {
                     ...(await this.searchInHistory(this.keywords, 20))
                 );
             }
+            // 搜索引擎中搜索
             searchRes.push({
                 title: this.keywords,
                 from: "engine"
             });
-            console.log(searchRes);
             this.searchResult = searchRes;
+            if (!this.keywords) {
+                this.searchResult = [];
+            }
+        },
+        // 切换搜索引擎
+        switchEngine: function(keyCode) {
+            if (keyCode == 37 && this.horizontalIndex > 0) {
+                this.horizontalIndex--;
+            }
+            if (
+                keyCode == 39 &&
+                this.horizontalIndex < this.engines.length - 1
+            ) {
+                this.horizontalIndex++;
+            }
+            this.updateCurrentEngine(this.engines[this.horizontalIndex].name);
+        },
+        // 切换搜索结果
+        switchResult: function(keyCode) {
+            if (this.searchResult.length == 0) {
+                return;
+            }
+            if (keyCode == 38 && this.verticalIndex > 0) {
+                this.verticalIndex--;
+            }
+            if (
+                keyCode == 40 &&
+                this.verticalIndex < this.searchResult.length - 1
+            ) {
+                this.verticalIndex++;
+            }
         }
+    },
+    mounted() {
+        this.$el.addEventListener("keydown", e => {
+            if (e.keyCode == 37 || e.keyCode == 39) {
+                this.switchEngine(e.keyCode);
+            }
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                this.switchResult(e.keyCode);
+            }
+            if (e.keyCode == 13) {
+                this.go();
+            }
+        });
     }
 };
 </script>
@@ -234,6 +295,7 @@ export default {
             .result-item {
                 display: block;
                 height: 45px;
+                border-bottom: 1px solid #f9f1f1;
                 &:hover {
                     background: #ddd;
                 }
@@ -246,7 +308,13 @@ export default {
                     .icon {
                         margin-right: 10px;
                     }
+                    .title {
+                        margin-right: 10px;
+                    }
                 }
+            }
+            .is-current {
+                background: #ddd;
             }
         }
     }
