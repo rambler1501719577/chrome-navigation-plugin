@@ -21,7 +21,7 @@
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="搜万物 | 使用⬆ ⬇箭头切换结果，⬅ ➡箭头切换搜索引擎"
+                placeholder="搜万物 | 使用⬆ ⬇箭头切换结果"
             />
             <img
                 class="search-icon"
@@ -46,7 +46,13 @@
                                 class="result-item-detail"
                             >
                                 <div class="icon">
-                                    <el-tag type="warning">书签</el-tag>
+                                    <el-tag type="warning"
+                                        >{{
+                                            dataSource == "local"
+                                                ? "本地"
+                                                : "远程"
+                                        }}书签</el-tag
+                                    >
                                 </div>
                                 <div class="title">
                                     {{ result.title }}
@@ -54,7 +60,7 @@
                             </div>
                             <!-- 历史搜索结果 -->
                             <div
-                                v-else-if="result.from == 'search'"
+                                v-else-if="result.from == 'history'"
                                 class="result-item-detail"
                             >
                                 <div class="icon">
@@ -63,7 +69,9 @@
                                 <div class="title">
                                     {{ result.title }}
                                 </div>
-                                <div></div>
+                                <div class="visit-count">
+                                    近期访问 {{ result.visitCount }}次
+                                </div>
                             </div>
                             <!-- 未匹配 -->
                             <div v-else class="result-item-detail">
@@ -97,7 +105,12 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["engines", "currentEngine", "flatternBookmark"])
+        ...mapGetters([
+            "engines",
+            "currentEngine",
+            "flatternBookmark",
+            "dataSource"
+        ])
     },
     methods: {
         ...mapActions("engine", ["updateCurrentEngine"]),
@@ -158,6 +171,8 @@ export default {
             });
         },
         async handleInput(keywords) {
+            // 重置索引和搜索结果
+            this.verticalIndex = 0;
             const searchRes = [];
             if (this.flatternBookmark.length > 0) {
                 searchRes.push(...this.searchInBookmark(this.keywords));
@@ -180,30 +195,41 @@ export default {
         },
         // 切换搜索引擎
         switchEngine: function(keyCode) {
-            if (keyCode == 37 && this.horizontalIndex > 0) {
-                this.horizontalIndex--;
-            }
-            if (
-                keyCode == 39 &&
-                this.horizontalIndex < this.engines.length - 1
-            ) {
-                this.horizontalIndex++;
-            }
-            this.updateCurrentEngine(this.engines[this.horizontalIndex].name);
+            // if (keyCode == 37 && this.horizontalIndex > 0) {
+            //     this.horizontalIndex--;
+            // }
+            // if (
+            //     keyCode == 39 &&
+            //     this.horizontalIndex < this.engines.length - 1
+            // ) {
+            //     this.horizontalIndex++;
+            // }
+            // this.updateCurrentEngine(this.engines[this.horizontalIndex].name);
         },
         // 切换搜索结果
         switchResult: function(keyCode) {
-            if (this.searchResult.length == 0) {
-                return;
-            }
+            const resultDomHeight = 45; // 搜索结果高度
+            const dom = document.querySelector(".search-result");
+            const resultCount = dom.clientHeight / resultDomHeight;
+            const scrollTop = dom.scrollTop;
             if (keyCode == 38 && this.verticalIndex > 0) {
                 this.verticalIndex--;
+                // 滚动条上移，scrollTop > 0为标识
+                if (scrollTop >= this.verticalIndex * resultDomHeight) {
+                    dom.scrollTop = scrollTop - resultDomHeight;
+                }
             }
             if (
                 keyCode == 40 &&
                 this.verticalIndex < this.searchResult.length - 1
             ) {
                 this.verticalIndex++;
+                if (this.verticalIndex >= resultCount) {
+                    // 滚动条下移
+                    dom.scrollTop =
+                        (this.verticalIndex - resultCount + 1) *
+                        resultDomHeight;
+                }
             }
         }
     },
@@ -214,6 +240,7 @@ export default {
             }
             if (e.keyCode == 38 || e.keyCode == 40) {
                 this.switchResult(e.keyCode);
+                e.preventDefault();
             }
             if (e.keyCode == 13) {
                 this.go();
@@ -291,13 +318,14 @@ export default {
             background: #ffffff;
             overflow: hidden auto;
             border-radius: 10px;
-            max-height: 400px;
+            max-height: 360px;
             .result-item {
                 display: block;
                 height: 45px;
+                box-sizing: border-box;
                 border-bottom: 1px solid #f9f1f1;
                 &:hover {
-                    background: #ddd;
+                    background: #eee;
                 }
                 .result-item-detail {
                     height: 100%;
@@ -314,7 +342,7 @@ export default {
                 }
             }
             .is-current {
-                background: #ddd;
+                background: #eee;
             }
         }
     }
