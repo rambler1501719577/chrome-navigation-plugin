@@ -3,6 +3,7 @@
         <component
             :is="component"
             @login-success="handleLoginSuccess"
+            @logout="logout"
         ></component>
     </div>
 </template>
@@ -24,6 +25,9 @@ export default {
     methods: {
         handleLoginSuccess() {
             this.component = "user-info";
+        },
+        logout() {
+            this.component = "login";
         }
     },
     async created() {

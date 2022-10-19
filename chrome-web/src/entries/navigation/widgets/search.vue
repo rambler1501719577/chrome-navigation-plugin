@@ -46,13 +46,7 @@
                                 class="result-item-detail"
                             >
                                 <div class="icon">
-                                    <el-tag type="warning"
-                                        >{{
-                                            dataSource == "local"
-                                                ? "本地"
-                                                : "远程"
-                                        }}书签</el-tag
-                                    >
+                                    <el-tag type="warning">书签</el-tag>
                                 </div>
                                 <div class="title">
                                     {{ result.title }}
@@ -64,13 +58,13 @@
                                 class="result-item-detail"
                             >
                                 <div class="icon">
-                                    <el-tag>历史记录</el-tag>
+                                    <el-tag>历史</el-tag>
                                 </div>
                                 <div class="title">
                                     {{ result.title }}
                                 </div>
                                 <div class="visit-count">
-                                    近期访问 {{ result.visitCount }}次
+                                    近期访问 【{{ result.visitCount }}】次
                                 </div>
                             </div>
                             <!-- 未匹配 -->

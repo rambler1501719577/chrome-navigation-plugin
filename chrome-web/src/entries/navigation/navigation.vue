@@ -20,7 +20,24 @@
             <rambler-setting></rambler-setting>
         </el-dialog>
 
+        <el-dialog
+            width="1000px"
+            title="本地书签管理"
+            :modal="false"
+            top="10vh"
+            :visible.sync="bookmarkDialogVisible"
+            :close-on-click-modal="false"
+            v-dialogDrag
+        >
+            <bookmark-setting></bookmark-setting>
+        </el-dialog>
+
         <div class="affix">
+            <rambler-icon
+                @click.native="openBookmarkConfig"
+                name="date"
+                class="bookmark"
+            ></rambler-icon>
             <rambler-icon
                 @click.native="openSetting"
                 name="setting"
@@ -34,6 +51,7 @@
 import { mapActions } from "vuex";
 import { getToken } from "@/utils/token";
 import Setting from "./settings/index";
+import BookmarkSetting from "./widgets/bookmark";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
 import { getBookmarks } from "@/api/modules/bookmark";
@@ -42,17 +60,42 @@ export default {
     name: "IndexLayout",
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            bookmarkDialogVisible: false
         };
     },
-    // 加载engines和bookmarkds以及todos
-    // 加载本地个性化配置
-    // 同步到vuex中
     async created() {
         const token = await getToken();
         if (token && token.value) {
-            console.log(`获取用户登录信息成功`);
-            // 获取书签
+            // 获取和现在相差时间毫秒数
+            const time = token.expirationDate * 1000 - new Date().getTime();
+            const hours = (time / 1000 / 60 / 60).toFixed(2);
+            console.log(`获取用户信息成功, token ${hours} 小时后失效`);
+            // load remote settings and data
+            this.loadRemoteData(token);
+        } else {
+            console.log("未登录或token已过期");
+        }
+        // 加载本地书签
+        this.loadLocalBookmark();
+    },
+    components: {
+        RamblerSearch: Search,
+        frequentBookmarks: frequentBookmarks,
+        RamblerSetting: Setting,
+        BookmarkSetting: BookmarkSetting
+    },
+    methods: {
+        ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
+        ...mapActions("todo", ["updateRemoteTodo"]),
+        openSetting: function() {
+            this.dialogVisible = true;
+        },
+        openBookmarkConfig() {
+            this.bookmarkDialogVisible = !this.bookmarkDialogVisible;
+        },
+        // 请求远程数据(不缓存)
+        loadRemoteData(token) {
             const promises = [
                 getBookmarks(null, token.value),
                 getTodos(null, token.value)
@@ -75,21 +118,12 @@ export default {
                     console.log(`已更新todos, 共【${todos.length}】条`);
                 }
             });
-            // load remote settings and data
-        } else {
-            console.log("未登录");
-        }
-    },
-    components: {
-        RamblerSearch: Search,
-        frequentBookmarks: frequentBookmarks,
-        RamblerSetting: Setting
-    },
-    methods: {
-        ...mapActions("bookmark", ["updateRemoteBookmark"]),
-        ...mapActions("todo", ["updateRemoteTodo"]),
-        openSetting: function() {
-            this.dialogVisible = true;
+        },
+        loadLocalBookmark: function() {
+            if (!chrome.bookmarks) {
+                return console.log("请在chrome中调试本地书签");
+            }
+            this.updateBookmark();
         }
     }
 };
@@ -114,18 +148,32 @@ export default {
         margin: 0 auto;
     }
     .affix {
+        display: flex;
         position: absolute;
+        width: 35px;
         right: 30px;
         bottom: 30px;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .bookmark {
+            width: 35px;
+            height: 35px;
+            fill: #ddd;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
         .affix-icon {
             width: 30px;
             height: 30px;
             fill: #ddd;
             cursor: pointer;
             transition: all 0.7s;
-        }
-        &:hover > .affix-icon {
-            transform: rotate(270deg);
+
+            &:hover {
+                transform: rotate(270deg);
+            }
         }
     }
 }

@@ -16,19 +16,28 @@
                 <span v-for="(tag, index) of userTags">{{ tag }}</span>
             </div>
             <div class="exit">
-                <button id="logout">退出</button>
+                <button id="logout" @click="exit">退出</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { clearToken } from "@/utils/token";
 export default {
     name: "PopupUp",
     data() {
         return {
             userTags: ["Coding", "DJ", "Game"]
         };
+    },
+    methods: {
+        exit() {
+            clearToken().then(() => {
+                this.$message.info("登出成功");
+                this.$emit("logout");
+            });
+        }
     }
 };
 </script>

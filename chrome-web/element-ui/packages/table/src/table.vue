@@ -746,7 +746,6 @@ export default {
     },
 
     created() {
-        console.log("debugging");
         this.tableId = "el-table_" + tableIdSeed++;
         this.debouncedUpdateLayout = debounce(50, () => this.doLayout());
     },

@@ -49,6 +49,22 @@ export function setToken(payload, time = 60 * 60 * 8) {
     });
 }
 
+// 移除token
 export function clearToken() {
-    Cookies.remove("token");
+    return new Promise(resolve => {
+        if (chrome.cookies) {
+            chrome.cookies.remove(
+                {
+                    url: "http://www.suhaoblog.cn",
+                    name: "token"
+                },
+                () => {
+                    resolve();
+                }
+            );
+        } else {
+            Cookies.remove("token");
+            resolve();
+        }
+    });
 }

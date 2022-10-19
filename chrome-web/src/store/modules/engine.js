@@ -47,7 +47,6 @@ export default {
             state.currentEngine = payload;
         },
         SET_DEFAULT_ENGINE(state) {
-            debugger;
             state.currentEngine = state.engines[0].name;
         }
     },
@@ -65,6 +64,14 @@ export default {
         },
         updateCurrentEngine({ commit }, payload) {
             commit("UPDATE_CURRENT_ENGINE", payload);
+        },
+        setDefaultEngine({ commit, state }, payload) {
+            const { dataSource } = payload;
+            if (dataSource == "local") {
+                commit("UPDATE_CURRENT_ENGINE", state.engines[0].name);
+            } else {
+                commit("UPDATE_CURRENT_ENGINE", state.remoteEngines[0].name);
+            }
         }
     }
 };

@@ -46,19 +46,20 @@ const getters = {
             return state.bookmark.remoteBookmark;
         }
     },
+    // 本地和远程书签合并后的集合
     flatternBookmark: state => {
-        let treeBookmark;
-        if (state.setting.dataSource == "local") {
-            treeBookmark = state.bookmark.bookmark;
-        } else {
-            treeBookmark = state.bookmark.remoteBookmark;
-        }
+        let treeBookmark = [
+            ...state.bookmark.bookmark,
+            ...state.bookmark.remoteBookmark
+        ];
         function getChildren(bookmark) {
             let arr = [];
             for (let book of bookmark) {
                 if (book.children) {
                     arr.push(...getChildren(book.children));
                     delete book.children;
+                    arr.push(book);
+                } else {
                     arr.push(book);
                 }
             }

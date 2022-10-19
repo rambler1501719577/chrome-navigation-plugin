@@ -29,10 +29,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- 导出数据 -->
+        <div class="export">
+            <el-button size="small" type="primary" @click="exportConfig"
+                >导出本地配置</el-button
+            >
+            <el-button size="small" type="primary" @click="importConfig"
+                >导入本地配置</el-button
+            >
+            <input id="upload" type="file" @change="parseJson" />
+        </div>
     </div>
 </template>
 
 <script>
+import FileSaver from "file-saver";
 import { mapActions } from "vuex";
 export default {
     name: "Account",
@@ -47,12 +59,41 @@ export default {
     },
     methods: {
         ...mapActions("setting", ["updateDataSource"]),
+        ...mapActions("engine", ["setDefaultEngine"]),
         changeDataSource(value) {
             if (value) {
                 this.updateDataSource("local");
+                this.setDefaultEngine({
+                    dataSource: "local"
+                });
             } else {
                 this.updateDataSource("remote");
+                this.setDefaultEngine({
+                    dataSource: "remote"
+                });
             }
+        },
+        exportConfig() {
+            const data = JSON.stringify([
+                {
+                    name: 123
+                }
+            ]);
+            const blob = new Blob([data], { type: "" });
+            FileSaver.saveAs(blob, "config.json");
+        },
+        // 解析文本
+        parseJson(e) {
+            const file = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function() {
+                console.log(JSON.parse(this.result));
+            };
+        },
+        // 唤起file事件
+        importConfig() {
+            document.querySelector("#upload").click();
         }
     }
 };
@@ -69,6 +110,11 @@ export default {
                 display: flex;
                 align-items: center;
             }
+        }
+    }
+    .export {
+        #upload {
+            display: none;
         }
     }
 }
