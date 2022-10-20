@@ -18,21 +18,21 @@
                         <span v-else>{{ scope.row.name }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="网址" align="left">
+                <el-table-column label="搜索地址" align="left">
                     <template slot-scope="scope">
                         <el-input
                             size="small"
                             v-if="scope.row.isEdit"
-                            v-model="scope.row.url"
+                            v-model="scope.row.searchUrl"
                         ></el-input>
-                        <span v-else>{{ scope.row.url }}</span>
+                        <span v-else>{{ scope.row.searchUrl }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="操作"
                     width="150"
-                    align="center"
                     v-if="dataSource == 'local'"
+                    align="center"
                 >
                     <template slot-scope="scope">
                         <div v-if="!scope.row.isEdit">
@@ -85,7 +85,7 @@
                     </el-form-item>
                     <el-form-item label="网址">
                         <el-input
-                            v-model="form.url"
+                            v-model="form.searchUrl"
                             placeholder="网址"
                         ></el-input>
                     </el-form-item>
@@ -104,35 +104,37 @@ const { v4: uuidv4 } = require("uuid");
 import _ from "lodash";
 import { mapGetters, mapActions } from "vuex";
 export default {
+    name: "EngineSetting",
     data() {
         return {
             tableData: [],
             form: {
                 name: "",
-                url: ""
+                searchUrl: ""
             },
             isActive: true
         };
     },
     computed: {
-        ...mapGetters(["frequentBookmarks", "dataSource"])
+        ...mapGetters("engine", ["localEngines"]),
+        ...mapGetters(["engines", "dataSource"])
     },
     methods: {
         // 映射setting.Action
-        ...mapActions("frequentBookmark", ["update"]),
+        ...mapActions("engine", ["update"]),
         switchStatus() {
             this.isActive = !this.isActive;
         },
         // 新增
         onSubmit: function() {
             let reg = /https?:\/\/(\w+\.?)+/;
-            if (!reg.test(this.form.url))
+            if (!reg.test(this.form.searchUrl))
                 return this.$message.error(
                     "地址格式错误,请输入包含http的完整地址"
                 );
             const data = {
                 name: this.form.name,
-                url: this.form.url,
+                searchUrl: this.form.searchUrl,
                 id: uuidv4()
             };
             this.tableData.push({
@@ -140,7 +142,7 @@ export default {
                 isEdit: false
             });
             this.form.name = "";
-            this.form.url = "";
+            this.form.searchUrl = "";
             // 同步到vuex
             this.update({
                 type: "add",
@@ -200,13 +202,17 @@ export default {
             });
         }
     },
-    created() {
-        let data = this.frequentBookmarks;
-        // 通过isEdit标识每一行是否是编辑状态
-        this.tableData = _.cloneDeep(data).map(item => ({
-            ...item,
-            isEdit: false
-        }));
+    watch: {
+        localEngines: {
+            immediate: true,
+            handler(engines) {
+                // 通过isEdit标识每一行是否是编辑状态
+                this.tableData = _.cloneDeep(engines).map(item => ({
+                    ...item,
+                    isEdit: false
+                }));
+            }
+        }
     }
 };
 </script>

@@ -1,3 +1,4 @@
+import _ from "lodash";
 const getters = {
     theme: state => state.theme.currentTheme,
     dataSource: state => state.setting.dataSource,
@@ -48,9 +49,11 @@ const getters = {
     },
     // 本地和远程书签合并后的集合
     flatternBookmark: state => {
+        // 深克隆
+
         let treeBookmark = [
-            ...state.bookmark.bookmark,
-            ...state.bookmark.remoteBookmark
+            ..._.cloneDeep(state.bookmark.bookmark),
+            ..._.cloneDeep(state.bookmark.remoteBookmark)
         ];
         function getChildren(bookmark) {
             let arr = [];

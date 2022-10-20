@@ -11,6 +11,9 @@ export default {
             }
         ]
     },
+    getters: {
+        localFrequentBookmarks: state => state.frequentBookmarks
+    },
     mutations: {
         UPDATE_FREQUENT_BOOKMARKS(state, payload) {
             state.frequentBookmarks.splice(
@@ -32,6 +35,9 @@ export default {
                 item => item.id == payload.id
             );
             state.frequentBookmarks.splice(index, 1);
+        },
+        CLEAR(state) {
+            state.frequentBookmarks.splice(0, state.frequentBookmarks.length);
         }
     },
     actions: {
@@ -45,6 +51,14 @@ export default {
             } else {
                 commit("UPDATE_FREQUENT_BOOKMARKS", data);
             }
+        },
+        replaceFrequentBookmark({ commit }, payload) {
+            if (!payload || !Array.isArray(payload) || payload.length == 0)
+                return;
+            commit("CLEAR");
+            payload.forEach(item => {
+                commit("ADD_FREQUENT_BOOKMARKS", item);
+            });
         }
     }
 };

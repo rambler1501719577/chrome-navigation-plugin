@@ -93,6 +93,7 @@ Vue.use(FormItem);
 Vue.use(Switch);
 Vue.use(Alert);
 Vue.use(Tag);
+Vue.use(Tooltip);
 
 // Vue.use(Pagination);
 // Vue.use(Autocomplete);
@@ -118,7 +119,6 @@ Vue.use(Tag);
 // Vue.use(TimeSelect);
 // Vue.use(TimePicker);
 
-// Vue.use(Tooltip);
 // Vue.use(Breadcrumb);
 // Vue.use(BreadcrumbItem);
 

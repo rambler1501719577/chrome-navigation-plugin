@@ -5,7 +5,7 @@ export default {
         remoteBookmark: []
     },
     getters: {
-        bookmark: state => state.bookmark
+        localBookmark: state => state.bookmark
     },
     mutations: {
         UPDATE_BOOKMARK(state, payload) {

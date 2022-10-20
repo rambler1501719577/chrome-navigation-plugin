@@ -21,7 +21,7 @@
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="搜万物 | 使用⬆ ⬇箭头切换结果"
+                placeholder="搜万物 | 使用 ⬆ ⬇ 箭头切换结果"
             />
             <img
                 class="search-icon"
@@ -34,7 +34,7 @@
                 <ul>
                     <li v-for="(result, index) of searchResult">
                         <a
-                            @click="go(history)"
+                            @click="go(result)"
                             :class="{
                                 'result-item': true,
                                 'is-current': index == verticalIndex
@@ -109,8 +109,10 @@ export default {
     methods: {
         ...mapActions("engine", ["updateCurrentEngine"]),
         // 跳转目标页面
-        go: function() {
-            const result = this.searchResult[this.verticalIndex];
+        go: function(result) {
+            if (!result) {
+                result = this.searchResult[this.verticalIndex];
+            }
             if (result.from == "bookmark" || result.from == "history") {
                 window.open(result.url, "_self");
             } else {

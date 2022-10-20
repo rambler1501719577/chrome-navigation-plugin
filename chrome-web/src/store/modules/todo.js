@@ -2,7 +2,7 @@ export default {
     namespaced: true,
     state: {
         todo: [],
-        // 远程engines配置
+        // 远程todo配置
         remoteTodo: []
     },
     mutations: {

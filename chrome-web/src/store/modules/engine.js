@@ -47,8 +47,19 @@ export default {
             state.currentEngine = payload;
         },
         SET_DEFAULT_ENGINE(state) {
-            state.currentEngine = state.engines[0].name;
+            if (state.engines.length > 0) {
+                state.currentEngine = state.engines[0].name;
+            } else {
+                state.currentEngine = "百度";
+            }
+        },
+        CLEAR(state) {
+            state.engines.splice(0, state.engines.length);
         }
+    },
+    getters: {
+        localEngines: state => state.engines,
+        remoteEngines: state => state.remoteEngines
     },
     actions: {
         update({ commit }, payload) {
@@ -72,6 +83,15 @@ export default {
             } else {
                 commit("UPDATE_CURRENT_ENGINE", state.remoteEngines[0].name);
             }
+        },
+        replaceEngines({ commit }, payload) {
+            if (!Array.isArray(payload) || payload.length == 0) {
+                return;
+            }
+            commit("CLEAR");
+            payload.forEach(item => {
+                commit("ADD_ENGINE", item);
+            });
         }
     }
 };

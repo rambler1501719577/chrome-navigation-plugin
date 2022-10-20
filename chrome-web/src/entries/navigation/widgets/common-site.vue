@@ -18,21 +18,21 @@
                         <span v-else>{{ scope.row.name }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="搜索地址" align="left">
+                <el-table-column label="网址" align="left">
                     <template slot-scope="scope">
                         <el-input
                             size="small"
                             v-if="scope.row.isEdit"
-                            v-model="scope.row.searchUrl"
+                            v-model="scope.row.url"
                         ></el-input>
-                        <span v-else>{{ scope.row.searchUrl }}</span>
+                        <span v-else>{{ scope.row.url }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="操作"
                     width="150"
-                    v-if="dataSource == 'local'"
                     align="center"
+                    v-if="dataSource == 'local'"
                 >
                     <template slot-scope="scope">
                         <div v-if="!scope.row.isEdit">
@@ -85,7 +85,7 @@
                     </el-form-item>
                     <el-form-item label="网址">
                         <el-input
-                            v-model="form.searchUrl"
+                            v-model="form.url"
                             placeholder="网址"
                         ></el-input>
                     </el-form-item>
@@ -109,30 +109,31 @@ export default {
             tableData: [],
             form: {
                 name: "",
-                searchUrl: ""
+                url: ""
             },
             isActive: true
         };
     },
     computed: {
-        ...mapGetters(["engines", "dataSource"])
+        ...mapGetters(["dataSource"]),
+        ...mapGetters("frequentBookmark", ["localFrequentBookmarks"])
     },
     methods: {
         // 映射setting.Action
-        ...mapActions("engine", ["update"]),
+        ...mapActions("frequentBookmark", ["update"]),
         switchStatus() {
             this.isActive = !this.isActive;
         },
         // 新增
         onSubmit: function() {
             let reg = /https?:\/\/(\w+\.?)+/;
-            if (!reg.test(this.form.searchUrl))
+            if (!reg.test(this.form.url))
                 return this.$message.error(
                     "地址格式错误,请输入包含http的完整地址"
                 );
             const data = {
                 name: this.form.name,
-                searchUrl: this.form.searchUrl,
+                url: this.form.url,
                 id: uuidv4()
             };
             this.tableData.push({
@@ -140,7 +141,7 @@ export default {
                 isEdit: false
             });
             this.form.name = "";
-            this.form.searchUrl = "";
+            this.form.url = "";
             // 同步到vuex
             this.update({
                 type: "add",
@@ -200,17 +201,13 @@ export default {
             });
         }
     },
-    watch: {
-        engines: {
-            immediate: true,
-            handler(newVal) {
-                // 通过isEdit标识每一行是否是编辑状态
-                this.tableData = _.cloneDeep(newVal).map(item => ({
-                    ...item,
-                    isEdit: false
-                }));
-            }
-        }
+    created() {
+        let data = this.localFrequentBookmarks;
+        // 通过isEdit标识每一行是否是编辑状态
+        this.tableData = _.cloneDeep(data).map(item => ({
+            ...item,
+            isEdit: false
+        }));
     }
 };
 </script>
