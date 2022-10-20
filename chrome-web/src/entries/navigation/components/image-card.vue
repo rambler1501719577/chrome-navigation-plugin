@@ -142,7 +142,7 @@ export default {
 
     .description {
         text-align: center;
-        color: #333;
+        color: #f8f0f0;
         height: 20px;
         max-width: 100px;
         overflow: hidden;

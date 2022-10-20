@@ -1,5 +1,10 @@
 <template>
-    <div class="page-container">
+    <div
+        class="page-container"
+        :style="{
+            backgroundImage: `url('${$store.getters.background}')`
+        }"
+    >
         <!-- 搜索 -->
         <div class="search">
             <rambler-search />
@@ -104,7 +109,7 @@
                         class="icon"
                     ></rambler-icon>
                     <el-dialog
-                        width="700px"
+                        width="1000px"
                         title="背景设置"
                         :modal="false"
                         top="10vh"
@@ -112,7 +117,7 @@
                         :close-on-click-modal="false"
                         v-dialogDrag
                     >
-                        <h1>下载背景图, 更新vuex</h1>
+                        <background-setting></background-setting>
                     </el-dialog>
                 </div>
             </el-tooltip>
@@ -158,6 +163,7 @@ import { getBookmarks } from "@/api/modules/bookmark";
 import { getTodos } from "@/api/modules/todo";
 import EngineSetting from "./widgets/engine";
 import FrequentBookmarkSetting from "./widgets/common-site";
+import BackgroundSetting from "./widgets/background";
 export default {
     name: "IndexLayout",
     data() {
@@ -190,7 +196,8 @@ export default {
         RamblerSetting: Setting,
         BookmarkSetting: BookmarkSetting,
         EngineSetting: EngineSetting,
-        FrequentBookmarkSetting
+        FrequentBookmarkSetting: FrequentBookmarkSetting,
+        BackgroundSetting: BackgroundSetting
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -237,7 +244,6 @@ export default {
     box-sizing: border-box;
     height: 100vh;
     width: 100vw;
-    background: url("../../assets/images/background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

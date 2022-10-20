@@ -53,7 +53,7 @@ export default {
     height: 120px;
     width: 100%;
     overflow: hidden;
-    background-image: url(../../../assets/images/background.jpg);
+    background-image: url(/background/10.jpg);
     background-size: cover;
     background-repeat: no-repeat;
 }

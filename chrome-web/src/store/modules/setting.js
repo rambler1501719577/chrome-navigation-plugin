@@ -1,7 +1,8 @@
 export default {
     namespaced: true,
     state: {
-        dataSource: "local" // 数据源 remote | local
+        dataSource: "local", // 数据源 remote | local
+        background: "1.jpg" // 背景图片名称 (位置固定：根目录background下)
     },
     mutations: {
         UPDATE_DATASOURCE(state, param) {
@@ -15,6 +16,9 @@ export default {
                 iconMap[param.src] = param.icon;
                 localStorage.setItem("iconMap", JSON.stringify(iconMap));
             }
+        },
+        UPDATE_BACKGROUND(state, param) {
+            state.background = param;
         }
     },
     actions: {
@@ -23,6 +27,9 @@ export default {
         },
         updateFavicon({ commit }, payload) {
             commit("UPDATE_FAVICON", payload);
+        },
+        updateBackground({ commit }, payload) {
+            commit("UPDATE_BACKGROUND", payload);
         }
     }
 };

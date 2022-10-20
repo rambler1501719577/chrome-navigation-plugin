@@ -71,6 +71,7 @@ const getters = {
         let flatternBookmark = [];
         flatternBookmark.push(...getChildren(treeBookmark));
         return flatternBookmark;
-    }
+    },
+    background: state => `/background/${state.setting.background}`
 };
 export default getters;
