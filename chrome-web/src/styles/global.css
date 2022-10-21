@@ -65,11 +65,11 @@ html,
 body {
     margin: 0;
     padding: 0;
-    cursor: url('../assets/cur/default.cur'), auto;
+    cursor: url("../assets/cur/default.cur"), auto;
 }
 
 a {
-    cursor: url('../assets/cur/pointer.cur'), auto
+    cursor: url("../assets/cur/pointer.cur"), auto;
 }
 
 .markdown-body pre code {
@@ -85,4 +85,12 @@ a {
     color: #fff;
     z-index: 99;
     border-radius: 5px;
+}
+
+#driver-highlighted-element-stage {
+    background: transparent !important;
+    border: 2px solid #fff;
+}
+div#driver-page-overlay {
+    opacity: 0.5 !important;
 }

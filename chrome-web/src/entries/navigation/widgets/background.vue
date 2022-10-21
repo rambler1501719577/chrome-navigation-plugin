@@ -1,5 +1,8 @@
 <template>
     <div class="background-container">
+        <div class="info">
+            <el-alert>后续会支持上传本地图片作为背景</el-alert>
+        </div>
         <div class="gallary">
             <img
                 @click="updateBackground('1.jpg')"

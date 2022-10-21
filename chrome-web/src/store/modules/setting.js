@@ -2,7 +2,8 @@ export default {
     namespaced: true,
     state: {
         dataSource: "local", // 数据源 remote | local
-        background: "1.jpg" // 背景图片名称 (位置固定：根目录background下)
+        background: "10.jpg", // 背景图片名称 (位置固定：根目录background下)
+        isGuide: false
     },
     mutations: {
         UPDATE_DATASOURCE(state, param) {
@@ -19,6 +20,10 @@ export default {
         },
         UPDATE_BACKGROUND(state, param) {
             state.background = param;
+        },
+        UPDATE_IS_GUIDE(state) {
+            // 只指引一次，更新后置为false
+            state.isGuide = true;
         }
     },
     actions: {
@@ -30,6 +35,9 @@ export default {
         },
         updateBackground({ commit }, payload) {
             commit("UPDATE_BACKGROUND", payload);
+        },
+        updateIsGuide({ commit }) {
+            commit("UPDATE_IS_GUIDE");
         }
     }
 };

@@ -6,15 +6,15 @@
         }"
     >
         <!-- 搜索 -->
-        <div class="search">
+        <div class="search" id="search-window">
             <rambler-search />
         </div>
         <!-- common bookmarks -->
-        <div class="frequent-bookmarks">
+        <div class="frequent-bookmarks" id="frequent-window">
             <frequent-bookmarks />
         </div>
         <!-- 侧边栏 -->
-        <div class="fixed-sidebar">
+        <div class="fixed-sidebar" id="sidebar-window">
             <!-- 本地书签设置 -->
             <el-tooltip
                 class="item"
@@ -23,11 +23,15 @@
                 placement="right"
             >
                 <div class="box-item">
-                    <rambler-icon
-                        @click.native="open('bookmarkDialogVisible')"
-                        name="bookmark"
-                        class="icon"
-                    ></rambler-icon>
+                    <div
+                        class="icon-wrapper"
+                        @click="open('bookmarkDialogVisible')"
+                    >
+                        <rambler-icon
+                            name="bookmark"
+                            class="icon"
+                        ></rambler-icon>
+                    </div>
                     <el-dialog
                         width="1000px"
                         title="本地书签管理"
@@ -49,11 +53,12 @@
                 placement="right"
             >
                 <div class="box-item">
-                    <rambler-icon
-                        @click.native="open('engineDialogVisible')"
-                        name="engine"
-                        class="icon"
-                    ></rambler-icon>
+                    <div
+                        class="icon-wrapper"
+                        @click="open('engineDialogVisible')"
+                    >
+                        <rambler-icon name="engine" class="icon"></rambler-icon>
+                    </div>
                     <el-dialog
                         width="1000px"
                         title="搜索引擎配置"
@@ -75,11 +80,15 @@
                 placement="right"
             >
                 <div class="box-item">
-                    <rambler-icon
-                        @click.native="open('frequentBookmarkDialogVisible')"
-                        name="website"
-                        class="icon"
-                    ></rambler-icon>
+                    <div
+                        class="icon-wrapper"
+                        @click="open('frequentBookmarkDialogVisible')"
+                    >
+                        <rambler-icon
+                            name="website"
+                            class="icon"
+                        ></rambler-icon>
+                    </div>
                     <el-dialog
                         width="1000px"
                         title="常用网站配置"
@@ -93,9 +102,7 @@
                     </el-dialog>
                 </div>
             </el-tooltip>
-
             <!-- 换肤 -->
-            <!-- 数据管理 -->
             <el-tooltip
                 class="item"
                 effect="dark"
@@ -103,11 +110,12 @@
                 placement="right"
             >
                 <div class="box-item">
-                    <rambler-icon
-                        @click.native="open('skinDialogVisible')"
-                        name="skin"
-                        class="icon"
-                    ></rambler-icon>
+                    <div
+                        class="icon-wrapper"
+                        @click="open('skinDialogVisible')"
+                    >
+                        <rambler-icon name="skin" class="icon"></rambler-icon>
+                    </div>
                     <el-dialog
                         width="1000px"
                         title="背景设置"
@@ -121,7 +129,6 @@
                     </el-dialog>
                 </div>
             </el-tooltip>
-
             <!-- 数据管理 -->
             <el-tooltip
                 class="item"
@@ -130,11 +137,12 @@
                 placement="right"
             >
                 <div class="box-item">
-                    <rambler-icon
-                        @click.native="open('dialogVisible')"
-                        name="setting"
-                        class="icon"
-                    ></rambler-icon>
+                    <div class="icon-wrapper" @click="open('dialogVisible')">
+                        <rambler-icon
+                            name="setting"
+                            class="icon"
+                        ></rambler-icon>
+                    </div>
                     <el-dialog
                         width="700px"
                         title="数据管理"
@@ -144,8 +152,53 @@
                         :close-on-click-modal="false"
                         v-dialogDrag
                     >
-                        <rambler-setting></rambler-setting>
+                        <data-manage></data-manage>
                     </el-dialog>
+                </div>
+            </el-tooltip>
+            <!-- 账户设置 -->
+            <el-tooltip
+                class="item"
+                effect="dark"
+                content="账户设置"
+                placement="right"
+                v-if="isLogin"
+            >
+                <div class="box-item">
+                    <div
+                        class="icon-wrapper"
+                        @click="open('accountDialogVisible')"
+                    >
+                        <rambler-icon
+                            name="account"
+                            class="icon"
+                        ></rambler-icon>
+                    </div>
+
+                    <el-dialog
+                        width="700px"
+                        title="账户设置"
+                        :modal="false"
+                        top="10vh"
+                        :visible.sync="accountDialogVisible"
+                        :close-on-click-modal="false"
+                        v-dialogDrag
+                    >
+                        <account-setting></account-setting>
+                    </el-dialog>
+                </div>
+            </el-tooltip>
+
+            <el-tooltip
+                class="item"
+                effect="dark"
+                content="使用教程"
+                placement="right"
+            >
+                <div class="box-item">
+                    <div class="icon-wrapper" @click="guide">
+                        <rambler-icon name="guide" class="icon"></rambler-icon>
+                    </div>
                 </div>
             </el-tooltip>
         </div>
@@ -153,9 +206,11 @@
 </template>
 
 <script>
+import Driver from "driver.js";
+import "driver.js/dist/driver.min.css";
 import { mapActions } from "vuex";
 import { getToken } from "@/utils/token";
-import Setting from "./settings/index";
+import DataManage from "./widgets/data-manage";
 import BookmarkSetting from "./widgets/bookmark";
 import frequentBookmarks from "./widgets/frequent-bookmarks";
 import Search from "./widgets/search";
@@ -164,6 +219,7 @@ import { getTodos } from "@/api/modules/todo";
 import EngineSetting from "./widgets/engine";
 import FrequentBookmarkSetting from "./widgets/common-site";
 import BackgroundSetting from "./widgets/background";
+import AccountSetting from "./widgets/account";
 export default {
     name: "IndexLayout",
     data() {
@@ -172,12 +228,16 @@ export default {
             bookmarkDialogVisible: false,
             engineDialogVisible: false,
             frequentBookmarkDialogVisible: false,
-            skinDialogVisible: false
+            skinDialogVisible: false,
+            accountDialogVisible: false,
+            isLogin: false,
+            driver: null
         };
     },
     async created() {
         const token = await getToken();
         if (token && token.value) {
+            this.isLogin = true;
             // 获取和现在相差时间毫秒数
             const time = token.expirationDate * 1000 - new Date().getTime();
             const hours = (time / 1000 / 60 / 60).toFixed(2);
@@ -189,15 +249,21 @@ export default {
         }
         // 加载本地书签
         this.loadLocalBookmark();
+        // 定义指引步骤
+        this.defineSteps();
+        if (!this.$store.getters.isGuide) {
+            this.guide();
+        }
     },
     components: {
         RamblerSearch: Search,
         frequentBookmarks: frequentBookmarks,
-        RamblerSetting: Setting,
+        DataManage: DataManage,
         BookmarkSetting: BookmarkSetting,
         EngineSetting: EngineSetting,
         FrequentBookmarkSetting: FrequentBookmarkSetting,
-        BackgroundSetting: BackgroundSetting
+        BackgroundSetting: BackgroundSetting,
+        AccountSetting: AccountSetting
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -235,6 +301,52 @@ export default {
                 return console.log("请在chrome中调试本地书签");
             }
             this.updateBookmark();
+        },
+        defineSteps() {
+            this.driver = new Driver({
+                padding: 0,
+                doneBtnText: "完成",
+                closeBtnText: "关闭",
+                nextBtnText: "下一步", // Next button text for this step
+                prevBtnText: "上一步"
+            });
+            this.driver.defineSteps([
+                {
+                    element: "#search-window",
+                    popover: {
+                        className: "first-step-popover-class",
+                        title: "搜索模块",
+                        description:
+                            "将在【书签】【历史记录】中进行检索, 可以使用上下箭头切换结果并使用回车跳转, 上方可以切换不同搜索引擎",
+                        position: "bottom-center",
+                        offset: 0
+                    }
+                },
+                {
+                    element: "#frequent-window",
+                    popover: {
+                        title: "常用菜单导航",
+                        description:
+                            "方便快速访问常用网站, 可以在右侧进行添加和修改",
+                        position: "bottom-center"
+                    }
+                },
+                {
+                    element: "#sidebar-window",
+                    popover: {
+                        title: "设置区域",
+                        description:
+                            "这里可以对整个插件进行配置, 鼠标悬停会有文字提示",
+                        position: "left-center"
+                    }
+                }
+            ]);
+        },
+        // 用户指引
+        guide(e) {
+            this.driver.start();
+            this.$store.dispatch("setting/updateIsGuide");
+            if (e) e.stopPropagation();
         }
     }
 };
@@ -252,6 +364,7 @@ export default {
     .search {
         max-width: 60%;
         margin: 30px auto;
+        padding: 5px;
     }
     .frequent-bookmarks {
         width: 80%;
@@ -268,10 +381,14 @@ export default {
         .box-item {
             width: 100%;
             height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             cursor: pointer;
+            .icon-wrapper {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
             &:hover .icon {
                 transform: scale(1.3);
             }

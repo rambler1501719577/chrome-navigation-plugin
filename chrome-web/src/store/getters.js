@@ -49,8 +49,6 @@ const getters = {
     },
     // 本地和远程书签合并后的集合
     flatternBookmark: state => {
-        // 深克隆
-
         let treeBookmark = [
             ..._.cloneDeep(state.bookmark.bookmark),
             ..._.cloneDeep(state.bookmark.remoteBookmark)
@@ -72,6 +70,8 @@ const getters = {
         flatternBookmark.push(...getChildren(treeBookmark));
         return flatternBookmark;
     },
-    background: state => `/background/${state.setting.background}`
+    background: state => `/background/${state.setting.background}`,
+    // 是否指引过
+    isGuide: state => state.setting.isGuide
 };
 export default getters;
