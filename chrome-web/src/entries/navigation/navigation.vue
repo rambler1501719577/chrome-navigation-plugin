@@ -202,10 +202,14 @@
                 </div>
             </el-tooltip>
         </div>
+        <div class="time">
+            <time-flip></time-flip>
+        </div>
     </div>
 </template>
 
 <script>
+import TimeFlip from "./components/time-flip";
 import Driver from "driver.js";
 import "driver.js/dist/driver.min.css";
 import { mapActions } from "vuex";
@@ -263,7 +267,8 @@ export default {
         EngineSetting: EngineSetting,
         FrequentBookmarkSetting: FrequentBookmarkSetting,
         BackgroundSetting: BackgroundSetting,
-        AccountSetting: AccountSetting
+        AccountSetting: AccountSetting,
+        TimeFlip: TimeFlip
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
