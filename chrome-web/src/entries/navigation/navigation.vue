@@ -1,5 +1,6 @@
 <template>
     <div
+        v-bubble
         class="page-container"
         :style="{
             backgroundImage: `url('${$store.getters.background}')`

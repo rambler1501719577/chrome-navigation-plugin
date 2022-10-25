@@ -61,8 +61,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .time-flip-container {
-    height: 100px;
-    width: 100%;
+    // height: 100px;
+    // width: 100%;
     margin: 0 auto;
     background: #fff;
     text-align: center;

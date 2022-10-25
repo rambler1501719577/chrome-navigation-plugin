@@ -94,3 +94,9 @@ a {
 div#driver-page-overlay {
     opacity: 0.5 !important;
 }
+.popup-item {
+    display: block;
+    position: absolute;
+    user-select: none;
+    font-size: 24px !important;
+}
