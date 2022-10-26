@@ -6,210 +6,226 @@
             backgroundImage: `url('${$store.getters.background}')`
         }"
     >
-        <!-- 搜索 -->
-        <div class="search" id="search-window">
-            <rambler-search />
-        </div>
-        <!-- common bookmarks -->
-        <div class="frequent-bookmarks" id="frequent-window">
-            <frequent-bookmarks />
-        </div>
-        <!-- 侧边栏 -->
-        <div class="fixed-sidebar" id="sidebar-window">
-            <!-- 本地书签设置 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="本地书签管理"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('bookmarkDialogVisible')"
-                    >
-                        <rambler-icon
-                            name="bookmark"
-                            class="icon"
-                        ></rambler-icon>
+        <div class="content">
+            <!-- 搜索 -->
+            <div class="search" id="search-window">
+                <rambler-search />
+            </div>
+            <!-- common bookmarks -->
+            <div class="frequent-bookmarks" id="frequent-window">
+                <frequent-bookmarks />
+            </div>
+            <!-- 侧边栏 -->
+            <div class="fixed-sidebar" id="sidebar-window">
+                <!-- 本地书签设置 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="本地书签管理"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('bookmarkDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="bookmark"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                        <el-dialog
+                            width="1000px"
+                            title="本地书签管理"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="bookmarkDialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <bookmark-setting></bookmark-setting>
+                        </el-dialog>
                     </div>
-                    <el-dialog
-                        width="1000px"
-                        title="本地书签管理"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="bookmarkDialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <bookmark-setting></bookmark-setting>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-            <!-- 搜索引擎配置 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="搜索引擎配置"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('engineDialogVisible')"
-                    >
-                        <rambler-icon name="engine" class="icon"></rambler-icon>
+                </el-tooltip>
+                <!-- 搜索引擎配置 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="搜索引擎配置"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('engineDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="engine"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                        <el-dialog
+                            width="1000px"
+                            title="搜索引擎配置"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="engineDialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <engine-setting></engine-setting>
+                        </el-dialog>
                     </div>
-                    <el-dialog
-                        width="1000px"
-                        title="搜索引擎配置"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="engineDialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <engine-setting></engine-setting>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-            <!-- 常用网站配置 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="配置你常用的网站"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('frequentBookmarkDialogVisible')"
-                    >
-                        <rambler-icon
-                            name="website"
-                            class="icon"
-                        ></rambler-icon>
+                </el-tooltip>
+                <!-- 常用网站配置 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="配置你常用的网站"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('frequentBookmarkDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="website"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                        <el-dialog
+                            width="1000px"
+                            title="常用网站配置"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="frequentBookmarkDialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <frequent-bookmark-setting></frequent-bookmark-setting>
+                        </el-dialog>
                     </div>
-                    <el-dialog
-                        width="1000px"
-                        title="常用网站配置"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="frequentBookmarkDialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <frequent-bookmark-setting></frequent-bookmark-setting>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-            <!-- 换肤 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="背景设置"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('skinDialogVisible')"
-                    >
-                        <rambler-icon name="skin" class="icon"></rambler-icon>
+                </el-tooltip>
+                <!-- 换肤 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="背景设置"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('skinDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="skin"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                        <el-dialog
+                            width="1000px"
+                            title="背景设置"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="skinDialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <background-setting></background-setting>
+                        </el-dialog>
                     </div>
-                    <el-dialog
-                        width="1000px"
-                        title="背景设置"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="skinDialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <background-setting></background-setting>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-            <!-- 数据管理 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="数据管理"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div class="icon-wrapper" @click="open('dialogVisible')">
-                        <rambler-icon
-                            name="setting"
-                            class="icon"
-                        ></rambler-icon>
+                </el-tooltip>
+                <!-- 数据管理 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="数据管理"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('dialogVisible')"
+                        >
+                            <rambler-icon
+                                name="setting"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                        <el-dialog
+                            width="700px"
+                            title="数据管理"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="dialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <data-manage></data-manage>
+                        </el-dialog>
                     </div>
-                    <el-dialog
-                        width="700px"
-                        title="数据管理"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="dialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <data-manage></data-manage>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-            <!-- 账户设置 -->
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="账户设置"
-                placement="right"
-                v-if="isLogin"
-            >
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('accountDialogVisible')"
-                    >
-                        <rambler-icon
-                            name="account"
-                            class="icon"
-                        ></rambler-icon>
-                    </div>
+                </el-tooltip>
+                <!-- 账户设置 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="账户设置"
+                    placement="right"
+                    v-if="isLogin"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('accountDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="account"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
 
-                    <el-dialog
-                        width="700px"
-                        title="账户设置"
-                        :modal="false"
-                        top="10vh"
-                        :visible.sync="accountDialogVisible"
-                        :close-on-click-modal="false"
-                        v-dialogDrag
-                    >
-                        <account-setting></account-setting>
-                    </el-dialog>
-                </div>
-            </el-tooltip>
-
-            <el-tooltip
-                class="item"
-                effect="dark"
-                content="使用教程"
-                placement="right"
-            >
-                <div class="box-item">
-                    <div class="icon-wrapper" @click="guide">
-                        <rambler-icon name="guide" class="icon"></rambler-icon>
+                        <el-dialog
+                            width="700px"
+                            title="账户设置"
+                            :modal="false"
+                            top="10vh"
+                            :visible.sync="accountDialogVisible"
+                            :close-on-click-modal="false"
+                            v-dialogDrag
+                        >
+                            <account-setting></account-setting>
+                        </el-dialog>
                     </div>
-                </div>
-            </el-tooltip>
+                </el-tooltip>
+
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="使用教程"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div class="icon-wrapper" @click="guide">
+                            <rambler-icon
+                                name="guide"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                    </div>
+                </el-tooltip>
+            </div>
+            <div class="time">
+                <time-flip></time-flip>
+            </div>
         </div>
-        <div class="time">
-            <time-flip></time-flip>
-        </div>
+        <component :is="background"></component>
     </div>
 </template>
 
 <script>
+import BubbleBackground from "./background/bubble";
 import TimeFlip from "./components/time-flip";
 import Driver from "driver.js";
 import "driver.js/dist/driver.min.css";
@@ -236,7 +252,8 @@ export default {
             skinDialogVisible: false,
             accountDialogVisible: false,
             isLogin: false,
-            driver: null
+            driver: null,
+            background: "bubble-background"
         };
     },
     async created() {
@@ -269,7 +286,8 @@ export default {
         FrequentBookmarkSetting: FrequentBookmarkSetting,
         BackgroundSetting: BackgroundSetting,
         AccountSetting: AccountSetting,
-        TimeFlip: TimeFlip
+        TimeFlip: TimeFlip,
+        BubbleBackground: BubbleBackground
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -367,56 +385,64 @@ export default {
     background-attachment: fixed;
     overflow-x: hidden;
     position: relative;
-    .search {
-        max-width: 60%;
-        margin: 30px auto;
-        padding: 5px;
-    }
-    .frequent-bookmarks {
-        width: 80%;
-        margin: 0 auto;
-    }
-    .fixed-sidebar {
-        width: 60px;
-        height: 100%;
-        position: fixed;
-        right: 0;
+    .content {
+        position: absolute;
+        left: 0;
         top: 0;
-        background: #00000954;
+        width: 100%;
+        height: 100vh;
+        z-index: 20;
+        .search {
+            max-width: 60%;
+            margin: 30px auto;
+            padding: 5px;
+        }
+        .frequent-bookmarks {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .fixed-sidebar {
+            width: 60px;
+            height: 100%;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: #00000954;
 
-        .box-item {
-            width: 100%;
-            height: 60px;
-            cursor: pointer;
-            .icon-wrapper {
+            .box-item {
                 width: 100%;
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                height: 60px;
+                cursor: pointer;
+                .icon-wrapper {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                &:hover .icon {
+                    transform: scale(1.3);
+                }
             }
-            &:hover .icon {
-                transform: scale(1.3);
+
+            .icon {
+                width: 30px;
+                height: 30px;
+                fill: rgb(234, 224, 224);
+                cursor: pointer;
+                margin-bottom: 8px;
+                transition: all 0.3s;
             }
-        }
+            .affix-icon {
+                width: 30px;
+                height: 30px;
+                fill: #ddd;
+                cursor: pointer;
+                transition: all 0.7s;
 
-        .icon {
-            width: 30px;
-            height: 30px;
-            fill: rgb(234, 224, 224);
-            cursor: pointer;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-        }
-        .affix-icon {
-            width: 30px;
-            height: 30px;
-            fill: #ddd;
-            cursor: pointer;
-            transition: all 0.7s;
-
-            &:hover {
-                transform: rotate(270deg);
+                &:hover {
+                    transform: rotate(270deg);
+                }
             }
         }
     }
