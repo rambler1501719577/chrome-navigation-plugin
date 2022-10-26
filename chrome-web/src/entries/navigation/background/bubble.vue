@@ -9,11 +9,14 @@ export default {
     props: {},
     data() {
         return {
-            bubbleCount: 50
+            bubbleCount: 10
         };
     },
     mounted() {
         this.generateBubble();
+        setInterval(() => {
+            this.generateBubble();
+        }, 1000);
     },
     methods: {
         generateBubble() {
@@ -25,6 +28,9 @@ export default {
                     10
                 )};--speed:${randomNum(10, 20)};--breath:${randomNum(10, 20)}`;
                 this.$el.appendChild(bubble);
+                setTimeout(() => {
+                    bubble.remove();
+                }, 20000);
             }
         }
     }
@@ -33,7 +39,7 @@ export default {
 <style>
 .bubble-item {
     position: absolute;
-    bottom: 0;
+    bottom: -10px;
     left: calc(var(--left) / 100 * 100vw);
     display: block;
     width: 5px;
@@ -54,5 +60,6 @@ export default {
     width: 100%;
     height: 100vh;
     display: flex;
+    overflow: hidden;
 }
 </style>
