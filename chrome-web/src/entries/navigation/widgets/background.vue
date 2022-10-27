@@ -1,7 +1,9 @@
 <template>
     <div class="background-container">
         <div class="info">
-            <el-alert>后续会支持上传本地图片作为背景</el-alert>
+            <el-alert type="warning" :closable="false"
+                >后续会支持上传本地图片作为背景</el-alert
+            >
         </div>
         <div class="gallary">
             <img
@@ -74,8 +76,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .background-container {
-    height: 570px;
+    max-height: calc(80vh - 30px - 43px);
     overflow: hidden auto;
+    .info {
+        padding: 0 10px 10px 10px;
+    }
     .gallary {
         display: flex;
         justify-content: space-around;

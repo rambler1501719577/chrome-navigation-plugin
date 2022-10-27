@@ -16,7 +16,7 @@ export default {
         this.generateBubble();
         setInterval(() => {
             this.generateBubble();
-        }, 1000);
+        }, 2000);
     },
     methods: {
         generateBubble() {
@@ -30,7 +30,7 @@ export default {
                 this.$el.appendChild(bubble);
                 setTimeout(() => {
                     bubble.remove();
-                }, 20000);
+                }, 15000);
             }
         }
     }

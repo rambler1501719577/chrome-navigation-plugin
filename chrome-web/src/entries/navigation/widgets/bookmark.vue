@@ -132,6 +132,6 @@ export default {
 <style lang="less" scoped>
 .bookmarkmark-container {
     overflow: hidden auto;
-    height: calc(80vh - 30px - 43px);
+    max-height: calc(80vh - 30px - 43px);
 }
 </style>
