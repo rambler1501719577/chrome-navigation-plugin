@@ -127,6 +127,9 @@ export default {
         border-radius: 8px;
         margin-bottom: 10px;
         position: relative;
+        img {
+            user-select: none;
+        }
         .loading {
             position: absolute;
             left: 10px;
@@ -153,6 +156,7 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            user-select: none;
         }
     }
 }

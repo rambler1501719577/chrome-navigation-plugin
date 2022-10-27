@@ -16,7 +16,7 @@
                 <frequent-bookmarks />
             </div>
             <!-- 侧边栏 -->
-            <div class="fixed-sidebar" id="sidebar-window">
+            <div class="fixed-sidebar" v-show="false" id="sidebar-window">
                 <!-- 本地书签设置 -->
                 <el-tooltip
                     class="item"
@@ -221,6 +221,41 @@
             </div>
         </div>
         <component :is="background"></component>
+        <div
+            class="popup"
+            v-show="contextMenuShow"
+            :style="{
+                left: position.left + 'px',
+                top: position.top + 'px'
+            }"
+        >
+            <ul>
+                <li @click="open('bookmarkDialogVisible')">
+                    <rambler-icon name="bookmark" class="icon"></rambler-icon>
+                    <span>本地书签管理</span>
+                </li>
+                <li @click="open('engineDialogVisible')">
+                    <rambler-icon name="engine" class="icon"></rambler-icon>
+                    <span>搜索引擎配置</span>
+                </li>
+                <li @click="open('frequentBookmarkDialogVisible')">
+                    <rambler-icon name="website" class="icon"></rambler-icon>
+                    <span>常用网站配置</span>
+                </li>
+                <li @click="open('skinDialogVisible')">
+                    <rambler-icon name="skin" class="icon"></rambler-icon>
+                    <span>切换背景</span>
+                </li>
+                <li @click="open('dialogVisible')">
+                    <rambler-icon name="skin" class="icon"></rambler-icon>
+                    <span>导入/导出数据</span>
+                </li>
+                <li @click="guide">
+                    <rambler-icon name="guide" class="icon"></rambler-icon>
+                    <span>观看教程</span>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -253,7 +288,12 @@ export default {
             accountDialogVisible: false,
             isLogin: false,
             driver: null,
-            background: "bubble-background"
+            contextMenuShow: false,
+            background: "bubble-background",
+            position: {
+                left: 0,
+                top: 0
+            }
         };
     },
     async created() {
@@ -276,6 +316,13 @@ export default {
         if (!this.$store.getters.isGuide) {
             this.guide();
         }
+        window.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            this.showContextMenu(e);
+        });
+        window.addEventListener("click", e => {
+            this.contextMenuShow = false;
+        });
     },
     components: {
         RamblerSearch: Search,
@@ -293,7 +340,14 @@ export default {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
         open(type) {
+            console.log(1);
             this[type] = true;
+        },
+        showContextMenu(e) {
+            this.contextMenuShow = true;
+            const { pageX, pageY } = e;
+            this.position.left = pageX;
+            this.position.top = pageY;
         },
         // 请求远程数据(不缓存)
         loadRemoteData(token) {
@@ -368,9 +422,12 @@ export default {
         },
         // 用户指引
         guide(e) {
-            this.driver.start();
-            this.$store.dispatch("setting/updateIsGuide");
-            if (e) e.stopPropagation();
+            this.contextMenuShow = false;
+            this.$nextTick(() => {
+                this.driver.start();
+                this.$store.dispatch("setting/updateIsGuide");
+                if (e) e.stopPropagation();
+            });
         }
     }
 };
@@ -442,6 +499,31 @@ export default {
 
                 &:hover {
                     transform: rotate(270deg);
+                }
+            }
+        }
+    }
+    .popup {
+        position: absolute;
+        z-index: 9999;
+        width: 180px;
+        background: #fff;
+        box-shadow: 0 2px 2px #333;
+        ul {
+            list-style: none;
+            li {
+                height: 40px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 0 0 0 8px;
+                cursor: pointer;
+                .icon {
+                    fill: #333;
+                    margin-right: 4px;
+                }
+                &:hover {
+                    background: #eee;
                 }
             }
         }
