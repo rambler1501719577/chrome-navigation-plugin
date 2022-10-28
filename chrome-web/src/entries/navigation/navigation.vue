@@ -15,9 +15,79 @@
             <div class="frequent-bookmarks" id="frequent-window">
                 <frequent-bookmarks />
             </div>
+            <!-- 管理弹窗 -->
+            <div class="dialog">
+                <el-dialog
+                    width="1000px"
+                    title="本地书签管理"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="bookmarkDialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <bookmark-setting></bookmark-setting>
+                </el-dialog>
+                <el-dialog
+                    width="1000px"
+                    title="搜索引擎配置"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="engineDialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <engine-setting></engine-setting>
+                </el-dialog>
+                <el-dialog
+                    width="1000px"
+                    title="常用网站配置"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="frequentBookmarkDialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <frequent-bookmark-setting></frequent-bookmark-setting>
+                </el-dialog>
+                <el-dialog
+                    width="1000px"
+                    title="背景设置"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="skinDialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <background-setting></background-setting>
+                </el-dialog>
+                <el-dialog
+                    width="700px"
+                    title="数据管理"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="dialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <data-manage></data-manage>
+                </el-dialog>
+                <el-dialog
+                    v-if="isLogin"
+                    width="700px"
+                    title="账户设置"
+                    :modal="false"
+                    top="10vh"
+                    :visible.sync="accountDialogVisible"
+                    :close-on-click-modal="false"
+                    v-dialogDrag
+                >
+                    <account-setting></account-setting>
+                </el-dialog>
+            </div>
+
             <!-- 侧边栏 -->
-            <div class="fixed-sidebar" v-show="false" id="sidebar-window">
-                <!-- 本地书签设置 -->
+            <div class="fixed-sidebar" v-if="false" id="sidebar-window">
                 <el-tooltip
                     class="item"
                     effect="dark"
@@ -34,20 +104,8 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-                        <el-dialog
-                            width="1000px"
-                            title="本地书签管理"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="bookmarkDialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <bookmark-setting></bookmark-setting>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
-                <!-- 搜索引擎配置 -->
                 <el-tooltip
                     class="item"
                     effect="dark"
@@ -64,20 +122,8 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-                        <el-dialog
-                            width="1000px"
-                            title="搜索引擎配置"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="engineDialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <engine-setting></engine-setting>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
-                <!-- 常用网站配置 -->
                 <el-tooltip
                     class="item"
                     effect="dark"
@@ -94,17 +140,6 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-                        <el-dialog
-                            width="1000px"
-                            title="常用网站配置"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="frequentBookmarkDialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <frequent-bookmark-setting></frequent-bookmark-setting>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
                 <!-- 换肤 -->
@@ -124,17 +159,6 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-                        <el-dialog
-                            width="1000px"
-                            title="背景设置"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="skinDialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <background-setting></background-setting>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
                 <!-- 数据管理 -->
@@ -154,17 +178,6 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-                        <el-dialog
-                            width="700px"
-                            title="数据管理"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="dialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <data-manage></data-manage>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
                 <!-- 账户设置 -->
@@ -185,18 +198,6 @@
                                 class="icon"
                             ></rambler-icon>
                         </div>
-
-                        <el-dialog
-                            width="700px"
-                            title="账户设置"
-                            :modal="false"
-                            top="10vh"
-                            :visible.sync="accountDialogVisible"
-                            :close-on-click-modal="false"
-                            v-dialogDrag
-                        >
-                            <account-setting></account-setting>
-                        </el-dialog>
                     </div>
                 </el-tooltip>
 
@@ -220,7 +221,9 @@
                 <time-flip></time-flip>
             </div>
         </div>
+        <!-- 动态背景 -->
         <component :is="background"></component>
+        <!-- 鼠标右键 -->
         <div
             class="popup"
             v-show="contextMenuShow"
@@ -249,10 +252,6 @@
                 <li @click="open('dialogVisible')">
                     <rambler-icon name="skin" class="icon"></rambler-icon>
                     <span>导入/导出数据</span>
-                </li>
-                <li @click="guide">
-                    <rambler-icon name="guide" class="icon"></rambler-icon>
-                    <span>观看教程</span>
                 </li>
             </ul>
         </div>
@@ -316,12 +315,16 @@ export default {
         if (!this.$store.getters.isGuide) {
             this.guide();
         }
-        window.addEventListener("contextmenu", e => {
-            e.preventDefault();
-            this.showContextMenu(e);
-        });
-        window.addEventListener("click", e => {
-            this.contextMenuShow = false;
+    },
+    mounted() {
+        this.$nextTick(() => {
+            window.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                this.showContextMenu(e);
+            });
+            window.addEventListener("click", e => {
+                this.contextMenuShow = false;
+            });
         });
     },
     components: {
@@ -340,14 +343,21 @@ export default {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
         open(type) {
-            console.log(1);
             this[type] = true;
         },
         showContextMenu(e) {
+            const contextMenu = document.querySelector(".popup");
+            // 高度非固定，通过子节点个数 × 子节点高度获得
+            const contextMenuHeight =
+                contextMenu.querySelectorAll("li").length * 40;
+            const viewportHeight =
+                document.documentElement.clientHeight ||
+                document.body.clientHeight;
+            const heightGap = viewportHeight - contextMenuHeight;
             this.contextMenuShow = true;
             const { pageX, pageY } = e;
             this.position.left = pageX;
-            this.position.top = pageY;
+            this.position.top = pageY > heightGap ? heightGap : pageY;
         },
         // 请求远程数据(不缓存)
         loadRemoteData(token) {
@@ -408,16 +418,16 @@ export default {
                             "方便快速访问常用网站, 可以在右侧进行添加和修改",
                         position: "bottom-center"
                     }
-                },
-                {
-                    element: "#sidebar-window",
-                    popover: {
-                        title: "设置区域",
-                        description:
-                            "这里可以对整个插件进行配置, 鼠标悬停会有文字提示",
-                        position: "left-center"
-                    }
                 }
+                // {
+                //     element: "#sidebar-window",
+                //     popover: {
+                //         title: "设置区域",
+                //         description:
+                //             "这里可以对整个插件进行配置, 鼠标悬停会有文字提示",
+                //         position: "left-center"
+                //     }
+                // }
             ]);
         },
         // 用户指引
@@ -506,10 +516,11 @@ export default {
     .popup {
         position: absolute;
         z-index: 9999;
-        width: 180px;
+        width: 160px;
         background: #fff;
         box-shadow: 0 2px 2px #333;
         ul {
+            width: 100%;
             list-style: none;
             li {
                 height: 40px;
@@ -517,6 +528,8 @@ export default {
                 justify-content: flex-start;
                 align-items: center;
                 padding: 0 0 0 8px;
+                font-weight: 300;
+                font-size: 14px;
                 cursor: pointer;
                 .icon {
                     fill: #333;
