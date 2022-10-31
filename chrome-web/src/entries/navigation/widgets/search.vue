@@ -141,7 +141,11 @@ export default {
             if (!keywords) return [];
             let res = [];
             this.flatternBookmark.forEach(element => {
-                if (element.title.indexOf(keywords) !== -1)
+                if (
+                    element.title
+                        .toLowerCase()
+                        .indexOf(keywords.toLowerCase()) !== -1
+                )
                     res.push({
                         ...element,
                         from: "bookmark"
