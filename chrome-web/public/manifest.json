@@ -9,8 +9,7 @@
         "tabs",
         "scripting",
         "cookies",
-        "history",
-        "chrome://favicon2"
+        "history"
     ],
     "optional_permissions": [],
     "host_permissions": ["http://www.suhaoblog.cn/"],

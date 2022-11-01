@@ -21,8 +21,9 @@
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="搜万物 | 使用 ⬆ ⬇ 箭头切换结果"
+                placeholder="可使用 ⬆ ⬇ 箭头切换结果"
             />
+            <!-- 优雅、着实优雅 -->
             <img
                 class="search-icon"
                 src="../../../assets/images/search.png"
