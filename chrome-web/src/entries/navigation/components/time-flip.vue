@@ -1,18 +1,20 @@
 <template>
-    <div class="time-flip-container">
-        <!-- <div class="hour">
-            <div
-                :class="{
-                    digit: true,
-                    flip: test
-                }"
-            >
-                <span>1</span>
-            </div>
+    <div class="time-flip-container" draggable="false">
+        <div class="time">
+            <span>
+                {{ time.hour[0] }}
+                {{ time.hour[1] }}
+            </span>
+
+            <span>:</span>
+            <span>
+                {{ time.minute[0] }}
+                {{ time.minute[1] }}
+            </span>
         </div>
-        <el-button @click="test = !test">
-            翻转
-        </el-button> -->
+        <div class="date">
+            {{ date.month }}月{{ date.date }}日, 星期{{ date.day }}
+        </div>
     </div>
 </template>
 
@@ -30,17 +32,18 @@ export default {
                 minute: {
                     0: 0,
                     1: 0
-                },
-                second: {
-                    0: 0,
-                    1: 0
                 }
             },
-            test: false
+            date: {
+                month: "",
+                date: "",
+                day: ""
+            }
         };
     },
     created() {
-        // this.updateTime();
+        this.updateTime();
+        this.updateDate();
     },
     methods: {
         updateTime() {
@@ -51,35 +54,58 @@ export default {
             const minute = date.getMinutes();
             this.time.minute[0] = minute.toString()[0] || "0";
             this.time.minute[1] = minute.toString()[1] || "0";
-            const second = date.getSeconds();
-            this.time.second[0] = second.toString()[0] || "0";
-            this.time.second[1] = second.toString()[1] || "0";
             setTimeout(this.updateTime, 1000);
+        },
+        updateDate() {
+            const date = new Date();
+            this.date.month = date.getMonth() + 1;
+            this.date.date = date.getDate();
+            const day = date.getDay();
+            switch (day) {
+                case 0:
+                    this.date.day = "天";
+                    break;
+                case 1:
+                    this.date.day = "一";
+                    break;
+                case 2:
+                    this.date.day = "二";
+                    break;
+                case 3:
+                    this.date.day = "三";
+                    break;
+                case 4:
+                    this.date.day = "四";
+                    break;
+                case 5:
+                    this.date.day = "五";
+                    break;
+                case 6:
+                    this.date.day = "六";
+                    break;
+            }
         }
     }
 };
 </script>
 <style lang="less" scoped>
 .time-flip-container {
-    // height: 100px;
-    // width: 100%;
     margin: 0 auto;
-    background: #fff;
+    color: #fff;
     text-align: center;
-    line-height: 100px;
-    font-size: 30px;
-    perspective: 1000;
-    .hour {
-        .digit {
-            width: 100px;
-            height: 100px;
-            background: red;
-            transition: all 0.3s linear;
-            transform-origin: top;
-        }
-        .flip {
-            transform: rotate3d(180deg, 0, 0);
-        }
+
+    .time {
+        height: 50px;
+        line-height: 50px;
+        font-size: 80px;
+        margin-bottom: 40px;
+        user-select: none;
+    }
+    .date {
+        height: 50px;
+        line-height: 50px;
+        font-size: 40px;
+        user-select: none;
     }
 }
 </style>

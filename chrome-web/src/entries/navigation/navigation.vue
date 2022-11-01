@@ -512,6 +512,11 @@ export default {
                 }
             }
         }
+        .time {
+            position: absolute;
+            right: 60px;
+            bottom: 60px;
+        }
     }
     .popup {
         position: absolute;
