@@ -18,11 +18,13 @@
             </a>
             <!-- 删除icon -->
             <div class="delete-icon">
-                <a
-                    @mouseover="handleMouseOver"
-                    @click="deleteFrequentSite(bookmark)"
-                    >x</a
-                >
+                <a @click="deleteFrequentSite(bookmark)"
+                    ><rambler-icon
+                        @mouseover.native="handleMouseOver"
+                        class="close-icon"
+                        name="close-light"
+                    ></rambler-icon
+                ></a>
             </div>
         </div>
         <div class="bookitem" v-if="showAddMore" @click="showDialog">
@@ -139,7 +141,7 @@ export default {
                 "none";
         },
         handleMouseOver(e) {
-            e.target.parentNode.style.display = "block";
+            e.target.parentNode.parentNode.style.display = "block";
         },
         showDialog() {
             this.dialogVisible = true;
@@ -202,7 +204,7 @@ export default {
                 align-items: center;
                 .add-icon {
                     fill: rgb(77, 71, 71) !important;
-                    font-size: 20px;
+                    font-size: 16px;
                     font-weight: 200;
                 }
             }
@@ -219,11 +221,13 @@ export default {
         .delete-icon {
             position: absolute;
             display: none;
-            right: 8px;
+            right: 4px;
             top: -10px;
-            a {
-                color: #fff;
-                font-size: 20px;
+            .close-icon {
+                fill: #65605c;
+                &:hover {
+                    fill: #fff;
+                }
             }
         }
     }

@@ -25,14 +25,8 @@ export default {
     data() {
         return {
             time: {
-                hour: {
-                    0: 0,
-                    1: 0
-                },
-                minute: {
-                    0: 0,
-                    1: 0
-                }
+                hour: "",
+                minute: ""
             },
             date: {
                 month: "",
@@ -48,12 +42,12 @@ export default {
     methods: {
         updateTime() {
             const date = new Date();
-            const hour = date.getHours();
-            this.time.hour[0] = hour.toString()[0] || "0";
-            this.time.hour[1] = hour.toString()[1] || "0";
-            const minute = date.getMinutes();
-            this.time.minute[0] = minute.toString()[0] || "0";
-            this.time.minute[1] = minute.toString()[1] || "0";
+            let hour = date.getHours().toString();
+            if (hour.length == 1) hour = `0${hour}`;
+            this.time.hour = hour;
+            let minute = date.getMinutes().toString();
+            if (minute.length == 1) minute = `0${minute}`;
+            this.time.minute = minute;
             setTimeout(this.updateTime, 1000);
         },
         updateDate() {

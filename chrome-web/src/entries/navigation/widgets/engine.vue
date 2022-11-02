@@ -73,7 +73,7 @@
                 :class="{ 'add-button': true, 'add-button-active': isActive }"
                 @click="switchStatus"
             >
-                <rambler-icon name="add"></rambler-icon>
+                <rambler-icon class="add-icon" name="add"></rambler-icon>
             </div>
             <div :class="{ 'add-form': true, 'add-form-active': isActive }">
                 <el-form :inline="true" :model="form" size="small">
@@ -236,6 +236,9 @@ export default {
         position: relative;
         height: 40px;
         overflow: hidden;
+        .add-icon {
+            fill: #fff;
+        }
         .add-button {
             position: absolute;
             right: 0;
