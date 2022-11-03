@@ -8,7 +8,7 @@
 
 预览
 
-![image-20221103223213609](D:\Code\chrome-navigation-plugin\images\效果图.png)
+![image-20221103223213609](.\images\效果图.png)
 
 > 目前离线版完全支持，在线版尚在开发中
 
