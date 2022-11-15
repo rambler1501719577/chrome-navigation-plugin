@@ -21,11 +21,16 @@
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
-                placeholder="可使用 ⬆ ⬇ 箭头切换结果"
+                :placeholder="placeholder"
             />
+            <favicon
+                class="search-prefix"
+                :url="currentEngineUrl"
+                :size="20"
+            ></favicon>
             <!-- 优雅、着实优雅 -->
             <img
-                class="search-icon"
+                class="search-suffix"
                 src="../../../assets/images/search.png"
                 height="100%"
                 alt=""
@@ -95,7 +100,6 @@ export default {
         return {
             keywords: "",
             searchResult: [],
-            horizontalIndex: 0, // 水平方向指针位置，标识搜索引擎
             verticalIndex: 0 // 竖直方向指针位置，标识搜索结果第几条
         };
     },
@@ -105,7 +109,14 @@ export default {
             "currentEngine",
             "flatternBookmark",
             "dataSource"
-        ])
+        ]),
+        placeholder: function() {
+            return `在${this.$store.getters.currentEngine}中搜索`;
+        },
+        currentEngineUrl: function() {
+            return this.engines.find(item => item.name == this.currentEngine)
+                ?.searchUrl;
+        }
     },
     methods: {
         ...mapActions("engine", ["updateCurrentEngine"]),
@@ -175,6 +186,11 @@ export default {
             // 重置索引和搜索结果
             this.verticalIndex = 0;
             const searchRes = [];
+            // 搜索引擎中搜索
+            searchRes.push({
+                title: this.keywords,
+                from: "engine"
+            });
             if (this.flatternBookmark.length > 0) {
                 searchRes.push(...this.searchInBookmark(this.keywords));
             }
@@ -184,28 +200,10 @@ export default {
                     ...(await this.searchInHistory(this.keywords, 20))
                 );
             }
-            // 搜索引擎中搜索
-            searchRes.push({
-                title: this.keywords,
-                from: "engine"
-            });
             this.searchResult = searchRes;
             if (!this.keywords) {
                 this.searchResult = [];
             }
-        },
-        // 切换搜索引擎
-        switchEngine: function(keyCode) {
-            // if (keyCode == 37 && this.horizontalIndex > 0) {
-            //     this.horizontalIndex--;
-            // }
-            // if (
-            //     keyCode == 39 &&
-            //     this.horizontalIndex < this.engines.length - 1
-            // ) {
-            //     this.horizontalIndex++;
-            // }
-            // this.updateCurrentEngine(this.engines[this.horizontalIndex].name);
         },
         // 切换搜索结果
         switchResult: function(keyCode) {
@@ -237,7 +235,7 @@ export default {
     mounted() {
         this.$el.addEventListener("keydown", e => {
             if (e.keyCode == 37 || e.keyCode == 39) {
-                this.switchEngine(e.keyCode);
+                // this.switchEngine(e.keyCode);
             }
             if (e.keyCode == 38 || e.keyCode == 40) {
                 this.switchResult(e.keyCode);
@@ -269,6 +267,7 @@ export default {
                 line-height: 35px;
                 user-select: none;
                 margin-right: 10px;
+                border-radius: 5px;
                 transition: all 0.5s;
                 cursor: pointer;
             }
@@ -280,7 +279,7 @@ export default {
     }
     .search-form {
         box-sizing: border-box;
-        padding: 0 25px;
+        padding: 0 25px 0 38px;
         width: 100%;
         height: 50px;
         border-radius: 10px;
@@ -301,8 +300,14 @@ export default {
         #search::placeholder {
             color: #999;
         }
+        .search-prefix {
+            position: absolute;
+            left: 12px;
+            top: 15px;
+            cursor: pointer;
+        }
 
-        .search-icon {
+        .search-suffix {
             position: absolute;
             right: 25px;
             top: 12px;
@@ -321,6 +326,7 @@ export default {
             border-radius: 10px;
             max-height: 360px;
             .result-item {
+                border-left: 5px solid transparent;
                 display: block;
                 height: 45px;
                 box-sizing: border-box;
@@ -344,6 +350,7 @@ export default {
             }
             .is-current {
                 background: #eee;
+                border-left-color: rgb(62, 133, 191);
             }
         }
     }

@@ -1,19 +1,13 @@
 <template>
     <div class="time-flip-container" draggable="false">
         <div class="time">
-            <span>
-                {{ time.hour[0] }}
-                {{ time.hour[1] }}
-            </span>
+            <span> {{ time.hour[0] }}{{ time.hour[1] }} </span>
 
             <span>:</span>
-            <span>
-                {{ time.minute[0] }}
-                {{ time.minute[1] }}
-            </span>
+            <span> {{ time.minute[0] }}{{ time.minute[1] }} </span>
         </div>
         <div class="date">
-            {{ date.month }}月{{ date.date }}日, 星期{{ date.day }}
+            {{ date.month }}月{{ date.date }}日 星期{{ date.day }}
         </div>
     </div>
 </template>
@@ -87,6 +81,7 @@ export default {
     margin: 0 auto;
     color: #fff;
     text-align: center;
+    font-family: "龙吟手书";
 
     .time {
         height: 50px;

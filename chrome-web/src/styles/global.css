@@ -102,6 +102,29 @@ div#driver-page-overlay {
     font-size: 24px !important;
 }
 
+@font-face {
+    font-family: "龙吟手书";
+    src: url("../assets/fonts/龙吟手书.ttf");
+}
+
+@font-face {
+    font-family: "qwjh3";
+    src: url("../assets/fonts/字体圈伟君黑W3.ttf");
+}
+@font-face {
+    font-family: "qwj1";
+    src: url("../assets/fonts/字体圈伟君黑W1.ttf");
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @keyframes bubble {
     from {
         bottom: 0;
