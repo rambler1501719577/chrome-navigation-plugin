@@ -8,6 +8,7 @@
         v-rambler-loading="loading"
     >
         <div class="content" v-if="loadSucc"></div>
+
         <div v-else>
             <img
                 width="100%"
@@ -40,19 +41,21 @@ export default {
     },
     directives: {
         "rambler-loading": {
-            inserted: function(el) {
-                const svgDom = document.createElement("i");
-                svgDom.className = "iconfont icon-loading";
-                // style会打上hash值, 样式不会应用到当前i标签、因此这样写
-                svgDom.style =
-                    "line-height: 20px;text-align: center;font-size: 16px;display: block;animation: rotate 1.7s linear infinite;";
-                const box = el.querySelector(".content");
-                box.innerHTML = "";
-                box.appendChild(svgDom);
-            },
             update(el, { value }) {
                 if (!value) {
-                    el.querySelector(".icon-loading").remove();
+                    const dom = el.querySelector(".icon-loading");
+                    dom && dom.remove();
+                } else {
+                    const svgDom = document.createElement("i");
+                    svgDom.className = "iconfont icon-loading";
+                    // style会打上hash值, 样式不会应用到当前i标签、因此这样写
+                    svgDom.style =
+                        "line-height: 20px;text-align: center;font-size: 16px;display: block;animation: rotate 1.7s linear infinite;";
+                    const box = el.querySelector(".content");
+                    if (box) {
+                        box.innerHTML = "";
+                        box.appendChild(svgDom);
+                    }
                 }
             }
         }
@@ -89,6 +92,8 @@ export default {
         url: {
             immediate: true,
             handler: function(newVal) {
+                this.loadSucc = true;
+                this.loading = true;
                 if (!newVal) return;
                 // 验证网站
                 let siteReg = /https?:\/\/(\w+\.?)+/;
@@ -114,6 +119,9 @@ export default {
                                             .appendChild(image);
                                     });
                                 };
+                                image.onerror = () => {
+                                    this.loadSucc = false;
+                                };
                             } else {
                                 console.log("加载图标失败");
                                 this.loadSucc = false;
@@ -130,7 +138,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .favicon-container {
-    overflow: hidden;
+    // overflow: hidden;
     .content {
         width: 100%;
         height: 100%;
