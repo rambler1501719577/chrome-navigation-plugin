@@ -1,23 +1,11 @@
 <template>
     <div class="search-container">
-        <!-- 搜索引擎列表 -->
-        <div class="engine-list">
-            <ul>
-                <li
-                    v-for="(engine, index) of engines"
-                    :key="index"
-                    :class="{ selected: engine.name == currentEngine }"
-                    @click="handleEngineClick(engine)"
-                >
-                    {{ engine.name }}
-                </li>
-            </ul>
-        </div>
         <!-- 搜索表单 -->
         <div class="search-form">
             <input
                 id="search"
                 type="text"
+                @click="handleFocus"
                 @input="handleInput"
                 v-model="keywords"
                 autocomplete="off"
@@ -36,57 +24,75 @@
                 alt=""
                 @click="search"
             />
-            <div class="search-result">
-                <ul>
-                    <li v-for="(result, index) of searchResult">
-                        <a
-                            @click="go(result)"
-                            :class="{
-                                'result-item': true,
-                                'is-current': index == verticalIndex
-                            }"
+            <div class="popup-panel" v-show="showPopup">
+                <!-- 搜索引擎 -->
+                <div class="engine-list">
+                    <ul>
+                        <li
+                            v-for="(engine, index) of engines"
+                            :key="index"
+                            :class="{ selected: engine.name == currentEngine }"
+                            @click="handleEngineClick(engine)"
                         >
-                            <!-- 书签搜索结果 -->
-                            <div
-                                v-if="result.from == 'bookmark'"
-                                class="result-item-detail"
+                            {{ engine.name }}
+                        </li>
+                    </ul>
+                </div>
+                <!-- 分割线 -->
+                <div class="divider"></div>
+                <!-- 搜索结果 -->
+                <div class="search-result">
+                    <ul>
+                        <li v-for="(result, index) of searchResult">
+                            <a
+                                @click="go(result)"
+                                :class="{
+                                    'result-item': true,
+                                    'is-current': index == verticalIndex
+                                }"
                             >
-                                <div class="icon">
-                                    <el-tag type="warning">书签</el-tag>
+                                <!-- 书签搜索结果 -->
+                                <div
+                                    v-if="result.from == 'bookmark'"
+                                    class="result-item-detail"
+                                >
+                                    <div class="icon">
+                                        <el-tag type="warning">书签</el-tag>
+                                    </div>
+                                    <div class="title">
+                                        {{ result.title }}
+                                    </div>
                                 </div>
-                                <div class="title">
-                                    {{ result.title }}
+                                <!-- 历史搜索结果 -->
+                                <div
+                                    v-else-if="result.from == 'history'"
+                                    class="result-item-detail"
+                                >
+                                    <div class="icon">
+                                        <el-tag>历史</el-tag>
+                                    </div>
+                                    <div class="title">
+                                        {{ result.title }}
+                                    </div>
+                                    <div class="visit-count">
+                                        近期访问 【{{ result.visitCount }}】次
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- 历史搜索结果 -->
-                            <div
-                                v-else-if="result.from == 'history'"
-                                class="result-item-detail"
-                            >
-                                <div class="icon">
-                                    <el-tag>历史</el-tag>
+                                <!-- 未匹配 -->
+                                <div v-else class="result-item-detail">
+                                    <div class="icon">
+                                        <el-tag type="info">默认</el-tag>
+                                    </div>
+                                    <div class="title">
+                                        去【{{ currentEngine }}】中搜索{{
+                                            result.title
+                                        }}
+                                    </div>
                                 </div>
-                                <div class="title">
-                                    {{ result.title }}
-                                </div>
-                                <div class="visit-count">
-                                    近期访问 【{{ result.visitCount }}】次
-                                </div>
-                            </div>
-                            <!-- 未匹配 -->
-                            <div v-else class="result-item-detail">
-                                <div class="icon">
-                                    <el-tag type="info">默认</el-tag>
-                                </div>
-                                <div class="title">
-                                    去【{{ currentEngine }}】中搜索{{
-                                        result.title
-                                    }}
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -100,6 +106,7 @@ export default {
         return {
             keywords: "",
             searchResult: [],
+            showPopup: false,
             verticalIndex: 0 // 竖直方向指针位置，标识搜索结果第几条
         };
     },
@@ -120,6 +127,12 @@ export default {
     },
     methods: {
         ...mapActions("engine", ["updateCurrentEngine"]),
+        handleFocus() {
+            this.showPopup = true;
+        },
+        handleBlur() {
+            this.showPopup = false;
+        },
         // 跳转目标页面
         go: function(result) {
             if (!result) {
@@ -207,7 +220,7 @@ export default {
         },
         // 切换搜索结果
         switchResult: function(keyCode) {
-            const resultDomHeight = 45; // 搜索结果高度
+            const resultDomHeight = 50; // 搜索结果高度
             const dom = document.querySelector(".search-result");
             const resultCount = dom.clientHeight / resultDomHeight;
             const scrollTop = dom.scrollTop;
@@ -245,44 +258,24 @@ export default {
                 this.go();
             }
         });
+        document.addEventListener("click", e => {
+            const paths = e.path;
+            if (![].find.call(paths, item => item.className == "search")) {
+                this.showPopup = false;
+            }
+        });
     }
 };
 </script>
 <style lang="less" scoped="scoped">
 .search-container {
     position: relative;
-    .engine-list {
-        overflow: hidden;
-        ul {
-            list-style: none;
-            display: flex;
-            margin-bottom: 10px;
-            padding-left: 25px;
-            li {
-                background-color: #fff;
-                color: #333;
-                font-size: 14px;
-                height: 35px;
-                padding: 0 15px;
-                line-height: 35px;
-                user-select: none;
-                margin-right: 10px;
-                border-radius: 5px;
-                transition: all 0.5s;
-                cursor: pointer;
-            }
-            li.selected {
-                background-color: #333;
-                color: #fff;
-            }
-        }
-    }
     .search-form {
         box-sizing: border-box;
-        padding: 0 25px 0 38px;
+        padding: 0 25px 0 50px;
         width: 100%;
         height: 50px;
-        border-radius: 10px;
+        border-radius: 25px;
         background-color: #fff;
         position: relative;
         #search {
@@ -302,7 +295,7 @@ export default {
         }
         .search-prefix {
             position: absolute;
-            left: 12px;
+            left: 20px;
             top: 15px;
             cursor: pointer;
         }
@@ -315,42 +308,76 @@ export default {
             height: 25px;
             cursor: pointer;
         }
-        .search-result {
+        .popup-panel {
             position: absolute;
-            top: 51px;
             left: 0;
-            z-index: 2;
+            top: 60px;
+            z-index: 9;
             width: 100%;
-            background: #ffffff;
-            overflow: hidden auto;
-            border-radius: 10px;
-            max-height: 360px;
-            .result-item {
-                border-left: 5px solid transparent;
-                display: block;
-                height: 45px;
-                box-sizing: border-box;
-                border-bottom: 1px solid #f9f1f1;
-                &:hover {
-                    background: #eee;
-                }
-                .result-item-detail {
-                    height: 100%;
-                    padding: 0 10px;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgb(28 31 35 / 3%),
+                0 16px 48px 8px rgb(28 31 35 / 8%);
+            padding: 20px;
+
+            .engine-list {
+                ul {
+                    list-style: none;
                     display: flex;
-                    justify-content: flex-start;
-                    align-items: center;
-                    .icon {
+                    padding-left: 25px;
+                    li {
+                        background-color: #fff;
+                        color: #333;
+                        font-size: 14px;
+                        height: 32px;
+                        padding: 0 15px;
+                        line-height: 32px;
+                        user-select: none;
                         margin-right: 10px;
+                        border-radius: 8px;
+                        transition: all 0.5s;
+                        cursor: pointer;
                     }
-                    .title {
-                        margin-right: 10px;
+                    li.selected {
+                        background-color: #edf2f5;
+                        color: #1c1f23;
                     }
                 }
             }
-            .is-current {
-                background: #eee;
-                border-left-color: rgb(62, 133, 191);
+
+            .divider {
+                border-bottom: 1px solid #eee;
+                margin: 15px 0;
+            }
+
+            .search-result {
+                width: 100%;
+                max-height: calc(50px * 8);
+                .result-item {
+                    border-radius: 15px;
+                    display: block;
+                    height: 50px;
+                    box-sizing: border-box;
+                    &:hover {
+                        background: #f7f9fa;
+                    }
+                    .result-item-detail {
+                        height: 100%;
+                        padding: 0 10px;
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        .icon {
+                            margin-right: 10px;
+                        }
+                        .title {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+                .is-current {
+                    background: #f7f9fa;
+                }
             }
         }
     }
