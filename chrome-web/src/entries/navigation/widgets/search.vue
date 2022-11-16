@@ -17,13 +17,13 @@
                 :size="20"
             ></favicon>
             <!-- 优雅、着实优雅 -->
-            <img
+            <!-- <img
                 class="search-suffix"
                 src="../../../assets/images/search.png"
                 height="100%"
                 alt=""
                 @click="search"
-            />
+            /> -->
             <div class="popup-panel" v-show="showPopup">
                 <!-- 搜索引擎 -->
                 <div class="engine-list">
@@ -73,9 +73,6 @@
                                     </div>
                                     <div class="title">
                                         {{ result.title }}
-                                    </div>
-                                    <div class="visit-count">
-                                        近期访问 【{{ result.visitCount }}】次
                                     </div>
                                 </div>
                                 <!-- 未匹配 -->
@@ -324,7 +321,6 @@ export default {
                 ul {
                     list-style: none;
                     display: flex;
-                    padding-left: 25px;
                     li {
                         background-color: #fff;
                         color: #333;
@@ -353,6 +349,7 @@ export default {
             .search-result {
                 width: 100%;
                 max-height: calc(50px * 8);
+                overflow: hidden auto;
                 .result-item {
                     border-radius: 15px;
                     display: block;
@@ -371,6 +368,9 @@ export default {
                             margin-right: 10px;
                         }
                         .title {
+                            height: 32px;
+                            line-height: 32px;
+                            overflow: hidden;
                             margin-right: 10px;
                         }
                     }
