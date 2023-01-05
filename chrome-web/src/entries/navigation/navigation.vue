@@ -260,6 +260,7 @@
 
 <script>
 import BubbleBackground from "./background/bubble";
+import SnowBackground from "./background/snow";
 import TimeFlip from "./components/time-flip";
 import Driver from "driver.js";
 import "driver.js/dist/driver.min.css";
@@ -337,7 +338,8 @@ export default {
         BackgroundSetting: BackgroundSetting,
         AccountSetting: AccountSetting,
         TimeFlip: TimeFlip,
-        BubbleBackground: BubbleBackground
+        BubbleBackground: BubbleBackground,
+        SnowBackground: SnowBackground
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),

@@ -198,6 +198,10 @@ export function randomNum(min, max) {
     return parseInt(Math.random() * (max - min + 1) + min);
 }
 
+export function random(min, max) {
+    return min + Math.random() * (max - min);
+}
+
 export function message(message) {
     let dom = document.createElement("div");
     dom.classList = "rambler-message animated bounceIn";
