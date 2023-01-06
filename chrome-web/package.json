@@ -34,7 +34,7 @@
         "@vue/cli-plugin-vuex": "^4.5.13",
         "@vue/cli-service": "^4.5.13",
         "babel-plugin-component": "^1.1.1",
-        "copy-webpack-plugin": "^6.1.1",
+        "copy-webpack-plugin": "^5.1.2",
         "css-loader": "^3.6.0",
         "element-ui": "file:./element-ui",
         "eslint": "^5.16.0",
@@ -45,7 +45,8 @@
         "stylus": "^0.54.8",
         "stylus-loader": "^3.0.2",
         "svg-sprite-loader": "^6.0.11",
-        "vue-template-compiler": "^2.6.12"
+        "vue-template-compiler": "^2.6.12",
+        "webpack-cli": "^5.0.1"
     },
     "browserslist": [
         "> 1%",

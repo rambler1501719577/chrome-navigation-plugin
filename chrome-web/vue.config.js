@@ -2,7 +2,7 @@ const { WEB_SERVER } = require("./src/settings.js");
 const path = require("path");
 const port = process.env.port || 3000;
 const CompressionPlugin = require("compression-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+// const CopyWebpackPlugin = require("copy-webpack-plugin");
 const proxyWebAddress = "http://82.156.8.154:8888";
 
 function resolve(dir) {
@@ -97,6 +97,14 @@ module.exports = {
                     deleteOriginalAssets: false
                 })
             );
+            // plugins.push(
+            //     new CopyWebpackPlugin([
+            //         {
+            //             from: resolve(__dirname, "./public/js/*"),
+            //             to: resolve(__dirname, "./dist/js")
+            //         }
+            //     ])
+            // );
         }
         config.plugins = [...config.plugins, ...plugins];
     }

@@ -9,7 +9,8 @@
         "tabs",
         "scripting",
         "cookies",
-        "history"
+        "history",
+        "contextMenus"
     ],
     "optional_permissions": [],
     "host_permissions": ["http://www.suhaoblog.cn/"],
