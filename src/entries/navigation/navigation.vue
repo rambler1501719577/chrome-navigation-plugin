@@ -87,7 +87,27 @@
             </div>
 
             <!-- 侧边栏 -->
-            <div class="fixed-sidebar" v-if="true" id="sidebar-window">
+            <div class="fixed-sidebar" id="sidebar-window">
+                <!-- 账户设置 -->
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="账户设置"
+                    placement="right"
+                    v-if="isLogin"
+                >
+                    <div class="box-item">
+                        <div
+                            class="icon-wrapper"
+                            @click="open('accountDialogVisible')"
+                        >
+                            <rambler-icon
+                                name="account"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                    </div>
+                </el-tooltip>
                 <el-tooltip
                     class="item"
                     effect="dark"
@@ -180,26 +200,6 @@
                         </div>
                     </div>
                 </el-tooltip>
-                <!-- 账户设置 -->
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="账户设置"
-                    placement="right"
-                    v-if="isLogin"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('accountDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="account"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
 
                 <el-tooltip
                     class="item"
@@ -222,7 +222,7 @@
             </div>
         </div>
         <!-- 动态背景 -->
-        <component :is="background"></component>
+        <component :is="$store.getters.dynamicBackground"></component>
         <!-- 鼠标右键 -->
         <div
             class="popup"
@@ -259,6 +259,7 @@
 </template>
 
 <script>
+import EmptyBackground from "./background/empty";
 import BubbleBackground from "./background/bubble";
 import SnowBackground from "./background/snow";
 import TimeFlip from "./components/time-flip";
@@ -289,7 +290,6 @@ export default {
             isLogin: false,
             driver: null,
             contextMenuShow: false,
-            background: "snow-background",
             position: {
                 left: 0,
                 top: 0
@@ -339,7 +339,8 @@ export default {
         AccountSetting: AccountSetting,
         TimeFlip: TimeFlip,
         BubbleBackground: BubbleBackground,
-        SnowBackground: SnowBackground
+        SnowBackground: SnowBackground,
+        EmptyBackground
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),

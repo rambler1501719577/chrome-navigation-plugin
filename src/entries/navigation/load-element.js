@@ -94,6 +94,8 @@ Vue.use(Switch);
 Vue.use(Alert);
 Vue.use(Tag);
 Vue.use(Tooltip);
+Vue.use(Radio);
+Vue.use(RadioGroup);
 
 // Vue.use(Pagination);
 // Vue.use(Autocomplete);
@@ -106,8 +108,6 @@ Vue.use(Tooltip);
 // Vue.use(MenuItemGroup);
 
 // Vue.use(InputNumber);
-// Vue.use(Radio);
-// Vue.use(RadioGroup);
 // Vue.use(RadioButton);
 // Vue.use(Checkbox);
 // Vue.use(CheckboxButton);

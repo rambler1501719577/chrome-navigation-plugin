@@ -2,12 +2,19 @@ export default {
     namespaced: true,
     state: {
         dataSource: "local", // 数据源 remote | local
-        background: "9.jpg", // 背景图片名称 (位置固定：根目录background下)
-        isGuide: false
+        background: {
+            belong: "system", // system | custom
+            src: "9.jpg"
+        }, // 背景图片名称 (位置固定：根目录background下)
+        isGuide: false,
+        dynamicBackground: "snow" // 特效名称，snow | bubble | empty
     },
     mutations: {
         UPDATE_DATASOURCE(state, param) {
             state.dataSource = param;
+        },
+        UPDATE_DYNAMIC_BACKGROUND(state, param) {
+            state.dynamicBackground = param;
         },
         UPDATE_FAVICON(state, param) {
             let cacheMap = localStorage.getItem("iconMap");
@@ -18,8 +25,9 @@ export default {
                 localStorage.setItem("iconMap", JSON.stringify(iconMap));
             }
         },
-        UPDATE_BACKGROUND(state, param) {
-            state.background = param;
+        UPDATE_BACKGROUND(state, { belong = "system", src = "" }) {
+            state.background.belong = belong;
+            state.background.src = src;
         },
         UPDATE_IS_GUIDE(state) {
             // 只指引一次，更新后置为false
@@ -33,11 +41,23 @@ export default {
         updateFavicon({ commit }, payload) {
             commit("UPDATE_FAVICON", payload);
         },
+        /**
+         * 更新背景
+         * @param {*} payload {belong: system | custom, src: 背景地址 | base64 image}
+         */
         updateBackground({ commit }, payload) {
             commit("UPDATE_BACKGROUND", payload);
         },
         updateIsGuide({ commit }) {
             commit("UPDATE_IS_GUIDE");
+        },
+        updateDynamicBackground({ commit }, payload) {
+            commit("UPDATE_DYNAMIC_BACKGROUND", payload);
         }
+    },
+    getters: {
+        belong: state => state.background.belong,
+        background: state => state.background.src,
+        dynamicBackground: state => state.dynamicBackground
     }
 };

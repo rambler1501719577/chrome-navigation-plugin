@@ -1,79 +1,56 @@
 <template>
     <div class="background-container">
-        <div class="info">
-            <el-alert type="warning" :closable="false"
-                >后续会支持上传本地图片作为背景</el-alert
-            >
-        </div>
-        <div class="gallary">
-            <img
-                @click="updateBackground('1.jpg')"
-                src="/background/1.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('2.jpg')"
-                src="/background/2.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('3.jpg')"
-                src="/background/3.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('4.jpg')"
-                src="/background/4.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('5.jpg')"
-                src="/background/5.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('6.jpg')"
-                src="/background/6.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('7.jpg')"
-                src="/background/7.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('8.jpg')"
-                src="/background/8.jpg"
-                alt=""
-            />
-            <img
-                @click="updateBackground('9.jpg')"
-                src="/background/9.jpg"
-                alt=""
-            />
-        </div>
-        <!-- 自定义上传 -->
-        <div class="custom-cover-upload">
-            <img
-                v-if="choosenFileBase64Str"
-                :src="choosenFileBase64Str"
-                width="100px"
-                height="100%"
-                alt=""
-            />
-            <el-button @click="uploadFile" size="small">{{
-                this.choosenFileBase64Str ? "重新选择" : "选择图片"
-            }}</el-button>
-            <el-button size="small" v-if="choosenFileBase64Str" @click="reply"
-                >保存并应用</el-button
-            >
-            <input
-                id="upload"
-                type="file"
-                accept="image/*"
-                @change="readImage($event)"
-            />
-        </div>
+        <el-tabs v-model="activeTab">
+            <el-tab-pane label="系统背景" name="system">
+                <div class="gallary">
+                    <img
+                        v-for="(pic, index) of 9"
+                        :key="index"
+                        :src="'/background/' + pic + '.jpg'"
+                        alt=""
+                        @click="updateSystemBg(pic)"
+                    />
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="自定义背景" name="custom">
+                <!-- 自定义上传 -->
+                <div class="custom-cover-upload">
+                    <div class="btns">
+                        <el-button @click="uploadFile" size="small">{{
+                            this.choosenFileBase64Str ? "更换" : "选择图片"
+                        }}</el-button>
+                        <el-button
+                            size="small"
+                            v-if="choosenFileBase64Str"
+                            @click="reply"
+                            >应用</el-button
+                        >
+                    </div>
+                    <div class="preview-img-box">
+                        <img
+                            v-if="choosenFileBase64Str"
+                            :src="choosenFileBase64Str"
+                            width="100%"
+                            alt=""
+                        />
+                    </div>
+
+                    <input
+                        id="upload"
+                        type="file"
+                        accept="image/*"
+                        @change="readImage($event)"
+                    />
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="背景动效" name="dynamic-bg">
+                <el-radio-group v-model="dyBackground" @change="updateDyBg">
+                    <el-radio label="snow">雪花</el-radio>
+                    <el-radio label="bubble">气泡</el-radio>
+                    <el-radio label="empty">无</el-radio>
+                </el-radio-group>
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 <script>
@@ -81,15 +58,30 @@ import { mapGetters, mapActions } from "vuex";
 export default {
     data() {
         return {
-            choosenFileBase64Str: ""
+            choosenFileBase64Str: "",
+            activeTab: "",
+            dyBackground: ""
         };
     },
     computed: {
-        ...mapGetters("frequentBookmark", ["localFrequentBookmarks"])
+        ...mapGetters("setting", ["belong", "background", "dynamicBackground"])
     },
     methods: {
         // 映射setting.Action
-        ...mapActions("setting", ["updateBackground"]),
+        ...mapActions("setting", [
+            "updateBackground",
+            "updateDynamicBackground"
+        ]),
+        updateSystemBg(pic) {
+            this.updateBackground({
+                belong: "system",
+                src: pic + ".jpg"
+            });
+        },
+        // 更新动态特效
+        updateDyBg(effec) {
+            this.updateDynamicBackground(effec);
+        },
         uploadFile() {
             document.querySelector("#upload").click();
         },
@@ -111,8 +103,17 @@ export default {
             });
         },
         reply() {
-            this.updateBackground(this.choosenFileBase64Str);
+            this.updateBackground({
+                belong: "custom",
+                src: this.choosenFileBase64Str
+            });
         }
+    },
+    created() {
+        this.activeTab = this.belong;
+        this.choosenFileBase64Str =
+            this.belong == "custom" ? this.background : "";
+        this.dyBackground = this.dynamicBackground;
     }
 };
 </script>
@@ -120,9 +121,6 @@ export default {
 .background-container {
     max-height: calc(80vh - 30px - 43px);
     overflow: hidden auto;
-    .info {
-        padding: 0 10px 10px 10px;
-    }
     .gallary {
         display: flex;
         justify-content: space-around;
@@ -133,6 +131,15 @@ export default {
         }
     }
     .custom-cover-upload {
+        .preview-img-box {
+            width: 60%;
+            margin: 0 auto;
+        }
+        .btns {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
         #upload {
             display: none;
         }

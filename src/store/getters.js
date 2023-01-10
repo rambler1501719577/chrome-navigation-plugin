@@ -71,10 +71,13 @@ const getters = {
         return flatternBookmark;
     },
     background: state => {
-        if (state.setting.background.startsWith("data:image")) {
-            return state.setting.background;
+        if (state.setting.background.belong == "system") {
+            return `/background/${state.setting.background.src}`;
         }
-        return `/background/${state.setting.background}`;
+        return state.setting.background.src;
+    },
+    dynamicBackground: state => {
+        return state.setting.dynamicBackground + "-background";
     },
     // 是否指引过
     isGuide: state => state.setting.isGuide
