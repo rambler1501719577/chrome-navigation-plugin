@@ -13,9 +13,10 @@
         "contextMenus"
     ],
     "optional_permissions": [],
-    "host_permissions": ["http://www.suhaoblog.cn/"],
+    "host_permissions": ["*://*/*"],
     "background": {
-        "service_worker": "js/background.js"
+        "service_worker": "js/background.js",
+        "type": "module"
     },
     "action": {
         "default_popup": "popup.html",

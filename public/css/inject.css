@@ -1,0 +1,10 @@
+.rambler-toast {
+    position: fixed;
+    padding: 15px;
+    /* 不清楚页面布局，z-index还是给大一点吧 */
+    z-index: 999999;
+}
+.rambler-toast-success {
+    background-color: green;
+    color: #fff;
+}
