@@ -2,7 +2,7 @@ export default {
     namespaced: true,
     state: {
         dataSource: "local", // 数据源 remote | local
-        background: "10.jpg", // 背景图片名称 (位置固定：根目录background下)
+        background: "9.jpg", // 背景图片名称 (位置固定：根目录background下)
         isGuide: false
     },
     mutations: {

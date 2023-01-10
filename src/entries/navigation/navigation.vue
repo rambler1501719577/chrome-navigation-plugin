@@ -87,7 +87,7 @@
             </div>
 
             <!-- 侧边栏 -->
-            <div class="fixed-sidebar" v-if="false" id="sidebar-window">
+            <div class="fixed-sidebar" v-if="true" id="sidebar-window">
                 <el-tooltip
                     class="item"
                     effect="dark"
@@ -289,7 +289,7 @@ export default {
             isLogin: false,
             driver: null,
             contextMenuShow: false,
-            background: "bubble-background",
+            background: "snow-background",
             position: {
                 left: 0,
                 top: 0
@@ -471,10 +471,11 @@ export default {
             margin: 0 auto;
         }
         .fixed-sidebar {
+            padding-top: 15px;
             width: 60px;
             height: 100%;
             position: fixed;
-            right: 0;
+            left: 0;
             top: 0;
             background: #00000954;
 

@@ -70,7 +70,12 @@ const getters = {
         flatternBookmark.push(...getChildren(treeBookmark));
         return flatternBookmark;
     },
-    background: state => `/background/${state.setting.background}`,
+    background: state => {
+        if (state.setting.background.startsWith("data:image")) {
+            return state.setting.background;
+        }
+        return `/background/${state.setting.background}`;
+    },
     // 是否指引过
     isGuide: state => state.setting.isGuide
 };

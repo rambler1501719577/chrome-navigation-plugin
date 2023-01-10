@@ -48,23 +48,32 @@ export default {
             snowList: [],
             canvas: null,
             ctx: null,
-            maxSnowRadius: 5,
+            maxSnowRadius: 8,
             maxSnowVx: 2,
             maxSnowVy: 4,
-            maxSnowCount: 100
+            maxSnowCount: 100,
+            image: null
         };
     },
     methods: {
         // 初始化canvas
         init() {
-            this.windowHeight = this.$el.clientHeight;
-            this.windowWidth = this.$el.clientWidth;
-            this.canvas = this.$el.querySelector("#snow-canvas");
-            this.ctx = this.canvas.getContext("2d");
-            this.canvas.style.width = this.canvas.width = this.windowWidth;
-            this.canvas.style.height = this.canvas.height = this.windowHeight;
-            this.createSnows();
-            // this.canvas.style.background = "#000";
+            return new Promise(resolve => {
+                this.windowHeight = this.$el.clientHeight;
+                this.windowWidth = this.$el.clientWidth;
+                this.canvas = this.$el.querySelector("#snow-canvas");
+                this.ctx = this.canvas.getContext("2d");
+                this.canvas.style.width = this.canvas.width = this.windowWidth;
+                this.canvas.style.height = this.canvas.height = this.windowHeight;
+                this.createSnows();
+                const image = new Image();
+                image.src = "/img/snow.png";
+                image.addEventListener("load", () => {
+                    this.image = image;
+                    resolve();
+                });
+                // this.canvas.style.background = "#000";
+            });
         },
         // 构建雪花数组
         createSnows() {
@@ -98,7 +107,14 @@ export default {
 
                 this.ctx.fillStyle = "#fff";
                 this.ctx.beginPath();
-                this.ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
+                this.ctx.drawImage(
+                    this.image,
+                    snow.x,
+                    snow.y,
+                    snow.radius,
+                    snow.radius
+                );
+                // this.ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
                 this.ctx.closePath();
                 this.ctx.globalAlpha = snow.alpha;
                 this.ctx.fill();
@@ -107,8 +123,8 @@ export default {
             requestAnimationFrame(this.draw);
         }
     },
-    mounted() {
-        this.init();
+    async mounted() {
+        await this.init();
         this.draw();
     }
 };

@@ -62,6 +62,10 @@ export default {
         remoteEngines: state => state.remoteEngines
     },
     actions: {
+        /**
+         * 更新搜索引擎
+         * @param {*} payload 格式{type: [add, delete, update], data: {}}
+         */
         update({ commit }, payload) {
             const { type, data } = payload;
             if (type == "add") {
