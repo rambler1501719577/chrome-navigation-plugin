@@ -14,6 +14,7 @@ import "@/assets/iconfont/iconfont.css";
 // 注册图标
 import SvgIcon from "@/icon";
 import Favicon from "./components/favicon";
+import RamblerDialog from "@/components/dialog/RamblerDialog";
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$store = store;
@@ -24,6 +25,7 @@ Vue.config.productionTip = false;
  */
 Vue.component("RamblerIcon", SvgIcon);
 Vue.component("Favicon", Favicon);
+Vue.component("RamblerDialog", RamblerDialog);
 
 new Vue({
     store,

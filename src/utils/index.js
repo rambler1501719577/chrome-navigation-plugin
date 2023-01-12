@@ -188,6 +188,16 @@ export function scrollToTop(offsetTop) {
         behavior: "smooth"
     });
 }
+/**
+ * 随机生成色值
+ * @returns rgb字符串
+ */
+export function randomColor() {
+    function random() {
+        return parseInt(Math.random() * 255 - 1);
+    }
+    return `rgb(${random()},${random()},${random()})`;
+}
 
 /**
  * generate a random num between min and max

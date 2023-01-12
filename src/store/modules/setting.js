@@ -4,7 +4,8 @@ export default {
         dataSource: "local", // 数据源 remote | local
         background: {
             belong: "system", // system | custom
-            src: "9.jpg"
+            systemBg: "9.jpg", // 系统背景
+            customBg: "" // 自定义背景Base64串
         }, // 背景图片名称 (位置固定：根目录background下)
         isGuide: false,
         dynamicBackground: "snow" // 特效名称，snow | bubble | empty
@@ -27,7 +28,11 @@ export default {
         },
         UPDATE_BACKGROUND(state, { belong = "system", src = "" }) {
             state.background.belong = belong;
-            state.background.src = src;
+            if (belong == "system") {
+                state.background.systemBg = src;
+            } else {
+                state.background.customBg = src;
+            }
         },
         UPDATE_IS_GUIDE(state) {
             // 只指引一次，更新后置为false

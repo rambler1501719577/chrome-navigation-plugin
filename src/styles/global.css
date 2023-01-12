@@ -96,10 +96,12 @@ div#driver-page-overlay {
 }
 .popup-item {
     display: block;
-    position: absolute;
     user-select: none;
     z-index: 90;
     font-size: 24px !important;
+}
+.absolute {
+    position: absolute;
 }
 
 @font-face {

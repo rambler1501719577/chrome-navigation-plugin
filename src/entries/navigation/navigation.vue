@@ -1,6 +1,6 @@
 <template>
     <div
-        v-bubble
+        v-bubble="'heart'"
         class="page-container"
         :style="{
             backgroundImage: `url('${$store.getters.background}')`
@@ -15,6 +15,18 @@
             <div class="frequent-bookmarks" id="frequent-window">
                 <frequent-bookmarks />
             </div>
+            <rambler-dialog
+                :ndex="99"
+                :visible="test2"
+                name="NAME"
+                title="测试标题"
+                width="800px"
+                height="300px"
+                @close="closeTest2"
+                :draggable="true"
+            >
+                <h1>hahahha</h1>
+            </rambler-dialog>
             <!-- 管理弹窗 -->
             <div class="dialog">
                 <el-dialog
@@ -40,7 +52,7 @@
                     <engine-setting></engine-setting>
                 </el-dialog>
                 <el-dialog
-                    width="1000px"
+                    width="500px"
                     title="常用网站配置"
                     :modal="false"
                     top="10vh"
@@ -293,7 +305,8 @@ export default {
             position: {
                 left: 0,
                 top: 0
-            }
+            },
+            test2: true
         };
     },
     async created() {
@@ -347,6 +360,9 @@ export default {
         ...mapActions("todo", ["updateRemoteTodo"]),
         open(type) {
             this[type] = true;
+        },
+        closeTest2() {
+            this.test2 = false;
         },
         showContextMenu(e) {
             const contextMenu = document.querySelector(".popup");

@@ -72,9 +72,9 @@ const getters = {
     },
     background: state => {
         if (state.setting.background.belong == "system") {
-            return `/background/${state.setting.background.src}`;
+            return `/background/${state.setting.background.systemBg}`;
         }
-        return state.setting.background.src;
+        return state.setting.background.customBg;
     },
     dynamicBackground: state => {
         return state.setting.dynamicBackground + "-background";

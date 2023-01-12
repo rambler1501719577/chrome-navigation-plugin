@@ -54,7 +54,7 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 export default {
     data() {
         return {
@@ -64,7 +64,11 @@ export default {
         };
     },
     computed: {
-        ...mapGetters("setting", ["belong", "background", "dynamicBackground"])
+        ...mapState("setting", {
+            background: state => state.background,
+            dynamicBackground: state => state.dynamicBackground
+        })
+        // ...mapGetters("setting", ["belong", "background", "dynamicBackground"])
     },
     methods: {
         // 映射setting.Action
@@ -110,9 +114,9 @@ export default {
         }
     },
     created() {
-        this.activeTab = this.belong;
-        this.choosenFileBase64Str =
-            this.belong == "custom" ? this.background : "";
+        console.log(this.background);
+        this.activeTab = this.background.belong;
+        this.choosenFileBase64Str = this.background.customBg;
         this.dyBackground = this.dynamicBackground;
     }
 };
