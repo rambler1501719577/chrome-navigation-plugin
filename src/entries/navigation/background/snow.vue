@@ -20,7 +20,7 @@ class Snow {
         this.x = random(0, boundary.width);
         this.y = random(0, boundary.height);
         this.radius = random(0, radius);
-        this.vx = random(1, vx);
+        this.vx = random(-vx, vx);
         this.vy = random(2, vy);
         this.alpha = random(0.1, 0.9);
     }
@@ -48,10 +48,10 @@ export default {
             snowList: [],
             canvas: null,
             ctx: null,
-            maxSnowRadius: 12,
+            maxSnowRadius: 15,
             maxSnowVx: 2,
             maxSnowVy: 4,
-            maxSnowCount: 100,
+            maxSnowCount: 200,
             image: null
         };
     },

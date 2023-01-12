@@ -40,7 +40,6 @@ const drawMap = {
     }
 };
 function draw(type) {
-    debugger;
     if (type == "dog") {
         const imagePath = "/img/dog.jpg";
         return drawMap["drawImage"](imagePath, 20, 20);

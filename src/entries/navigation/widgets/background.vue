@@ -1,56 +1,59 @@
 <template>
     <div class="background-container">
-        <el-tabs v-model="activeTab">
-            <el-tab-pane label="系统背景" name="system">
-                <div class="gallary">
-                    <img
-                        v-for="(pic, index) of 9"
-                        :key="index"
-                        :src="'/background/' + pic + '.jpg'"
-                        alt=""
-                        @click="updateSystemBg(pic)"
-                    />
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="自定义背景" name="custom">
-                <!-- 自定义上传 -->
-                <div class="custom-cover-upload">
-                    <div class="btns">
-                        <el-button @click="uploadFile" size="small">{{
-                            this.choosenFileBase64Str ? "更换" : "选择图片"
-                        }}</el-button>
-                        <el-button
-                            size="small"
-                            v-if="choosenFileBase64Str"
-                            @click="reply"
-                            >应用</el-button
-                        >
-                    </div>
-                    <div class="preview-img-box">
+        <div class="choices">
+            <div class="title">
+                <h1>所有列表</h1>
+            </div>
+            <div class="absolute-box">
+                <div class="background-list">
+                    <div class="bg-item system-bg" v-for="(pic, index) of 9">
                         <img
-                            v-if="choosenFileBase64Str"
-                            :src="choosenFileBase64Str"
-                            width="100%"
+                            :key="index"
+                            :src="'/background/' + pic + '.jpg'"
                             alt=""
+                            width="100%"
+                            @click="updateSystemBg(pic)"
                         />
                     </div>
-
-                    <input
-                        id="upload"
-                        type="file"
-                        accept="image/*"
-                        @change="readImage($event)"
-                    />
+                    <!-- 自定义背景 -->
+                    <div class="bg-item system-bg" v-for="(pic, index) of 2">
+                        <img
+                            :key="index"
+                            :src="'/background/' + pic + '.jpg'"
+                            alt=""
+                            width="100%"
+                            @click="updateSystemBg(pic)"
+                        />
+                    </div>
+                    <!-- 上传背景 -->
+                    <div class="bg-item upload">
+                        +
+                    </div>
                 </div>
-            </el-tab-pane>
-            <el-tab-pane label="背景动效" name="dynamic-bg">
+            </div>
+        </div>
+
+        <div class="preview-box">
+            <div class="title">
+                <h1>预览</h1>
+            </div>
+            <div class="preview">
+                <img src="/background/1.jpg" width="100%" alt="" />
+            </div>
+            <div class="title">
+                背景动效
+            </div>
+            <div class="dynamic-bg">
                 <el-radio-group v-model="dyBackground" @change="updateDyBg">
                     <el-radio label="snow">雪花</el-radio>
                     <el-radio label="bubble">气泡</el-radio>
                     <el-radio label="empty">无</el-radio>
                 </el-radio-group>
-            </el-tab-pane>
-        </el-tabs>
+            </div>
+            <div class="btn">
+                <el-button type="primary">保存并应用</el-button>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -123,29 +126,62 @@ export default {
 </script>
 <style lang="less" scoped>
 .background-container {
-    max-height: calc(80vh - 30px - 43px);
-    overflow: hidden auto;
-    .gallary {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        img {
-            width: 300px;
-            margin-bottom: 20px;
+    height: calc(80vh - 30px - 43px);
+    display: flex;
+    .choices {
+        width: 300px;
+        height: 100%;
+        .title {
+            height: 30px;
+            background: #eee;
+            color: #fff;
+        }
+        .absolute-box {
+            height: calc(100% - 30px);
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            .background-list {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: -15px;
+                bottom: 0;
+                overflow: auto;
+                padding-top: 10px;
+                .bg-item {
+                    float: left;
+                    width: 145px;
+                    height: 82px;
+                    overflow: hidden;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                }
+                .bg-item:nth-child(2n + 1) {
+                    margin-right: 10px;
+                }
+                .upload {
+                    line-height: 82px;
+                    text-align: center;
+                }
+            }
         }
     }
-    .custom-cover-upload {
-        .preview-img-box {
-            width: 60%;
-            margin: 0 auto;
+    .preview-box {
+        margin-left: 20px;
+        flex: 1;
+        height: 100%;
+        position: relative;
+        .preview {
+            width: 100%;
+            max-height: 254px;
+            overflow: hidden;
+            background: #eee;
         }
-        .btns {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        #upload {
-            display: none;
+        .btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
         }
     }
 }

@@ -15,7 +15,7 @@
             <div class="frequent-bookmarks" id="frequent-window">
                 <frequent-bookmarks />
             </div>
-            <rambler-dialog
+            <!-- <rambler-dialog
                 :ndex="99"
                 :visible="test2"
                 name="NAME"
@@ -26,7 +26,7 @@
                 :draggable="true"
             >
                 <h1>hahahha</h1>
-            </rambler-dialog>
+            </rambler-dialog> -->
             <!-- 管理弹窗 -->
             <div class="dialog">
                 <el-dialog
@@ -63,10 +63,11 @@
                     <frequent-bookmark-setting></frequent-bookmark-setting>
                 </el-dialog>
                 <el-dialog
-                    width="1000px"
+                    width="800px"
                     title="背景设置"
                     :modal="false"
                     top="10vh"
+                    height="200px"
                     :visible.sync="skinDialogVisible"
                     :close-on-click-modal="false"
                     v-dialogDrag
