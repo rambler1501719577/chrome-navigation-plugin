@@ -48,10 +48,10 @@ export default {
             snowList: [],
             canvas: null,
             ctx: null,
-            maxSnowRadius: 15,
+            maxSnowRadius: 13,
             maxSnowVx: 2,
             maxSnowVy: 4,
-            maxSnowCount: 200,
+            maxSnowCount: 100,
             image: null
         };
     },

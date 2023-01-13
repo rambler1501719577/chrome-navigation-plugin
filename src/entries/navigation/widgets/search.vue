@@ -256,9 +256,13 @@ export default {
             }
         });
         document.addEventListener("click", e => {
-            const paths = e.path;
-            if (![].find.call(paths, item => item.className == "search")) {
-                this.showPopup = false;
+            try {
+                const paths = e.path;
+                if (![].find.call(paths, item => item.className == "search")) {
+                    this.showPopup = false;
+                }
+            } catch (e) {
+                console.log("here is a bug");
             }
         });
     }
