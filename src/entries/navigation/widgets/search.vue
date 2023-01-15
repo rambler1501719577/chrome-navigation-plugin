@@ -256,13 +256,10 @@ export default {
             }
         });
         document.addEventListener("click", e => {
-            try {
-                const paths = e.path;
-                if (![].find.call(paths, item => item.className == "search")) {
-                    this.showPopup = false;
-                }
-            } catch (e) {
-                console.log("here is a bug");
+            // chrome下e.path突然失效，可能是遵循标准事件模型，移除了path属性
+            const paths = e.path || (e.composedPath && e.composedPath());
+            if (![].find.call(paths, item => item.className == "search")) {
+                this.showPopup = false;
             }
         });
     }

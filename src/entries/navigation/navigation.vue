@@ -30,39 +30,6 @@
             <!-- 管理弹窗 -->
             <div class="dialog">
                 <el-dialog
-                    width="1000px"
-                    title="本地书签管理"
-                    :modal="false"
-                    top="10vh"
-                    :visible.sync="bookmarkDialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <bookmark-setting></bookmark-setting>
-                </el-dialog>
-                <el-dialog
-                    width="1000px"
-                    title="搜索引擎配置"
-                    :modal="false"
-                    top="10vh"
-                    :visible.sync="engineDialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <engine-setting></engine-setting>
-                </el-dialog>
-                <el-dialog
-                    width="500px"
-                    title="常用网站配置"
-                    :modal="false"
-                    top="10vh"
-                    :visible.sync="frequentBookmarkDialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <frequent-bookmark-setting></frequent-bookmark-setting>
-                </el-dialog>
-                <el-dialog
                     width="800px"
                     title="背景设置"
                     :modal="false"
@@ -116,60 +83,6 @@
                         >
                             <rambler-icon
                                 name="account"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="本地书签管理"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('bookmarkDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="bookmark"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="搜索引擎配置"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('engineDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="engine"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="配置你常用的网站"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('frequentBookmarkDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="website"
                                 class="icon"
                             ></rambler-icon>
                         </div>
@@ -246,25 +159,13 @@
             }"
         >
             <ul>
-                <li @click="open('bookmarkDialogVisible')">
-                    <rambler-icon name="bookmark" class="icon"></rambler-icon>
-                    <span>本地书签管理</span>
-                </li>
-                <li @click="open('engineDialogVisible')">
-                    <rambler-icon name="engine" class="icon"></rambler-icon>
-                    <span>搜索引擎配置</span>
-                </li>
-                <li @click="open('frequentBookmarkDialogVisible')">
-                    <rambler-icon name="website" class="icon"></rambler-icon>
-                    <span>常用网站配置</span>
-                </li>
                 <li @click="open('skinDialogVisible')">
                     <rambler-icon name="skin" class="icon"></rambler-icon>
                     <span>切换背景</span>
                 </li>
                 <li @click="open('dialogVisible')">
                     <rambler-icon name="skin" class="icon"></rambler-icon>
-                    <span>导入/导出数据</span>
+                    <span>数据管理</span>
                 </li>
             </ul>
         </div>
@@ -295,9 +196,6 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            bookmarkDialogVisible: false,
-            engineDialogVisible: false,
-            frequentBookmarkDialogVisible: false,
             skinDialogVisible: false,
             accountDialogVisible: false,
             isLogin: false,

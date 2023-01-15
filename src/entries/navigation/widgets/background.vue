@@ -6,6 +6,7 @@
             </div>
             <div class="absolute-box">
                 <div class="background-list">
+                    <!-- 系统自带背景 -->
                     <div class="bg-item system-bg" v-for="(pic, index) of 9">
                         <img
                             :key="index"
@@ -16,25 +17,26 @@
                         />
                     </div>
                     <!-- 自定义背景 -->
-                    <div class="bg-item system-bg" v-for="(pic, index) of 2">
+                    <div class="bg-item custom-bg" v-if="hasUploadBg">
                         <img
-                            :key="index"
-                            :src="'/background/' + pic + '.jpg'"
-                            alt=""
+                            :src="background.customBg"
                             width="100%"
-                            @click="updateSystemBg('custom', pic)"
+                            @click="updateSystemBg('custom')"
                         />
+                        <div class="tools">
+                            <!-- <el-button>更换</el-button> -->
+                        </div>
                     </div>
                     <!-- 上传背景 -->
-                    <div class="bg-item upload" @click="uploadFile">
+                    <div class="bg-item upload" @click="uploadFile" v-else>
                         上传图片
-                        <input
-                            id="upload"
-                            type="file"
-                            accept="image/*"
-                            @change="readImage($event)"
-                        />
                     </div>
+                    <input
+                        id="upload"
+                        type="file"
+                        accept="image/*"
+                        @change="readImage($event)"
+                    />
                 </div>
             </div>
         </div>
@@ -51,7 +53,12 @@
                     backgroundRepeat: 'no-repeat'
                 }"
             >
-                <!-- <img src="/background/1.jpg" width="100%" alt="" /> -->
+                <!-- 动效 -->
+                <div class="effect">
+                    <component
+                        :is="choosen.dyBackground + '-background'"
+                    ></component>
+                </div>
             </div>
             <div class="title">
                 背景动效
@@ -64,6 +71,13 @@
                 </el-radio-group>
             </div>
             <div class="btn">
+                <el-button
+                    type="primary"
+                    size="small"
+                    v-if="choosen.belong == 'custom'"
+                    @click="uploadFile"
+                    >更换</el-button
+                >
                 <el-button type="primary" size="small" @click="reply"
                     >保存并应用</el-button
                 >
@@ -72,12 +86,14 @@
     </div>
 </template>
 <script>
+import EmptyBackground from "../background/empty";
+import BubbleBackground from "../background/bubble";
+import SnowBackground from "../background/snow";
 import { uploadFileSize } from "@/settings";
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
     data() {
         return {
-            choosenFileBase64Str: "",
             dyBackground: "",
             choosen: {
                 belong: "",
@@ -97,8 +113,16 @@ export default {
             return this.choosen.belong == "system"
                 ? "/background/" + this.choosen.systemBg
                 : this.choosen.customBg;
+        },
+        hasUploadBg() {
+            return this.background.customBg ? true : false;
         }
         // ...mapGetters("setting", ["belong", "background", "dynamicBackground"])
+    },
+    components: {
+        EmptyBackground,
+        BubbleBackground,
+        SnowBackground
     },
     methods: {
         // 映射setting.Action
@@ -109,7 +133,7 @@ export default {
         updateSystemBg(type, pic) {
             this.choosen.belong = type;
             if (type == "custom") {
-                this.choosen.customBg = pic;
+                this.choosen.customBg = this.background.customBg;
             } else {
                 this.choosen.systemBg = pic + ".jpg";
             }
@@ -151,6 +175,7 @@ export default {
             };
             this.updateBackground(payload);
             this.updateDynamicBackground(this.choosen.dyBackground);
+            this.$message.success("更换成功");
         }
     },
     created() {
@@ -164,7 +189,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .background-container {
-    height: calc(80vh - 30px - 43px);
+    height: 490px;
     display: flex;
     .title {
         padding-left: 8px;
@@ -177,7 +202,7 @@ export default {
         width: 300px;
         height: 100%;
         .absolute-box {
-            height: calc(100% - 40px);
+            height: calc(100% - 30px);
             overflow: hidden;
             width: 100%;
             position: relative;
@@ -196,18 +221,41 @@ export default {
                     overflow: hidden;
                     margin-bottom: 10px;
                     cursor: pointer;
+                    img {
+                        transition: all 0.3s ease-in-out;
+                    }
+                    &:hover > img {
+                        transform: scale(1.1);
+                    }
                 }
                 .bg-item:nth-child(2n + 1) {
                     margin-right: 10px;
+                }
+                .bg-item:nth-child(9) {
+                    margin-bottom: 0;
+                }
+                .bg-item:nth-child(10) {
+                    margin-bottom: 0;
                 }
                 .upload {
                     box-sizing: border-box;
                     border: 1px solid #eee;
                     line-height: 82px;
                     text-align: center;
-                    #upload {
-                        display: none;
-                    }
+                }
+                .custom-bg {
+                    position: relative;
+                    // .tools {
+                    //     position: absolute;
+                    //     left: 0;
+                    //     top: 0;
+                    //     right: 0;
+                    //     bottom: 0;
+                    //     background: red;
+                    // }
+                }
+                #upload {
+                    display: none;
                 }
             }
         }
@@ -223,6 +271,14 @@ export default {
             height: 254px;
             overflow: hidden;
             background: #eee;
+            position: relative;
+            .effect {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
         }
         .dynamic-bg {
             margin: 10px 0;
