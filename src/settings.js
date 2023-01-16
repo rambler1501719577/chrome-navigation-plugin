@@ -4,5 +4,5 @@ module.exports = {
         FREQUENT_BOOKMARKS: "frequent-bookmarks",
         ICON_MAP: "icon-map"
     },
-    uploadFileSize: 5 // 单张图片大小限制(M)
+    uploadFileSize: 4 // 单张图片大小限制(M)
 };

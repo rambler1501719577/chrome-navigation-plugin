@@ -7,7 +7,12 @@
             <div class="absolute-box">
                 <div class="background-list">
                     <!-- 系统自带背景 -->
-                    <div class="bg-item system-bg" v-for="(pic, index) of 9">
+                    <div
+                        class="bg-item system-bg"
+                        v-for="(pic, index) of 9"
+                        @mouseover="handleCoverMouseEnter"
+                        @mouseleave="handleCoverMouseOut"
+                    >
                         <img
                             :key="index"
                             :src="'/background/' + pic + '.jpg'"
@@ -15,16 +20,49 @@
                             width="100%"
                             @click="updateSystemBg('system', pic)"
                         />
+                        <div class="tools">
+                            <div class="btns">
+                                <div class="preview-btn">
+                                    <rambler-icon
+                                        name="preview"
+                                        class="icon"
+                                        @click.native="
+                                            updateSystemBg('system', pic)
+                                        "
+                                    ></rambler-icon>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- 自定义背景 -->
-                    <div class="bg-item custom-bg" v-if="hasUploadBg">
+                    <div
+                        class="bg-item custom-bg"
+                        v-if="hasUploadBg"
+                        @mouseover="handleCoverMouseEnter"
+                        @mouseleave="handleCoverMouseOut"
+                    >
                         <img
                             :src="background.customBg"
                             width="100%"
                             @click="updateSystemBg('custom')"
                         />
                         <div class="tools">
-                            <!-- <el-button>更换</el-button> -->
+                            <div class="btns">
+                                <div class="preview-btn">
+                                    <rambler-icon
+                                        name="preview"
+                                        class="icon"
+                                        @click.native="updateSystemBg('custom')"
+                                    ></rambler-icon>
+                                </div>
+                                <div class="change-btn">
+                                    <rambler-icon
+                                        name="exchange"
+                                        class="icon"
+                                        @click.native="uploadFile"
+                                    ></rambler-icon>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- 上传背景 -->
@@ -71,13 +109,6 @@
                 </el-radio-group>
             </div>
             <div class="btn">
-                <el-button
-                    type="primary"
-                    size="small"
-                    v-if="choosen.belong == 'custom'"
-                    @click="uploadFile"
-                    >更换</el-button
-                >
                 <el-button type="primary" size="small" @click="reply"
                     >保存并应用</el-button
                 >
@@ -137,6 +168,21 @@ export default {
             } else {
                 this.choosen.systemBg = pic + ".jpg";
             }
+        },
+        handleCoverMouseOut(event) {
+            try {
+                const { target } = event;
+                if (!target) return;
+                target.querySelector(".tools").style.display = "none";
+            } catch (e) {}
+        },
+        handleCoverMouseEnter(event) {
+            try {
+                const { target } = event;
+                if (!target) return;
+                target.parentNode.querySelector(".tools").style.display =
+                    "flex";
+            } catch (e) {}
         },
         uploadFile() {
             document.querySelector("#upload").click();
@@ -214,20 +260,7 @@ export default {
                 bottom: 0;
                 overflow: auto;
                 padding-top: 10px;
-                .bg-item {
-                    float: left;
-                    width: 145px;
-                    height: 82px;
-                    overflow: hidden;
-                    margin-bottom: 10px;
-                    cursor: pointer;
-                    img {
-                        transition: all 0.3s ease-in-out;
-                    }
-                    &:hover > img {
-                        transform: scale(1.1);
-                    }
-                }
+
                 .bg-item:nth-child(2n + 1) {
                     margin-right: 10px;
                 }
@@ -245,17 +278,42 @@ export default {
                 }
                 .custom-bg {
                     position: relative;
-                    // .tools {
-                    //     position: absolute;
-                    //     left: 0;
-                    //     top: 0;
-                    //     right: 0;
-                    //     bottom: 0;
-                    //     background: red;
-                    // }
                 }
                 #upload {
                     display: none;
+                }
+                .bg-item {
+                    float: left;
+                    width: 145px;
+                    height: 82px;
+                    overflow: hidden;
+                    margin-bottom: 10px;
+                    position: relative;
+                    cursor: pointer;
+                    .tools {
+                        display: none;
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        justify-content: center;
+                        align-items: center;
+                        background: rgba(255, 255, 255, 0.8);
+                        .btns {
+                            height: 100%;
+                            width: 100%;
+                            line-height: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            .icon {
+                                font-size: 25px;
+                                fill: rgb(131, 125, 125);
+                                padding: 0 10px;
+                            }
+                        }
+                    }
                 }
             }
         }
