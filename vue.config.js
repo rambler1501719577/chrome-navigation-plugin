@@ -11,6 +11,7 @@ function resolve(dir) {
 
 module.exports = {
     publicPath: "./", //打包后静态资源的相对路径,build的时候改成./
+    outputDir: "chrome-new-tab-extension", // 打包输出文件名
     // 在开发环境下eslint-loader 会将 lint 错误输出为编译警告
     lintOnSave: process.env.NODE_ENV === "development",
     // 关闭生产环境的 sourceMap
