@@ -43,17 +43,25 @@ export default {
         return {
             windowHeight: 0,
             windowWidth: 0,
-            maxSnowRadius: 5,
-            snowCount: 100,
             snowList: [],
             canvas: null,
             ctx: null,
-            maxSnowRadius: 13,
-            maxSnowVx: 2,
-            maxSnowVy: 4,
-            maxSnowCount: 100,
             image: null
         };
+    },
+    props: {
+        maxSnowRadius: {
+            default: () => 13
+        },
+        maxSnowVx: {
+            default: () => 2
+        },
+        maxSnowVy: {
+            default: () => 4
+        },
+        maxSnowCount: {
+            default: () => 100
+        }
     },
     methods: {
         // 初始化canvas
@@ -131,13 +139,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10;
     width: 100%;
-    height: 100vh;
-    display: flex;
-    overflow: hidden;
+    height: 100%;
 }
 </style>

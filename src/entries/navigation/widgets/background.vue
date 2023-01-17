@@ -95,6 +95,7 @@
                 <div class="effect">
                     <component
                         :is="choosen.dyBackground + '-background'"
+                        v-bind="dynamicAttrs"
                     ></component>
                 </div>
             </div>
@@ -122,6 +123,23 @@ import BubbleBackground from "../background/bubble";
 import SnowBackground from "../background/snow";
 import { uploadFileSize } from "@/settings";
 import { mapActions, mapState } from "vuex";
+const attrMap = {
+    snow: {
+        maxSnowRadius: 7,
+        maxSnowVx: 2,
+        maxSnowVy: 2,
+        maxSnowCount: 40
+    },
+    bubble: {
+        bubbleCount: 30,
+        // 气泡半径
+        maxBubbleRadius: 2,
+        // 气泡最大速度
+        maxBubbleSpeed: 1,
+        // 气泡最小速度
+        minBubbleSpeed: 0.5
+    }
+};
 export default {
     data() {
         return {
@@ -147,8 +165,10 @@ export default {
         },
         hasUploadBg() {
             return this.background.customBg ? true : false;
+        },
+        dynamicAttrs() {
+            return attrMap[this.choosen.dyBackground];
         }
-        // ...mapGetters("setting", ["belong", "background", "dynamicBackground"])
     },
     components: {
         EmptyBackground,

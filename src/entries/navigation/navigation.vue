@@ -16,7 +16,7 @@
                 <frequent-bookmarks />
             </div>
             <!-- <rambler-dialog
-                :ndex="99"
+                :index="99"
                 :visible="test2"
                 name="NAME"
                 title="测试标题"
@@ -148,7 +148,10 @@
             </div>
         </div>
         <!-- 动态背景 -->
-        <component :is="$store.getters.dynamicBackground"></component>
+        <div class="dy-background">
+            <component :is="$store.getters.dynamicBackground"></component>
+        </div>
+
         <!-- 鼠标右键 -->
         <div
             class="popup"
@@ -436,6 +439,15 @@ export default {
             right: 60px;
             bottom: 60px;
         }
+    }
+    .dy-background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
     }
     .popup {
         position: absolute;
