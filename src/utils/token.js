@@ -68,3 +68,5 @@ export function clearToken() {
         }
     });
 }
+
+export function tokenExpires(token) {}

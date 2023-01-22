@@ -15,56 +15,39 @@
             <div class="frequent-bookmarks" id="frequent-window">
                 <frequent-bookmarks />
             </div>
-            <!-- <rambler-dialog
+            <rambler-dialog
                 :index="99"
-                :visible="test2"
-                name="NAME"
-                title="测试标题"
+                :visible.sync="skinDialogVisible"
+                name="backgroundSetting"
+                title="背景设置"
                 width="800px"
-                height="300px"
-                @close="closeTest2"
+                height="520px"
                 :draggable="true"
             >
-                <h1>hahahha</h1>
-            </rambler-dialog> -->
-            <!-- 管理弹窗 -->
-            <div class="dialog">
-                <el-dialog
-                    width="800px"
-                    title="背景设置"
-                    :modal="false"
-                    top="10vh"
-                    height="200px"
-                    :visible.sync="skinDialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <background-setting></background-setting>
-                </el-dialog>
-                <el-dialog
-                    width="700px"
-                    title="数据管理"
-                    :modal="false"
-                    top="10vh"
-                    :visible.sync="dialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <data-manage></data-manage>
-                </el-dialog>
-                <el-dialog
-                    v-if="isLogin"
-                    width="700px"
-                    title="账户设置"
-                    :modal="false"
-                    top="10vh"
-                    :visible.sync="accountDialogVisible"
-                    :close-on-click-modal="false"
-                    v-dialogDrag
-                >
-                    <account-setting></account-setting>
-                </el-dialog>
-            </div>
+                <background-setting></background-setting>
+            </rambler-dialog>
+            <rambler-dialog
+                :index="100"
+                :visible.sync="dialogVisible"
+                name="dataManage"
+                title="数据管理"
+                width="700px"
+                height="500px"
+                :draggable="true"
+            >
+                <data-manage></data-manage>
+            </rambler-dialog>
+            <rambler-dialog
+                :index="101"
+                :visible.sync="accountDialogVisible"
+                name="accountSetting"
+                title="账户设置"
+                width="700px"
+                height="500px"
+                :draggable="true"
+            >
+                <account-setting></account-setting>
+            </rambler-dialog>
 
             <!-- 侧边栏 -->
             <div class="fixed-sidebar" id="sidebar-window">
@@ -149,7 +132,7 @@
         </div>
         <!-- 动态背景 -->
         <div class="dy-background">
-            <component :is="$store.getters.dynamicBackground"></component>
+            <dynamic-background></dynamic-background>
         </div>
 
         <!-- 鼠标右键 -->
@@ -176,22 +159,19 @@
 </template>
 
 <script>
-import EmptyBackground from "./background/empty";
-import BubbleBackground from "./background/bubble";
-import SnowBackground from "./background/snow";
-import TimeFlip from "./components/time-flip";
-import Driver from "driver.js";
 import "driver.js/dist/driver.min.css";
+import Driver from "driver.js";
 import { mapActions } from "vuex";
-import { getToken } from "@/utils/token";
-import DataManage from "./widgets/data-manage";
-import BookmarkSetting from "./widgets/bookmark";
-import frequentBookmarks from "./widgets/frequent-bookmarks";
-import Search from "./widgets/search";
+import { getToken, tokenExpires } from "@/utils/token";
 import { getBookmarks } from "@/api/modules/bookmark";
 import { getTodos } from "@/api/modules/todo";
-import EngineSetting from "./widgets/engine";
-import FrequentBookmarkSetting from "./widgets/common-site";
+import DynamicBackground from "./background";
+import TimeFlip from "./components/time-flip";
+
+import DataManage from "./data-manage/index";
+import frequentBookmarks from "./widgets/frequent-bookmarks";
+import Search from "./widgets/search";
+
 import BackgroundSetting from "./widgets/background";
 import AccountSetting from "./widgets/account";
 export default {
@@ -244,18 +224,13 @@ export default {
         });
     },
     components: {
+        DynamicBackground: DynamicBackground,
         RamblerSearch: Search,
         frequentBookmarks: frequentBookmarks,
         DataManage: DataManage,
-        BookmarkSetting: BookmarkSetting,
-        EngineSetting: EngineSetting,
-        FrequentBookmarkSetting: FrequentBookmarkSetting,
         BackgroundSetting: BackgroundSetting,
         AccountSetting: AccountSetting,
-        TimeFlip: TimeFlip,
-        BubbleBackground: BubbleBackground,
-        SnowBackground: SnowBackground,
-        EmptyBackground
+        TimeFlip: TimeFlip
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -380,6 +355,7 @@ export default {
         width: 100%;
         height: 100vh;
         z-index: 20;
+        overflow: hidden;
         .search {
             max-width: 60%;
             margin: 30px auto;

@@ -73,7 +73,7 @@ export default {
             isDragging: false,
             position: {
                 left: 100,
-                top: 100
+                top: 30
             },
             originalPosition: {
                 left: 100,
@@ -145,13 +145,15 @@ export default {
             this.position.left = 0;
             this.position.top = 0;
             this.renderWidth = document.body.clientWidth + "px";
-            this.renderHeight = document.body.clientHeight - 50 - 48 + "px";
+            this.renderHeight = document.body.clientHeight - 50 - 38 + "px";
         },
         minus() {
             this.$emit("minus", this.name);
         },
         close: function() {
+            // 向父组件递交关闭信息
             this.$emit("close", this.name);
+            this.$emit("update:visible", false);
         },
         // 弹窗鼠标按下事件
         handleMouseDown(e) {
@@ -171,7 +173,8 @@ export default {
                 }
             } else {
                 // svg或者use, 从path找到svg标签，决定触发什么事件
-                let aim = e.path.find(item => item.nodeName == "svg");
+                const paths = e.path || (e.composedPath && e.composedPath());
+                let aim = paths.find(item => item.nodeName == "svg");
                 const indexOf = Array.prototype.indexOf;
                 if (aim) {
                     if (indexOf.call(aim.classList, "close") !== -1) {
@@ -238,8 +241,8 @@ export default {
     color: #fff;
     cursor: move;
     display: flex;
-    font-size: 16px;
-    height: 48px;
+    font-size: 14px;
+    height: 38px;
     justify-content: space-between;
     padding: 0 12px;
     .title {

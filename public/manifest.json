@@ -1,5 +1,5 @@
 {
-    "name": "rambler-navigation-vue",
+    "name": "chrome-new-tab-extension",
     "manifest_version": 3,
     "version": "1.0.0",
     "description": "rambler navigation extension",

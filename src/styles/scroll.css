@@ -16,7 +16,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color:#887e7e;
+    background-color: #ccc;
     min-height: 20px;
     background-clip: content-box;
 }
@@ -38,11 +38,11 @@
 }
 
 ::-ms-scrollbar-track {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, .2) inset;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
 }
 
 ::-ms-scrollbar-thumb {
-    background-color:#887e7e;
+    background-color: #ccc;
     min-height: 20px;
     background-clip: content-box;
 }
