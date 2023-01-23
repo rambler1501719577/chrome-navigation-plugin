@@ -1,7 +1,10 @@
 <template>
     <!-- 用于做全屏的遮罩层 -->
     <div class="rambler-dialog" v-show="visible" :style="dynamicStyle">
-        <div :class="['rambler_dialog__header', { 'drag-title': allowDrag }]">
+        <div
+            :class="['rambler_dialog__header', { 'drag-title': allowDrag }]"
+            :style="{ height: headerHeight + 'px' }"
+        >
             <slot name="header">
                 <div class="title">
                     <rambler-icon
@@ -52,20 +55,20 @@ export default {
         // 开启拖拽
         draggable: {
             type: Boolean,
-            default: false
+            default: false,
         },
         // 页面的标识，类似id
         name: String,
         // 表头名称
         title: {
             type: String,
-            default: "默认标题"
+            default: "默认标题",
         },
         // 表头图标
         icon: {
             type: String,
-            default: "engine"
-        }
+            default: "engine",
+        },
     },
     data() {
         return {
@@ -73,12 +76,13 @@ export default {
             isDragging: false,
             position: {
                 left: 100,
-                top: 30
+                top: 30,
             },
             originalPosition: {
                 left: 100,
-                top: 100
+                top: 100,
             },
+            headerHeight: 38,
             // 页面状态的常量
             viewState: viewState,
             animaionId: "", // requestAnimationFrame注册id
@@ -86,22 +90,22 @@ export default {
             startPositionY: 0, // 拖拽初始位置X
             renderWidth: 0, // 渲染宽度
             renderHeight: 0, // 渲染高度
-            mode: "restore" // max/middle
+            mode: "restore", // max/middle
         };
     },
     computed: {
-        dynamicStyle: function() {
+        dynamicStyle: function () {
             const { left, top } = this.position;
             return {
                 zIndex: this.index,
                 left: left + "px",
-                top: top + "px"
+                top: top + "px",
             };
-        }
+        },
     },
     watch: {
         // 弹窗隐藏和显示
-        visible: function(newVal) {
+        visible: function (newVal) {
             if (newVal) {
                 this.$emit("open");
                 console.log("渲染");
@@ -113,7 +117,7 @@ export default {
         mode(newVal) {
             this.$bus.$emit("dialog-size-change", {
                 page: this.name,
-                mode: newVal
+                mode: newVal,
             });
             if (newVal == "fullscreen") {
                 // 全屏
@@ -124,10 +128,10 @@ export default {
                 this.allowDrag = true;
                 this.restore();
             }
-        }
+        },
     },
     methods: {
-        handleResize: function() {
+        handleResize: function () {
             if (this.mode == "fullscreen") {
                 this.maximize();
             }
@@ -150,7 +154,7 @@ export default {
         minus() {
             this.$emit("minus", this.name);
         },
-        close: function() {
+        close: function () {
             // 向父组件递交关闭信息
             this.$emit("close", this.name);
             this.$emit("update:visible", false);
@@ -174,7 +178,7 @@ export default {
             } else {
                 // svg或者use, 从path找到svg标签，决定触发什么事件
                 const paths = e.path || (e.composedPath && e.composedPath());
-                let aim = paths.find(item => item.nodeName == "svg");
+                let aim = paths.find((item) => item.nodeName == "svg");
                 const indexOf = Array.prototype.indexOf;
                 if (aim) {
                     if (indexOf.call(aim.classList, "close") !== -1) {
@@ -210,7 +214,16 @@ export default {
             this.isDragging = false;
             document.onmousemove = null;
             document.onmouseup = null;
-        }
+        },
+        // 调整弹窗居中
+        relocateDialog() {
+            const windowHeight = document.body.clientHeight;
+            const windowWidth = document.body.clientWidth;
+            this.position.left = (windowWidth - parseInt(this.width)) / 2;
+            this.position.top =
+                (windowHeight - parseInt(this.height) - this.headerHeight) / 2;
+            console.log(this.position);
+        },
     },
     mounted() {
         // 绑定拖拽事件
@@ -220,11 +233,12 @@ export default {
             dom.onmousedown = this.handleMouseDown;
         }
         window.onresize = this.handleResize;
+        this.relocateDialog();
     },
     created() {
         this.renderWidth = this.width;
         this.renderHeight = this.height;
-    }
+    },
 };
 </script>
 
@@ -242,7 +256,6 @@ export default {
     cursor: move;
     display: flex;
     font-size: 14px;
-    height: 38px;
     justify-content: space-between;
     padding: 0 12px;
     .title {

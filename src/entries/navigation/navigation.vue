@@ -3,7 +3,7 @@
         v-bubble="'heart'"
         class="page-container"
         :style="{
-            backgroundImage: `url('${$store.getters.background}')`
+            backgroundImage: `url('${$store.getters.background}')`,
         }"
     >
         <div class="content">
@@ -43,7 +43,7 @@
                 name="accountSetting"
                 title="账户设置"
                 width="700px"
-                height="500px"
+                height="220px"
                 :draggable="true"
             >
                 <account-setting></account-setting>
@@ -141,7 +141,7 @@
             v-show="contextMenuShow"
             :style="{
                 left: position.left + 'px',
-                top: position.top + 'px'
+                top: position.top + 'px',
             }"
         >
             <ul>
@@ -186,9 +186,9 @@ export default {
             contextMenuShow: false,
             position: {
                 left: 0,
-                top: 0
+                top: 0,
             },
-            test2: true
+            test2: true,
         };
     },
     async created() {
@@ -214,11 +214,11 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            window.addEventListener("contextmenu", e => {
+            window.addEventListener("contextmenu", (e) => {
                 e.preventDefault();
                 this.showContextMenu(e);
             });
-            window.addEventListener("click", e => {
+            window.addEventListener("click", (e) => {
                 this.contextMenuShow = false;
             });
         });
@@ -230,7 +230,7 @@ export default {
         DataManage: DataManage,
         BackgroundSetting: BackgroundSetting,
         AccountSetting: AccountSetting,
-        TimeFlip: TimeFlip
+        TimeFlip: TimeFlip,
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -259,7 +259,7 @@ export default {
         loadRemoteData(token) {
             const promises = [
                 getBookmarks(null, token.value),
-                getTodos(null, token.value)
+                getTodos(null, token.value),
             ];
             Promise.allSettled(promises).then(([bookmarkRes, todoRes]) => {
                 if (
@@ -280,7 +280,7 @@ export default {
                 }
             });
         },
-        loadLocalBookmark: function() {
+        loadLocalBookmark: function () {
             if (!chrome.bookmarks) {
                 return console.log("请在chrome中调试本地书签");
             }
@@ -292,7 +292,7 @@ export default {
                 doneBtnText: "完成",
                 closeBtnText: "关闭",
                 nextBtnText: "下一步", // Next button text for this step
-                prevBtnText: "上一步"
+                prevBtnText: "上一步",
             });
             this.driver.defineSteps([
                 {
@@ -303,8 +303,8 @@ export default {
                         description:
                             "将在【书签】【历史记录】中进行检索, 可以使用上下箭头切换结果并使用回车跳转, 上方可以切换不同搜索引擎",
                         position: "bottom-center",
-                        offset: 0
-                    }
+                        offset: 0,
+                    },
                 },
                 {
                     element: "#frequent-window",
@@ -312,9 +312,9 @@ export default {
                         title: "常用菜单导航",
                         description:
                             "方便快速访问常用网站, 可以在右侧进行添加和修改",
-                        position: "bottom-center"
-                    }
-                }
+                        position: "bottom-center",
+                    },
+                },
                 // {
                 //     element: "#sidebar-window",
                 //     popover: {
@@ -334,8 +334,8 @@ export default {
                 this.$store.dispatch("setting/updateIsGuide");
                 if (e) e.stopPropagation();
             });
-        }
-    }
+        },
+    },
 };
 </script>
 <style scoped lang="less">
