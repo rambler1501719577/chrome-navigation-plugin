@@ -88,7 +88,7 @@
                 :style="{
                     backgroundImage: `url('${previewSrc}')`,
                     backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundRepeat: 'no-repeat',
                 }"
             >
                 <!-- 动效 -->
@@ -99,9 +99,7 @@
                     ></component>
                 </div>
             </div>
-            <div class="title">
-                背景动效
-            </div>
+            <div class="title">背景动效</div>
             <div class="dynamic-bg">
                 <el-radio-group v-model="choosen.dyBackground">
                     <el-radio label="snow">雪花</el-radio>
@@ -125,10 +123,10 @@ import { uploadFileSize } from "@/settings";
 import { mapActions, mapState } from "vuex";
 const attrMap = {
     snow: {
-        maxSnowRadius: 7,
+        maxSnowRadius: 10,
         maxSnowVx: 2,
         maxSnowVy: 2,
-        maxSnowCount: 40
+        maxSnowCount: 50,
     },
     bubble: {
         bubbleCount: 30,
@@ -137,8 +135,8 @@ const attrMap = {
         // 气泡最大速度
         maxBubbleSpeed: 1,
         // 气泡最小速度
-        minBubbleSpeed: 0.5
-    }
+        minBubbleSpeed: 0.5,
+    },
 };
 export default {
     data() {
@@ -148,17 +146,17 @@ export default {
                 belong: "",
                 systemBg: "",
                 customBg: "",
-                dyBackground: ""
-            }
+                dyBackground: "",
+            },
         };
     },
     computed: {
         ...mapState("setting", {
-            background: state => state.background,
-            dynamicBackground: state => state.dynamicBackground
+            background: (state) => state.background,
+            dynamicBackground: (state) => state.dynamicBackground,
         }),
         // 预览背景地址
-        previewSrc: function() {
+        previewSrc: function () {
             return this.choosen.belong == "system"
                 ? "/background/" + this.choosen.systemBg
                 : this.choosen.customBg;
@@ -168,18 +166,18 @@ export default {
         },
         dynamicAttrs() {
             return attrMap[this.choosen.dyBackground];
-        }
+        },
     },
     components: {
         EmptyBackground,
         BubbleBackground,
-        SnowBackground
+        SnowBackground,
     },
     methods: {
         // 映射setting.Action
         ...mapActions("setting", [
             "updateBackground",
-            "updateDynamicBackground"
+            "updateDynamicBackground",
         ]),
         updateSystemBg(type, pic) {
             this.choosen.belong = type;
@@ -226,7 +224,7 @@ export default {
                 this.choosen.belong = "custom";
                 this.choosen.customBg = reader.result;
             });
-            reader.addEventListener("error", e => {
+            reader.addEventListener("error", (e) => {
                 this.$message.error("读取文件失败，文件不存在");
                 console.log(e);
             });
@@ -237,12 +235,12 @@ export default {
                 src:
                     this.choosen.belong == "system"
                         ? this.choosen.systemBg
-                        : this.choosen.customBg
+                        : this.choosen.customBg,
             };
             this.updateBackground(payload);
             this.updateDynamicBackground(this.choosen.dyBackground);
             this.$message.success("更换成功");
-        }
+        },
     },
     created() {
         this.choosen.belong = this.background.belong;
@@ -250,7 +248,7 @@ export default {
         this.choosen.systemBg = this.background.systemBg;
         this.choosen.dyBackground = this.dynamicBackground;
         this.dyBackground = this.dyBackground;
-    }
+    },
 };
 </script>
 <style lang="less" scoped>

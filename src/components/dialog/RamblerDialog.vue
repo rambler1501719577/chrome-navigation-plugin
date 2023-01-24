@@ -219,10 +219,11 @@ export default {
         relocateDialog() {
             const windowHeight = document.body.clientHeight;
             const windowWidth = document.body.clientWidth;
-            this.position.left = (windowWidth - parseInt(this.width)) / 2;
-            this.position.top =
+            const posLeft = (windowWidth - parseInt(this.width)) / 2;
+            this.position.left = posLeft > 0 ? posLeft : 0;
+            const posTop =
                 (windowHeight - parseInt(this.height) - this.headerHeight) / 2;
-            console.log(this.position);
+            this.position.top = posTop > 0 ? posTop : 0;
         },
     },
     mounted() {

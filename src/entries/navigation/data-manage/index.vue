@@ -21,27 +21,27 @@
 </template>
 
 <script>
-import BookmarkManage from "../data-manage/bookmark.vue";
+import BookmarkManage from "../views/bookmark/bookmark-manage.vue";
 import EngineManage from "../data-manage/engine.vue";
 import FrequentBookmarksManage from "../data-manage/common-site.vue";
 export default {
     name: "DataManage",
     data() {
         return {
-            current: "bookmark-manage" // bookmark-manage | frequent-bookmarks-manage | engine-manage
+            current: "bookmark-manage", // bookmark-manage | frequent-bookmarks-manage | engine-manage
         };
     },
     components: {
         FrequentBookmarksManage,
         EngineManage,
-        BookmarkManage
+        BookmarkManage,
     },
     computed: {},
     methods: {
         switchComponent(component) {
             this.current = component;
-        }
-    }
+        },
+    },
 };
 </script>
 <style lang="less" scoped="scoped">
