@@ -252,8 +252,9 @@ export default {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     align-items: center;
-    background-color: #009688;
+    background-color: #6cbdf1;
     color: #fff;
+    letter-spacing: 1px;
     cursor: move;
     display: flex;
     font-size: 14px;

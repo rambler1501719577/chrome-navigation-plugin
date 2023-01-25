@@ -5,6 +5,7 @@ import axios from "axios";
 import "@/directives/drag";
 import "@/directives/bubble";
 import ElementUI from "element-ui";
+import Filters from "@/filters";
 
 // 全局css样式
 import "styl/scroll.css";
@@ -19,6 +20,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import SvgIcon from "@/icon";
 import Favicon from "./components/favicon";
 import RamblerDialog from "@/components/dialog/RamblerDialog";
+import RamblerButton from "@/components/button";
 
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios;
@@ -31,6 +33,9 @@ Vue.config.productionTip = false;
 Vue.component("RamblerIcon", SvgIcon);
 Vue.component("Favicon", Favicon);
 Vue.component("RamblerDialog", RamblerDialog);
+Vue.component("RamblerButton", RamblerButton);
+// 注册过滤器
+Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));
 
 new Vue({
     store,

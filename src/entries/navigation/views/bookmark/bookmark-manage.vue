@@ -2,17 +2,29 @@
     <div class="bookmarkmark-container">
         <div class="bookmark-header">
             <div class="paths">
-                <button @click="goBack">后退</button>
+                <rambler-button @click="goBack">后退</rambler-button>
                 <div class="path">
-                    <span v-for="(visitedDir, index) of path" :key="index">
+                    <span
+                        v-for="(visitedDir, index) of path"
+                        :key="index"
+                        @click="handlePathClick(visitedDir)"
+                    >
                         {{ visitedDir.title }}
                     </span>
                 </div>
             </div>
             <div class="tail">
-                <div class="mesh">网格</div>
-                <div class="list">列表</div>
+                <div class="mesh">
+                    <rambler-icon class="icon" name="grid"></rambler-icon>
+                </div>
+                <div class="list">
+                    <rambler-icon class="icon" name="list"></rambler-icon>
+                </div>
             </div>
+        </div>
+        <div class="table-header">
+            <div class="file">书签名</div>
+            <div class="mod-time">修改时间</div>
         </div>
         <ul>
             <li v-for="bookmark of bookmarkList">
@@ -41,7 +53,7 @@ export default {
                     id: "1",
                     index: 0,
                     parentId: "0",
-                    title: "书签栏",
+                    title: "vol",
                 },
                 {
                     dateAdded: 1628582602825,
@@ -69,8 +81,12 @@ export default {
         ...mapActions("bookmark", ["updateBookmark"]),
         // 点击书签文件夹
         handleDirClick(bookmarkDir) {
-            this.path.push(bookmarkDir);
-            this.getChildren(bookmarkDir.id);
+            try {
+                this.getChildren(bookmarkDir.id);
+                this.path.push(bookmarkDir);
+            } catch (e) {
+                console.log("获取书签捕获到异常");
+            }
         },
         // 点击书签
         handleBookmarkClick(bookmark) {
@@ -89,10 +105,18 @@ export default {
         isDir(bookmark) {
             return !bookmark.url;
         },
+        handlePathClick(pathTarget) {
+            const popTimes = this.path.findIndex(
+                (path) => path.id == pathTarget.id
+            );
+            for (let i = 0; i < popTimes; i++) {
+                this.path.pop();
+            }
+            this.getChildren(pathTarget.id);
+        },
         getChildren(bookmarkId) {
             if (!chrome.bookmarks) {
-                console.log("无法读取chrome.bookmarks对象");
-                // this.bookmarkList = [];
+                throw new Error("无法读取chrome.bookmarks对象");
             } else {
                 chrome.bookmarks.getChildren(bookmarkId, (list) => {
                     this.bookmarkList = list;
@@ -139,6 +163,7 @@ export default {
     .bookmark-header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 10px;
         color: #666;
         font-size: 14px;
@@ -150,21 +175,49 @@ export default {
             .path {
                 span {
                     position: relative;
-                    margin-right: 10px;
+                    margin-right: 12px;
                 }
                 span:not(:last-child):before {
                     content: "";
                     position: absolute;
                     top: 0px;
                     right: -5px;
-                    width: 3px;
+                    width: 1px;
                     height: 16px;
                     background: #666;
+                    transform: rotateZ(13deg);
                 }
             }
         }
         .tail {
             display: flex;
+            .mesh {
+                .icon {
+                    font-size: 20px;
+                    margin: -2px 4px 0 0;
+                }
+            }
+            .icon {
+                fill: #444;
+                font-size: 18px;
+            }
+        }
+    }
+    .table-header {
+        display: flex;
+        height: 26px;
+        line-height: 26px;
+        font-size: 14px;
+        .file {
+            padding-left: 5px;
+            background: #eee;
+            width: 400px;
+            margin-right: 5px;
+        }
+        .mod-time {
+            flex: 1;
+            padding-left: 5px;
+            background: #eee;
         }
     }
 }

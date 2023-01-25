@@ -1,0 +1,88 @@
+@keyframes rotate {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.rambler-button {
+    // 转为行内块状元素
+    display: inline-block;
+    .rambler-button-inner {
+        cursor: pointer;
+        display: inline-block;
+        min-height: 1em;
+        outline: none;
+        border: none;
+        vertical-align: baseline;
+        background: #e0e1e2 none;
+        color: rgba(0, 0, 0, 0.6);
+        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        margin: 0em 0.25em 0em 0em;
+        text-transform: none;
+        padding: 0.78571429em 1.5em 0.78571429em;
+        text-shadow: none;
+        font-weight: bold;
+        line-height: 1em;
+        font-style: normal;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 0.28571429rem;
+        box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgb(34 36 38 / 15%) inset;
+        user-select: none;
+        transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease,
+            box-shadow 0.1s ease, background 0.1s ease;
+        will-change: '';
+        position: relative;
+
+        .icon-btn {
+            margin-left: 5px;
+        }
+
+        &:hover {
+            background-color: #cacbcd;
+            background-image: none;
+            box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgb(34 36 38 / 15%) inset;
+            color: rgba(0, 0, 0, 0.8);
+        }
+    }
+    .only-icon-button {
+        padding: 0.78571429em 0.78571429em 0.78571429em;
+    }
+    .rich-button {
+        padding: 0.78571429em 1.5em 0.78571429em;
+    }
+    .button-blue {
+        background-color: #2185d0;
+        color: #ffffff;
+        &:hover {
+            background: #1678c2;
+            color: #ffffff !important;
+        }
+    }
+    .button-green {
+        background-color: #21ba45;
+        color: #ffffff;
+        &:hover {
+            background-color: #16ab39 !important;
+            color: #ffffff !important;
+        }
+    }
+    .button-orange {
+        background-color: #f2711c;
+        color: #ffffff;
+        &:hover {
+            background-color: #f26202 !important;
+            color: #ffffff !important;
+        }
+    }
+    .button-red {
+        background-color: #db2828;
+        color: #ffffff;
+        &:hover {
+            background-color: #d01919 !important;
+            color: #ffffff !important;
+        }
+    }
+}
