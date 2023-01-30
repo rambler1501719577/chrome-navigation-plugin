@@ -1,9 +1,10 @@
 <template>
     <div class="bookmark-list-item-wrapper">
+        <!-- dir start -->
         <div
             v-if="isDir"
             class="list-item-dir list-item"
-            @click="handleItemClick('dir')"
+            @dblclick="handleItemClick('dir')"
             @contextmenu="handleContextmenu"
         >
             <div class="title">
@@ -11,13 +12,37 @@
                 <span class="title-text">{{ bookmark.title | upper }}</span>
             </div>
             <div class="mod-time">
-                <span>
-                    {{
-                        bookmark.dateGroupModified | timeFormat("{y}-{m}-{d}")
-                    }}</span
-                >
+                <!-- bookmark.dateGroupModified -->
+                <div class="delete-box">
+                    <rambler-icon
+                        class="icon"
+                        name="delete-fill"
+                        @click.native.stop="confirmForDelete"
+                    ></rambler-icon>
+                    <div class="alert-box">
+                        确定要删除这个<span style="color: red">文件夹</span>吗
+                        <div class="alert-bottom-btn">
+                            <p
+                                class="rambler-icon-inline cancel"
+                                @click.stop="cancelDeletet"
+                            >
+                                取消
+                            </p>
+                            <p
+                                class="rambler-icon-inline sure"
+                                @click.stop="sureDeleteDir"
+                            >
+                                确定
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <rambler-icon class="icon" name="edit-fill"></rambler-icon>
             </div>
+            <div class="opt-btns"></div>
         </div>
+        <!-- dir end -->
+        <!-- bookmark start -->
         <div
             v-else
             class="list-item-bookmark list-item"
@@ -31,7 +56,34 @@
                 ></favicon>
                 <span class="title-text">{{ bookmark.title | upper }}</span>
             </div>
+            <div class="mod-time">
+                <div class="delete-box">
+                    <rambler-icon
+                        class="icon"
+                        name="delete-fill"
+                        @click.native.stop="confirmForDelete"
+                    ></rambler-icon>
+                    <div class="alert-box">
+                        确定要删除这个<span style="color: red">书签</span>吗
+                        <div class="alert-bottom-btn">
+                            <p
+                                class="rambler-icon-inline cancel"
+                                @click.stop="cancelDeletet"
+                            >
+                                取消
+                            </p>
+                            <p
+                                class="rambler-icon-inline sure"
+                                @click.stop="sureDeleteBookmark"
+                            >
+                                确定
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- bookmark end -->
     </div>
 </template>
 
@@ -53,14 +105,39 @@ export default {
         },
     },
     methods: {
+        // 删除提示
+        confirmForDelete(e) {
+            const { target } = e;
+            target.parentNode.parentNode.querySelector(
+                ".alert-box"
+            ).style.display = "block";
+            e.stopPropagation();
+        },
+        // 取消删除
+        cancelDeletet(e) {
+            // e.target.parentNode.parentNode.style.display = "none";
+            this.closeDeleteTip();
+        },
+        closeDeleteTip() {
+            this.$el.querySelector(".alert-box").style.display = "none";
+        },
+        // 确定删除书签
+        sureDeleteBookmark() {
+            console.log("确定删除");
+            this.closeDeleteTip();
+        },
+        sureDeleteDir() {
+            console.log("确定删除文件夹");
+            this.closeDeleteTip();
+        },
         handleItemClick(type) {
             const emitType = type == "dir" ? "dir-click" : "bookmark-click";
             this.$emit(emitType, this.bookmark);
         },
         handleContextmenu(e) {
+            // 思路： 悬停后展示buttons like baidu网盘
             e.stopPropagation();
             e.preventDefault();
-            console.log("contextmenu");
         },
     },
 };
@@ -72,7 +149,7 @@ export default {
         display: flex;
         align-items: center;
         .title {
-            width: 410px;
+            flex: 1;
             overflow: hidden;
             color: #666;
             font-size: 16px;
@@ -83,8 +160,6 @@ export default {
             .title-text {
                 display: block;
                 width: 100%;
-                height: 40px;
-                line-height: 40px;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
@@ -96,7 +171,66 @@ export default {
             }
         }
         .mod-time {
+            position: relative;
+            height: 100%;
+            padding-top: 11px;
+            width: 100px;
             color: rgba(0, 0, 0, 0.54);
+            padding-left: 5px;
+            .delete-box {
+                display: inline-block;
+                position: relative;
+                .alert-box {
+                    display: none;
+                    position: absolute;
+                    z-index: 9;
+                    left: -80px;
+                    top: 30px;
+                    width: 180px;
+                    height: 80px;
+                    padding: 12px;
+                    font-size: 14px;
+                    background: #fff;
+                    color: #606266;
+                    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+                    border: 1px solid #ebeef5;
+                    .alert-bottom-btn {
+                        margin-top: 12px;
+                        display: flex;
+                        justify-content: flex-end;
+                        .sure {
+                            background: rgb(95, 156, 225);
+                            color: #fff;
+                        }
+                        .cancel {
+                            color: rgb(95, 156, 225);
+                        }
+                    }
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 80px;
+                        top: -7px;
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-bottom: 7px solid #fff;
+                    }
+                }
+            }
+            .icon {
+                font-size: 20px;
+                cursor: pointer;
+                fill: #7a9edf;
+                margin-right: 8px;
+                &:hover {
+                    fill: rgb(89, 120, 218);
+                }
+            }
+        }
+        &:hover {
+            background: #edf3f9;
         }
     }
 }

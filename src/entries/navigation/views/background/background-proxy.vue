@@ -2,15 +2,15 @@
     <component :is="$store.getters.dynamicBackground"></component>
 </template>
 <script>
-import EmptyBackground from "./empty";
-import BubbleBackground from "./bubble";
-import SnowBackground from "./snow";
+import EmptyBackground from "./backgrounds/empty";
+import BubbleBackground from "./backgrounds/bubble";
+import SnowBackground from "./backgrounds/snow";
 export default {
     components: {
         BubbleBackground,
         SnowBackground,
-        EmptyBackground
-    }
+        EmptyBackground,
+    },
 };
 </script>
 <style lang="less"></style>

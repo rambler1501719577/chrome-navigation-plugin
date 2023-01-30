@@ -34,23 +34,23 @@ export default {
         // 气泡数量
         bubbleCount: {
             type: Number,
-            default: () => 50
+            default: () => 50,
         },
         // 气泡半径
         maxBubbleRadius: {
             type: Number,
-            default: () => 3
+            default: () => 3,
         },
         // 气泡最大速度
         maxBubbleSpeed: {
             type: Number,
-            default: () => 2
+            default: () => 2,
         },
         // 气泡最小速度
         minBubbleSpeed: {
             type: Number,
-            default: () => 0.5
-        }
+            default: () => 0.5,
+        },
     },
     data() {
         return {
@@ -58,7 +58,7 @@ export default {
             windowHeight: 0,
             windowWidth: 0,
             canvas: null,
-            ctx: null
+            ctx: null,
         };
     },
     async mounted() {
@@ -69,11 +69,11 @@ export default {
         generateBubble() {
             const boundary = {
                 width: this.windowWidth,
-                height: this.windowHeight
+                height: this.windowHeight,
             };
             const speed = {
                 max: this.maxBubbleSpeed,
-                min: this.minBubbleSpeed
+                min: this.minBubbleSpeed,
             };
             for (let i = 0; i < this.bubbleCount; i++) {
                 const bubble = new Bubble();
@@ -82,13 +82,14 @@ export default {
             }
         },
         init() {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 this.windowHeight = this.$el.clientHeight;
                 this.windowWidth = this.$el.clientWidth;
                 this.canvas = this.$el.querySelector("#bubble-canvas");
                 this.ctx = this.canvas.getContext("2d");
                 this.canvas.style.width = this.canvas.width = this.windowWidth;
-                this.canvas.style.height = this.canvas.height = this.windowHeight;
+                this.canvas.style.height = this.canvas.height =
+                    this.windowHeight;
                 this.generateBubble();
                 resolve();
             });
@@ -96,7 +97,7 @@ export default {
         draw() {
             this.ctx.clearRect(0, 0, this.windowWidth, this.windowHeight);
             // repaint
-            this.bubbleArr.forEach(bubble => {
+            this.bubbleArr.forEach((bubble) => {
                 // update bubble,
                 this.ctx.save();
                 bubble.update(
@@ -112,8 +113,8 @@ export default {
                 this.ctx.restore();
             });
             requestAnimationFrame(this.draw);
-        }
-    }
+        },
+    },
 };
 </script>
 <style lang="less" scoped>

@@ -9,7 +9,7 @@
             </div>
             <div
                 class="list-item"
-                @click="switchComponent('frequent-bookmarks-manage')"
+                @click="switchComponent('frequent-website-manage')"
             >
                 <rambler-icon title="常用网站" name="website"></rambler-icon>
             </div>
@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import BookmarkManage from "../views/bookmark/bookmark-manage.vue";
-import EngineManage from "../data-manage/engine.vue";
-import FrequentBookmarksManage from "../data-manage/common-site.vue";
+import BookmarkManage from "../bookmark/manage.vue";
+import EngineManage from "../search-engine/manage.vue";
+import FrequentWebsiteManage from "../frequent-website/manage.vue";
 export default {
     name: "DataManage",
     data() {
@@ -32,7 +32,7 @@ export default {
         };
     },
     components: {
-        FrequentBookmarksManage,
+        FrequentWebsiteManage,
         EngineManage,
         BookmarkManage,
     },

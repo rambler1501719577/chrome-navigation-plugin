@@ -4,6 +4,7 @@
             <div class="paths">
                 <rambler-button @click="goBack">后退</rambler-button>
                 <div class="path">
+                    <span @click="handlePathClick(undefined)"> 全部书签 </span>
                     <span
                         v-for="(visitedDir, index) of path"
                         :key="index"
@@ -39,6 +40,7 @@
 </template>
 
 <script>
+import { randomNum } from "@/utils";
 import _ from "lodash";
 import { mapGetters, mapActions } from "vuex";
 import BookmarkItem from "./components/list-item";
@@ -60,6 +62,7 @@ export default {
                     dateGroupModified: 1673316216588,
                     id: "2",
                     index: 1,
+                    url: "1",
                     parentId: "0",
                     title: "其他书签",
                 },
@@ -105,23 +108,49 @@ export default {
         isDir(bookmark) {
             return !bookmark.url;
         },
+        // 路径直接跳转
         handlePathClick(pathTarget) {
-            const popTimes = this.path.findIndex(
+            if (!pathTarget) {
+                while (this.path.length !== 0) {
+                    this.path.pop();
+                }
+                this.getChildren("0");
+                return;
+            }
+            const targetPathIndex = this.path.findIndex(
                 (path) => path.id == pathTarget.id
             );
-            for (let i = 0; i < popTimes; i++) {
+            const popTime = this.path.length - (targetPathIndex + 1);
+            for (let i = 0; i < popTime; i++) {
                 this.path.pop();
             }
             this.getChildren(pathTarget.id);
         },
+        // chrome api -> 根据id获取书签
         getChildren(bookmarkId) {
             if (!chrome.bookmarks) {
-                throw new Error("无法读取chrome.bookmarks对象");
+                this.bookmarkList = [...this.randomData()];
             } else {
                 chrome.bookmarks.getChildren(bookmarkId, (list) => {
                     this.bookmarkList = list;
                 });
             }
+        },
+        randomData() {
+            const arr = [];
+            const times = randomNum(2, 10);
+            for (let i = 0; i < times; i++) {
+                arr.push({
+                    dateAdded: 1628582602825,
+                    dateGroupModified: 1673316216588,
+                    id: "2",
+                    index: 1,
+                    url: i % 2 == 0 ? "111" : "",
+                    parentId: "0",
+                    title: "随机" + i + "",
+                });
+            }
+            return arr;
         },
         // 编辑行
         editRow: function (row) {
@@ -173,9 +202,14 @@ export default {
             flex-wrap: wrap;
             align-items: center;
             .path {
+                margin-left: 6px;
                 span {
+                    cursor: pointer;
                     position: relative;
                     margin-right: 12px;
+                    &:hover {
+                        color: rgb(105, 151, 221);
+                    }
                 }
                 span:not(:last-child):before {
                     content: "";
@@ -208,14 +242,15 @@ export default {
         height: 26px;
         line-height: 26px;
         font-size: 14px;
+        margin-bottom: 5px;
         .file {
             padding-left: 5px;
             background: #eee;
-            width: 400px;
             margin-right: 5px;
+            flex: 1;
         }
         .mod-time {
-            flex: 1;
+            width: 100px;
             padding-left: 5px;
             background: #eee;
         }

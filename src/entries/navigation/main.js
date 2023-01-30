@@ -18,7 +18,8 @@ import "@/assets/iconfont/iconfont.css";
 import "element-ui/lib/theme-chalk/index.css";
 // 注册图标
 import SvgIcon from "@/icon";
-import Favicon from "./components/favicon";
+// import Favicon from "./components/favicon";
+import Favicon from "@/components/favicon";
 import RamblerDialog from "@/components/dialog/RamblerDialog";
 import RamblerButton from "@/components/button";
 

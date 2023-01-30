@@ -10,9 +10,10 @@
         "scripting",
         "cookies",
         "history",
-        "contextMenus"
+        "contextMenus",
+        "favicon"
     ],
-    "optional_permissions": [],
+    "optional_host_permissions": [],
     "host_permissions": ["*://*/*"],
     "background": {
         "service_worker": "js/background.js",

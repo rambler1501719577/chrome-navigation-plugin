@@ -59,12 +59,12 @@ export default {
     data() {
         return {
             localDataSource: false,
-            isLogin: false
+            isLogin: false,
         };
     },
     created() {
         this.localDataSource = this.dataSource == "local" ? true : false;
-        getToken().then(token => {
+        getToken().then((token) => {
             if (token && token.value) {
                 this.isLogin = true;
             }
@@ -74,7 +74,7 @@ export default {
         ...mapGetters(["dataSource"]),
         ...mapGetters("engine", ["localEngines"]),
         ...mapGetters("frequentBookmark", ["localFrequentBookmarks"]),
-        ...mapGetters("bookmark", ["localBookmark"])
+        ...mapGetters("bookmark", ["localBookmark"]),
     },
     methods: {
         ...mapActions("frequentBookmark", ["replaceFrequentBookmark"]),
@@ -84,19 +84,19 @@ export default {
             if (value) {
                 this.updateDataSource("local");
                 this.setDefaultEngine({
-                    dataSource: "local"
+                    dataSource: "local",
                 });
             } else {
                 this.updateDataSource("remote");
                 this.setDefaultEngine({
-                    dataSource: "remote"
+                    dataSource: "remote",
                 });
             }
         },
         exportConfig() {
             const data = JSON.stringify({
                 frequentBookmark: this.localFrequentBookmarks,
-                engine: this.localEngines
+                engine: this.localEngines,
             });
             const blob = new Blob([data], { type: "" });
             FileSaver.saveAs(blob, "config.json");
@@ -107,7 +107,7 @@ export default {
             const file = e.target.files[0];
             let reader = new FileReader();
             reader.readAsText(file);
-            reader.onload = function() {
+            reader.onload = function () {
                 try {
                     let res = JSON.parse(this.result);
                     const { frequentBookmark, engine } = res;
@@ -125,8 +125,8 @@ export default {
         // 唤起file事件
         importConfig() {
             document.querySelector("#upload").click();
-        }
-    }
+        },
+    },
 };
 </script>
 <style lang="less" scoped="scoped">

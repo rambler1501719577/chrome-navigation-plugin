@@ -104,6 +104,14 @@ div#driver-page-overlay {
     position: absolute;
 }
 
+.rambler-icon-inline {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 @font-face {
     font-family: "龙吟手书";
     src: url("../assets/fonts/龙吟手书.ttf");

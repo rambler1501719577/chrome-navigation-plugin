@@ -116,9 +116,9 @@
     </div>
 </template>
 <script>
-import EmptyBackground from "../background/empty";
-import BubbleBackground from "../background/bubble";
-import SnowBackground from "../background/snow";
+import EmptyBackground from "./backgrounds/empty";
+import BubbleBackground from "./backgrounds/bubble";
+import SnowBackground from "./backgrounds/snow";
 import { uploadFileSize } from "@/settings";
 import { mapActions, mapState } from "vuex";
 const attrMap = {

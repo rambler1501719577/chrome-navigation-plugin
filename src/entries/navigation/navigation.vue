@@ -165,15 +165,15 @@ import { mapActions } from "vuex";
 import { getToken, tokenExpires } from "@/utils/token";
 import { getBookmarks } from "@/api/modules/bookmark";
 import { getTodos } from "@/api/modules/todo";
-import DynamicBackground from "./background";
+import DynamicBackground from "./views/background";
 import TimeFlip from "./components/time-flip";
 
-import DataManage from "./data-manage/index";
-import frequentBookmarks from "./widgets/frequent-bookmarks";
-import Search from "./widgets/search";
+import DataManage from "./views/data-manage/index";
+import frequentBookmarks from "./views/frequent-website/list-front";
+import Search from "./views/search-engine/search";
 
-import BackgroundSetting from "./widgets/background";
-import AccountSetting from "./widgets/account";
+import BackgroundSetting from "./views/background/manage";
+import AccountSetting from "./views/account";
 export default {
     name: "IndexLayout",
     data() {

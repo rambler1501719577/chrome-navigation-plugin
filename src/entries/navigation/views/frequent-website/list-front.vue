@@ -32,9 +32,7 @@
                 <div class="add-bg">
                     <rambler-icon name="add" class="add-icon"></rambler-icon>
                 </div>
-                <div class="text">
-                    添加
-                </div>
+                <div class="text">添加</div>
             </div>
         </div>
         <el-dialog
@@ -66,7 +64,7 @@
                     ></el-input>
                 </el-form-item>
             </el-form>
-            <div class="btns" style="display:flex;justify-content:flex-end">
+            <div class="btns" style="display: flex; justify-content: flex-end">
                 <el-button size="small" @click="handleSubmit" type="primary"
                     >确定</el-button
                 >
@@ -77,7 +75,7 @@
 
 <script>
 const { v4: uuidv4 } = require("uuid");
-import ImageCard from "../components/image-card";
+import ImageCard from "./components/image-card";
 import { mapGetters, mapActions } from "vuex";
 export default {
     name: "FrequesntBookmarks",
@@ -95,32 +93,32 @@ export default {
             dialogVisible: false,
             form: {
                 name: "",
-                url: ""
+                url: "",
             },
             rules: {
                 name: [
                     {
                         required: true,
                         message: "网站名称不能为空",
-                        trigger: "blur"
-                    }
+                        trigger: "blur",
+                    },
                 ],
                 url: [
                     { validator: urlValidator, trigger: "blur" },
                     {
                         required: true,
                         message: "网站地址不能为空",
-                        trigger: "blur"
-                    }
-                ]
-            }
+                        trigger: "blur",
+                    },
+                ],
+            },
         };
     },
     computed: {
-        ...mapGetters(["frequentBookmarks"])
+        ...mapGetters(["frequentBookmarks"]),
     },
     components: {
-        ImageCard
+        ImageCard,
     },
     methods: {
         ...mapActions("frequentBookmark", ["update"]),
@@ -128,8 +126,8 @@ export default {
             this.update({
                 type: "delete",
                 data: {
-                    id: site.id
-                }
+                    id: site.id,
+                },
             });
         },
         handleMouseenter(e) {
@@ -146,8 +144,8 @@ export default {
         showDialog() {
             this.dialogVisible = true;
         },
-        handleSubmit: function() {
-            this.$refs.form.validate(result => {
+        handleSubmit: function () {
+            this.$refs.form.validate((result) => {
                 if (result) {
                     // 同步到vuex
                     this.update({
@@ -155,8 +153,8 @@ export default {
                         data: {
                             name: this.form.name,
                             url: this.form.url,
-                            id: uuidv4()
-                        }
+                            id: uuidv4(),
+                        },
                     });
                     this.$refs.form.resetFields();
                     this.dialogVisible = false;
@@ -167,8 +165,8 @@ export default {
             this.$nextTick(() => {
                 this.$refs.form.resetFields();
             });
-        }
-    }
+        },
+    },
 };
 </script>
 <style lang="less" scoped>
