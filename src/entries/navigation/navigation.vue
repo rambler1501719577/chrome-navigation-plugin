@@ -16,7 +16,6 @@
                 <frequent-bookmarks />
             </div>
             <rambler-dialog
-                :index="99"
                 :visible.sync="skinDialogVisible"
                 name="backgroundSetting"
                 title="背景设置"
@@ -27,7 +26,6 @@
                 <background-setting></background-setting>
             </rambler-dialog>
             <rambler-dialog
-                :index="100"
                 :visible.sync="dialogVisible"
                 name="dataManage"
                 title="数据管理"

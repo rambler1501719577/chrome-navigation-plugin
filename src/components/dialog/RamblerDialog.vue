@@ -11,7 +11,7 @@
                         :name="icon"
                         class="title-icon"
                     ></rambler-icon>
-                    <span>{{ title }}</span>
+                    <span>{{ title }}-{{ zIndex }}</span>
                 </div>
                 <div class="btns">
                     <!-- <rambler-icon
@@ -45,13 +45,13 @@
 
 <script>
 import { viewState } from "./constant";
+import { mapGetters, mapActions } from "vuex";
 export default {
     name: "RamblerDialog",
     props: {
         visible: Boolean,
         width: String,
         height: String,
-        index: Number, // 弹窗zIndex属性
         // 开启拖拽
         draggable: {
             type: Boolean,
@@ -83,6 +83,7 @@ export default {
                 top: 100,
             },
             headerHeight: 38,
+            zIndex: 1,
             // 页面状态的常量
             viewState: viewState,
             animaionId: "", // requestAnimationFrame注册id
@@ -94,10 +95,11 @@ export default {
         };
     },
     computed: {
+        ...mapGetters("dialog", ["index"]),
         dynamicStyle: function () {
             const { left, top } = this.position;
             return {
-                zIndex: this.index,
+                zIndex: this.zIndex,
                 left: left + "px",
                 top: top + "px",
             };
@@ -107,11 +109,17 @@ export default {
         // 弹窗隐藏和显示
         visible: function (newVal) {
             if (newVal) {
+                this.zIndex = this.index(this.name);
                 this.$emit("open");
-                console.log("渲染");
+                this.updateDialogs({
+                    name: this.name,
+                    index: this.zIndex,
+                });
             } else {
                 // this.hide();
-                console.log("关闭");
+                this.deleteCachedDialog({
+                    name: this.name,
+                });
             }
         },
         mode(newVal) {
@@ -131,6 +139,7 @@ export default {
         },
     },
     methods: {
+        ...mapActions("dialog", ["updateDialogs", "deleteCachedDialog"]),
         handleResize: function () {
             if (this.mode == "fullscreen") {
                 this.maximize();
@@ -161,7 +170,13 @@ export default {
         },
         // 弹窗鼠标按下事件
         handleMouseDown(e) {
+            // 更新层级
+            this.updateDialogs({
+                name: this.name,
+                index: this.index(this.name),
+            });
             const { target } = e;
+            e.stopPropagation();
             const nodeName = target.nodeName.toLowerCase();
             if (nodeName == "div") {
                 // 无论怎样都置顶, 通过emit触发, 可以自定义执行事件
@@ -245,51 +260,53 @@ export default {
 
 <style scoped lang="less">
 .rambler-dialog {
-    box-shadow: 0 4px 12px #80807d;
-    position: absolute;
-}
-.rambler_dialog__header {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    align-items: center;
-    background-color: #6cbdf1;
-    color: #fff;
-    letter-spacing: 1px;
-    cursor: move;
-    display: flex;
-    font-size: 14px;
-    justify-content: space-between;
-    padding: 0 12px;
-    .title {
-        cursor: default;
-        .title-icon {
-            fill: #fff;
-            margin-right: 8px;
-            float: left;
-        }
-    }
-    .btns {
-        .right-icon {
-            cursor: pointer;
-            margin-right: 10px;
-            fill: #fff;
-            &:hover {
-                fill: #1cbdee;
+    box-shadow: 0 2px 6px #bebeb5;
+    position: fixed;
+    overflow: hidden;
+    border-radius: 8px;
+    .rambler_dialog__header {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        align-items: center;
+        background-color: #6cbdf1;
+        color: #fff;
+        letter-spacing: 1px;
+        cursor: move;
+        display: flex;
+        font-size: 14px;
+        justify-content: space-between;
+        padding: 0 12px;
+        .title {
+            cursor: default;
+            .title-icon {
+                fill: #fff;
+                margin-right: 8px;
+                float: left;
             }
         }
-        .restore {
-            font-size: 20px;
-        }
-        .fullscreen {
-            font-size: 16px;
+        .btns {
+            .right-icon {
+                cursor: pointer;
+                margin-right: 10px;
+                fill: #fff;
+                &:hover {
+                    fill: #1cbdee;
+                }
+            }
+            .restore {
+                font-size: 20px;
+            }
+            .fullscreen {
+                font-size: 16px;
+            }
         }
     }
-}
-.content {
-    overflow: hidden auto;
-    padding: 15px;
-    background: #fff;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    .content {
+        overflow: hidden auto;
+        padding: 15px;
+        background: #fff;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
 }
 </style>

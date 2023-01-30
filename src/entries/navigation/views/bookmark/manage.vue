@@ -15,12 +15,16 @@
                 </div>
             </div>
             <div class="tail">
-                <div class="mesh">
-                    <rambler-icon class="icon" name="grid"></rambler-icon>
+                <div class="create-folder">
+                    <rambler-icon
+                        class="icon"
+                        name="create-folder"
+                        @click.native="showCreateBookmarkFolder"
+                    ></rambler-icon>
                 </div>
-                <div class="list">
+                <!-- <div class="list">
                     <rambler-icon class="icon" name="list"></rambler-icon>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="table-header">
@@ -32,10 +36,21 @@
                 <bookmark-item
                     @dir-click="handleDirClick"
                     @bookmark-click="handleBookmarkClick"
+                    @update="updateList"
                     :bookmark="bookmark"
                 ></bookmark-item>
             </li>
         </ul>
+        <rambler-dialog
+            :visible.sync="folderDialogVisible"
+            name="createFolder"
+            title="创建文件夹"
+            width="700px"
+            height="200px"
+            :draggable="true"
+        >
+            <h1>创建文件夹</h1>
+        </rambler-dialog>
     </div>
 </template>
 
@@ -69,6 +84,7 @@ export default {
             ],
             // 访问路径栈
             path: [],
+            folderDialogVisible: false,
         };
     },
     components: {
@@ -82,6 +98,27 @@ export default {
     },
     methods: {
         ...mapActions("bookmark", ["updateBookmark"]),
+        // 创建文件夹
+        showCreateBookmarkFolder() {
+            this.folderDialogVisible = true;
+        },
+        confirmCreateBookmark() {
+            chrome.bookmarks.create({
+                parentId: "1",
+                title: "测试文件夹",
+            });
+        },
+        // 更新当前标签页列表
+        updateList() {
+            const currentPath = this.path[this.path.length - 1];
+            this.getChildren(currentPath.id);
+        },
+        // 返回到上一级
+        backPreviousDir() {
+            // 移除被删除的路径
+            this.path.pop();
+            this.updateList();
+        },
         // 点击书签文件夹
         handleDirClick(bookmarkDir) {
             try {
@@ -96,6 +133,9 @@ export default {
             console.log(bookmark);
         },
         goBack() {
+            if (this.path.length == 0) {
+                return;
+            }
             this.path.pop();
             const lastVisitedPath = this.path[this.path.length - 1];
             if (lastVisitedPath) {
@@ -225,15 +265,12 @@ export default {
         }
         .tail {
             display: flex;
-            .mesh {
+            .create-folder {
                 .icon {
-                    font-size: 20px;
-                    margin: -2px 4px 0 0;
+                    font-size: 22px;
+                    fill: #ffca28;
+                    cursor: pointer;
                 }
-            }
-            .icon {
-                fill: #444;
-                font-size: 18px;
             }
         }
     }

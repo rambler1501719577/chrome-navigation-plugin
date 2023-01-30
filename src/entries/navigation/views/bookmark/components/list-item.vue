@@ -123,12 +123,17 @@ export default {
         },
         // 确定删除书签
         sureDeleteBookmark() {
-            console.log("确定删除");
+            chrome.bookmarks.remove(this.bookmark.id, (result) => {
+                this.$emit("update");
+                console.log("remove bookmark successfully");
+            });
             this.closeDeleteTip();
         },
         sureDeleteDir() {
-            console.log("确定删除文件夹");
-            this.closeDeleteTip();
+            chrome.bookmarks.removeTree(this.bookmark.id, (res) => {
+                this.$emit("update");
+                this.closeDeleteTip();
+            });
         },
         handleItemClick(type) {
             const emitType = type == "dir" ? "dir-click" : "bookmark-click";
@@ -158,6 +163,7 @@ export default {
             display: flex;
             align-items: center;
             .title-text {
+                user-select: none;
                 display: block;
                 width: 100%;
                 text-overflow: ellipsis;

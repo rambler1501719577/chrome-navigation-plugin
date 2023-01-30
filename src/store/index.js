@@ -7,6 +7,7 @@ import createPersistedState from "vuex-persistedstate";
 import engine from "./modules/engine";
 import todo from "./modules/todo";
 import bookmark from "./modules/bookmark";
+import dialog from "./modules/dialog";
 
 import getters from "./getters";
 Vue.use(Vuex);
@@ -18,7 +19,8 @@ export default new Vuex.Store({
         frequentBookmark,
         engine,
         todo,
-        bookmark
+        bookmark,
+        dialog,
     },
     getters,
     strict: true,
@@ -32,8 +34,9 @@ export default new Vuex.Store({
                 "basic",
                 "engine",
                 "todo",
-                "bookmark"
-            ]
-        })
-    ]
+                "bookmark",
+                "dialog",
+            ],
+        }),
+    ],
 });
