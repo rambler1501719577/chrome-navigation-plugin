@@ -11,20 +11,9 @@
                         :name="icon"
                         class="title-icon"
                     ></rambler-icon>
-                    <span>{{ title }}-{{ zIndex }}</span>
+                    <span>{{ title }}</span>
                 </div>
                 <div class="btns">
-                    <!-- <rambler-icon
-                        name="minus"
-                        class="right-icon minus"
-                    ></rambler-icon>
-                    <rambler-icon
-                        :name="mode == 'restore' ? 'fullscreen' : 'restore'"
-                        :class="[
-                            'right-icon',
-                            mode == 'fullscreen' ? 'fullscreen' : 'restore'
-                        ]"
-                    ></rambler-icon> -->
                     <rambler-icon
                         name="close"
                         class="right-icon close"
@@ -83,7 +72,6 @@ export default {
                 top: 100,
             },
             headerHeight: 38,
-            zIndex: 1,
             // 页面状态的常量
             viewState: viewState,
             animaionId: "", // requestAnimationFrame注册id
@@ -99,7 +87,7 @@ export default {
         dynamicStyle: function () {
             const { left, top } = this.position;
             return {
-                zIndex: this.zIndex,
+                zIndex: this.index(this.name),
                 left: left + "px",
                 top: top + "px",
             };
@@ -109,11 +97,10 @@ export default {
         // 弹窗隐藏和显示
         visible: function (newVal) {
             if (newVal) {
-                this.zIndex = this.index(this.name);
                 this.$emit("open");
                 this.updateDialogs({
                     name: this.name,
-                    index: this.zIndex,
+                    index: this.index,
                 });
             } else {
                 // this.hide();
@@ -238,7 +225,7 @@ export default {
             this.position.left = posLeft > 0 ? posLeft : 0;
             const posTop =
                 (windowHeight - parseInt(this.height) - this.headerHeight) / 2;
-            this.position.top = posTop > 0 ? posTop : 0;
+            this.position.top = posTop > 0 ? posTop : "10vh";
         },
     },
     mounted() {

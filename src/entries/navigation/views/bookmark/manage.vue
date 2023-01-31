@@ -27,29 +27,48 @@
                 </div> -->
             </div>
         </div>
-        <div class="table-header">
-            <div class="file">书签名</div>
-            <div class="mod-time">修改时间</div>
+        <div class="content">
+            <div class="table-header">
+                <div class="file">书签名</div>
+                <div class="mod-time">修改时间</div>
+            </div>
+            <ul>
+                <li v-for="bookmark of bookmarkList">
+                    <bookmark-item
+                        @dir-click="handleDirClick"
+                        @bookmark-click="handleBookmarkClick"
+                        @update="updateList"
+                        :bookmark="bookmark"
+                    ></bookmark-item>
+                </li>
+            </ul>
         </div>
-        <ul>
-            <li v-for="bookmark of bookmarkList">
-                <bookmark-item
-                    @dir-click="handleDirClick"
-                    @bookmark-click="handleBookmarkClick"
-                    @update="updateList"
-                    :bookmark="bookmark"
-                ></bookmark-item>
-            </li>
-        </ul>
+
         <rambler-dialog
             :visible.sync="folderDialogVisible"
             name="createFolder"
-            title="创建文件夹"
-            width="700px"
-            height="200px"
+            :title="`在【${currentPath.title}】中创建文件夹`"
+            width="400px"
+            height="120px"
             :draggable="true"
         >
-            <h1>创建文件夹</h1>
+            <div class="create-folder">
+                <input
+                    type="text"
+                    v-model="folder.title"
+                    placeholder="文件夹名称"
+                />
+                <div class="footer">
+                    <rambler-button @click="cancel" style="margin-right: 8px"
+                        >取消</rambler-button
+                    >
+                    <rambler-button
+                        type="primary"
+                        @click="confirmCreateBookmark"
+                        >确定</rambler-button
+                    >
+                </div>
+            </div>
         </rambler-dialog>
     </div>
 </template>
@@ -85,6 +104,9 @@ export default {
             // 访问路径栈
             path: [],
             folderDialogVisible: false,
+            folder: {
+                title: "",
+            },
         };
     },
     components: {
@@ -92,6 +114,15 @@ export default {
     },
     computed: {
         ...mapGetters("bookmark", ["localBookmark"]),
+        currentPath() {
+            if (this.path.length == 0) {
+                return {
+                    id: 1,
+                    title: "全部书签",
+                };
+            }
+            return this.path[this.path.length - 1];
+        },
     },
     created() {
         this.getChildren("0");
@@ -102,11 +133,24 @@ export default {
         showCreateBookmarkFolder() {
             this.folderDialogVisible = true;
         },
+        cancel() {
+            this.folderDialogVisible = false;
+            this.folder.title = "";
+        },
         confirmCreateBookmark() {
-            chrome.bookmarks.create({
-                parentId: "1",
-                title: "测试文件夹",
-            });
+            try {
+                if (!chrome.bookmarks) throw new Error("创建文件夹失败");
+                chrome.bookmarks.create({
+                    parentId: this.currentPath ? this.currentPath.id : "0",
+                    title: this.folder.title,
+                });
+            } catch (e) {
+                console.log("创建文件夹失败，无法访问chrome.bookmark对象");
+            } finally {
+                this.folder.title = "";
+                this.folderDialogVisible = false;
+                this.updateList();
+            }
         },
         // 更新当前标签页列表
         updateList() {
@@ -290,6 +334,23 @@ export default {
             width: 100px;
             padding-left: 5px;
             background: #eee;
+        }
+    }
+
+    .create-folder {
+        width: 100%;
+        input {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            outline: none;
+            border: 1px solid rgb(211, 208, 208);
+            padding: 8px 12px;
+        }
+        .footer {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
         }
     }
 }
