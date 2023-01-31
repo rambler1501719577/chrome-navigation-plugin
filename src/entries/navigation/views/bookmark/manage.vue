@@ -2,7 +2,12 @@
     <div class="bookmarkmark-container">
         <div class="bookmark-header">
             <div class="paths">
-                <rambler-button @click="goBack">后退</rambler-button>
+                <div class="back-btn">
+                    <rambler-icon
+                        name="back"
+                        @click.native="goBack"
+                    ></rambler-icon>
+                </div>
                 <div class="path">
                     <span @click="handlePathClick(undefined)"> 全部书签 </span>
                     <span
@@ -22,9 +27,13 @@
                         @click.native="showCreateBookmarkFolder"
                     ></rambler-icon>
                 </div>
-                <!-- <div class="list">
-                    <rambler-icon class="icon" name="list"></rambler-icon>
-                </div> -->
+                <div class="refresh">
+                    <rambler-icon
+                        class="icon"
+                        name="refresh"
+                        @click.native="updateList"
+                    ></rambler-icon>
+                </div>
             </div>
         </div>
         <div class="content">
@@ -272,86 +281,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.bookmarkmark-container {
-    .bookmark-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        color: #666;
-        font-size: 14px;
-        user-select: none;
-        .paths {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            .path {
-                margin-left: 6px;
-                span {
-                    cursor: pointer;
-                    position: relative;
-                    margin-right: 12px;
-                    &:hover {
-                        color: rgb(105, 151, 221);
-                    }
-                }
-                span:not(:last-child):before {
-                    content: "";
-                    position: absolute;
-                    top: 0px;
-                    right: -5px;
-                    width: 1px;
-                    height: 16px;
-                    background: #666;
-                    transform: rotateZ(13deg);
-                }
-            }
-        }
-        .tail {
-            display: flex;
-            .create-folder {
-                .icon {
-                    font-size: 22px;
-                    fill: #ffca28;
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-    .table-header {
-        display: flex;
-        height: 26px;
-        line-height: 26px;
-        font-size: 14px;
-        margin-bottom: 5px;
-        .file {
-            padding-left: 5px;
-            background: #eee;
-            margin-right: 5px;
-            flex: 1;
-        }
-        .mod-time {
-            width: 100px;
-            padding-left: 5px;
-            background: #eee;
-        }
-    }
-
-    .create-folder {
-        width: 100%;
-        input {
-            box-sizing: border-box;
-            display: block;
-            width: 100%;
-            outline: none;
-            border: 1px solid rgb(211, 208, 208);
-            padding: 8px 12px;
-        }
-        .footer {
-            margin-top: 12px;
-            display: flex;
-            justify-content: flex-end;
-        }
-    }
-}
+@import url("./styles/bookmark-manage.less");
 </style>
