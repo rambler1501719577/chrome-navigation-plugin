@@ -141,11 +141,10 @@ export default {
             this.choosenContextMenu = choosen;
         },
         confirm() {
-            const originUrl = decodeURI(this.data.searchUrl);
             // 解析查询url，获取主机
             const data = {
                 name: this.data.name,
-                searchUrl: originUrl.replace("搜索", ""),
+                searchUrl: decodeURI(this.data.searchUrl),
                 id: uuidv4(),
             };
             this.data.name = "";

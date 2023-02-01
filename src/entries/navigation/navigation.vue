@@ -123,6 +123,21 @@
                         </div>
                     </div>
                 </el-tooltip>
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="清空数据"
+                    placement="right"
+                >
+                    <div class="box-item">
+                        <div class="icon-wrapper" @click="clearData">
+                            <rambler-icon
+                                name="delete-fill"
+                                class="icon"
+                            ></rambler-icon>
+                        </div>
+                    </div>
+                </el-tooltip>
             </div>
             <div class="time">
                 <time-flip></time-flip>
@@ -236,8 +251,9 @@ export default {
         open(type) {
             this[type] = true;
         },
-        closeTest2() {
-            this.test2 = false;
+        clearData() {
+            localStorage.clear();
+            window.location.reload();
         },
         showContextMenu(e) {
             const contextMenu = document.querySelector(".popup");

@@ -29,15 +29,13 @@
                 <div class="text">添加</div>
             </div>
         </div>
-        <el-dialog
+        <rambler-dialog
             width="500px"
-            title="本地书签管理"
-            :modal="false"
-            @open="handleOpen"
-            top="10vh"
+            height="165px"
+            title="最常访问"
+            name="frequentWebsiteDialog"
             :visible.sync="dialogVisible"
-            :close-on-click-modal="false"
-            v-dialogDrag
+            :draggable="true"
         >
             <el-form
                 label-position="left"
@@ -59,11 +57,11 @@
                 </el-form-item>
             </el-form>
             <div class="btns" style="display: flex; justify-content: flex-end">
-                <el-button size="small" @click="handleSubmit" type="primary"
-                    >确定</el-button
+                <rambler-button @click="handleSubmit" type="primary"
+                    >确定</rambler-button
                 >
             </div>
-        </el-dialog>
+        </rambler-dialog>
     </div>
 </template>
 
@@ -142,11 +140,6 @@ export default {
                     this.$refs.form.resetFields();
                     this.dialogVisible = false;
                 }
-            });
-        },
-        handleOpen() {
-            this.$nextTick(() => {
-                this.$refs.form.resetFields();
             });
         },
     },

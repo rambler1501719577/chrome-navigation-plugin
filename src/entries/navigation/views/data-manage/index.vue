@@ -4,9 +4,9 @@
             <div class="list-item" @click="switchComponent('bookmark-manage')">
                 <rambler-icon title="书签" name="bookmark"></rambler-icon>
             </div>
-            <div class="list-item" @click="switchComponent('engine-manage')">
+            <!-- <div class="list-item" @click="switchComponent('engine-manage')">
                 <rambler-icon title="搜索引擎" name="engine"></rambler-icon>
-            </div>
+            </div> -->
             <div
                 class="list-item"
                 @click="switchComponent('frequent-website-manage')"

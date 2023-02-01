@@ -7,22 +7,22 @@ export default {
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
                 name: "百度",
-                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd="
-            }
+                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
+            },
         ],
         // 远程engines配置
         remoteEngines: [
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
                 name: "远程Engine测试",
-                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd="
-            }
-        ]
+                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
+            },
+        ],
     },
     mutations: {
         UPDATE_ENGINE(state, payload) {
             state.engines.splice(
-                state.engines.findIndex(item => item.id == payload.id),
+                state.engines.findIndex((item) => item.id == payload.id),
                 1,
                 payload
             );
@@ -35,7 +35,7 @@ export default {
         },
         DELETE_ENGINE(state, payload) {
             const index = state.engines.findIndex(
-                item => item.id == payload.id
+                (item) => item.id == payload.id
             );
             if (index !== -1) {
                 state.engines.splice(index, 1);
@@ -55,11 +55,11 @@ export default {
         },
         CLEAR(state) {
             state.engines.splice(0, state.engines.length);
-        }
+        },
     },
     getters: {
-        localEngines: state => state.engines,
-        remoteEngines: state => state.remoteEngines
+        localEngines: (state) => state.engines,
+        remoteEngines: (state) => state.remoteEngines,
     },
     actions: {
         /**
@@ -93,9 +93,9 @@ export default {
                 return;
             }
             commit("CLEAR");
-            payload.forEach(item => {
+            payload.forEach((item) => {
                 commit("ADD_ENGINE", item);
             });
-        }
-    }
+        },
+    },
 };

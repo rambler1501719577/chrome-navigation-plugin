@@ -122,6 +122,7 @@ export default {
         },
         // 跳转目标页面
         go: function (result) {
+            debugger;
             if (!result) {
                 result = this.searchResult[this.verticalIndex];
             }
@@ -131,7 +132,11 @@ export default {
                 const engine = this.engines.find(
                     (item) => item.name == this.currentEngine
                 );
-                window.open(`${engine.searchUrl}${this.keywords}`, "_self");
+                // 替换搜索关键字
+                window.open(
+                    engine.searchUrl.replace("搜索", this.keywords),
+                    "_blank"
+                );
             }
         },
         // 搜索

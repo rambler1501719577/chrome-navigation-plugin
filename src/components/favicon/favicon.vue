@@ -69,8 +69,11 @@ export default {
             }
             const urlObj = new URL(url);
             const prepareUrl = new URL(chrome.runtime.getURL("/_favicon/"));
-            prepareUrl.searchParams.set("pageUrl", urlObj.origin);
-            prepareUrl.searchParams.set("size", this.size);
+            prepareUrl.searchParams.set(
+                "pageUrl",
+                decodeURIComponent(urlObj.origin)
+            );
+            prepareUrl.searchParams.set("size", 128);
             return prepareUrl.toString();
         },
     },
