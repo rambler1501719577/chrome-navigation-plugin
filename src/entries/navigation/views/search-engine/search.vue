@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import Engines from "./components/engines.vue";
+import Engines from "./engines.vue";
 import { mapGetters } from "vuex";
 export default {
     name: "Search",

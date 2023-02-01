@@ -189,6 +189,7 @@ export default {
                 if (aim) {
                     if (indexOf.call(aim.classList, "close") !== -1) {
                         this.close();
+                        e.stopPropagation();
                     } else if (indexOf.call(aim.classList, "restore") !== -1) {
                         this.mode = "fullscreen";
                     } else if (

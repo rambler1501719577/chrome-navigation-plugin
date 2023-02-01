@@ -25,17 +25,36 @@
             name="addSearchEngine"
             title="添加搜索引擎"
             :draggable="true"
-            width="500px"
-            height="220px"
+            width="600px"
+            height="380px"
         >
+            <rambler-alert>
+                <span style="font-weight: bold"
+                    >举例添加【哔哩哔哩】搜索引擎的几个步骤</span
+                >
+                <ul>
+                    <li class="item">1. 打开哔哩哔哩在搜索栏输入：搜索</li>
+                    <li class="item">2. 复制搜索结果页面地址</li>
+                    <li class="item">
+                        格式：<br /><span style="color: #687bce"
+                            >https://search.bilibili.com/all?keyword=%E6%90%9C%E7%B4%A2</span
+                        >
+                    </li>
+                </ul>
+            </rambler-alert>
             <div class="form">
                 <div class="form-item">
                     <p class="label">名称</p>
                     <input type="text" v-model="data.name" />
                 </div>
-                <div class="form-item">
+                <div class="form-item search">
                     <p class="label">搜索地址</p>
                     <input type="text" v-model="data.searchUrl" />
+                    <favicon
+                        class="favicon"
+                        :size="20"
+                        :url="iconUrl"
+                    ></favicon>
                 </div>
                 <div class="footer">
                     <rambler-button @click="cancel">取消</rambler-button>
@@ -69,6 +88,7 @@ export default {
             data: {
                 name: "",
                 searchUrl: "",
+                host: "",
             },
             choosenContextMenu: {},
             popupPosition: {
@@ -87,6 +107,11 @@ export default {
                 top: this.popupPosition.top + "px",
             };
         },
+        iconUrl() {
+            if (!this.data.searchUrl) return "";
+            const url = new URL(this.data.searchUrl);
+            return url.origin;
+        },
     },
     methods: {
         ...mapActions("engine", ["updateCurrentEngine", "update"]),
@@ -95,6 +120,7 @@ export default {
             this.dialogVisible = true;
             this.data.name = this.choosenContextMenu.name;
             this.data.searchUrl = this.choosenContextMenu.searchUrl;
+            this.data.host = this.choosenContextMenu.host;
         },
         deleteEngine() {
             this.update({
@@ -115,10 +141,11 @@ export default {
             this.choosenContextMenu = choosen;
         },
         confirm() {
+            const originUrl = decodeURI(this.data.searchUrl);
             // 解析查询url，获取主机
             const data = {
                 name: this.data.name,
-                searchUrl: this.data.searchUrl,
+                searchUrl: originUrl.replace("搜索", ""),
                 id: uuidv4(),
             };
             this.data.name = "";
@@ -161,5 +188,5 @@ export default {
 };
 </script>
 <style lang="less" scoped="scoped">
-@import url("../styles/engines.less");
+@import url("./styles/engines.less");
 </style>

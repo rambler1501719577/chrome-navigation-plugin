@@ -22,6 +22,7 @@ import SvgIcon from "@/icon";
 import Favicon from "@/components/favicon";
 import RamblerDialog from "@/components/dialog/RamblerDialog";
 import RamblerButton from "@/components/button";
+import RamblerAlert from "@/components/alert";
 
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios;
@@ -35,6 +36,7 @@ Vue.component("RamblerIcon", SvgIcon);
 Vue.component("Favicon", Favicon);
 Vue.component("RamblerDialog", RamblerDialog);
 Vue.component("RamblerButton", RamblerButton);
+Vue.component("RamblerAlert", RamblerAlert);
 // 注册过滤器
 Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));
 
