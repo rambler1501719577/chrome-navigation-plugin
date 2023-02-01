@@ -42,7 +42,7 @@
                 <div class="mod-time">修改时间</div>
             </div>
             <ul>
-                <li v-for="bookmark of bookmarkList">
+                <li v-for="bookmark of bookmarkList" class="drag-list-item">
                     <bookmark-item
                         @dir-click="handleDirClick"
                         @bookmark-click="handleBookmarkClick"
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import Sortable from "sortablejs";
 import { randomNum } from "@/utils";
 import _ from "lodash";
 import { mapGetters, mapActions } from "vuex";
@@ -135,6 +136,15 @@ export default {
     },
     created() {
         this.getChildren("0");
+    },
+    mounted() {
+        new Sortable(this.$el.querySelector(".content > ul"), {
+            animation: 150,
+            ghost: "drag-list-item",
+            onEnd: (evt) => {
+                console.log(evt);
+            },
+        });
     },
     methods: {
         ...mapActions("bookmark", ["updateBookmark"]),

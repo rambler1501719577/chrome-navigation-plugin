@@ -5,12 +5,7 @@
             v-for="bookmark of frequentBookmarks"
             :key="bookmark.id"
         >
-            <a
-                :href="bookmark.url"
-                target="_blank"
-                @mouseenter.self="handleMouseenter($event)"
-                @mouseleave="handleMouseout($event)"
-            >
+            <a :href="bookmark.url" target="_blank">
                 <image-card
                     :name="bookmark.name"
                     :url="bookmark.url"
@@ -20,7 +15,6 @@
             <div class="delete-icon">
                 <a @click="deleteFrequentSite(bookmark)"
                     ><rambler-icon
-                        @mouseover.native="handleMouseOver"
                         class="close-icon"
                         name="close-light"
                     ></rambler-icon
@@ -130,17 +124,6 @@ export default {
                 },
             });
         },
-        handleMouseenter(e) {
-            e.target.parentNode.querySelector(".delete-icon").style.display =
-                "block";
-        },
-        handleMouseout(e) {
-            e.target.parentNode.querySelector(".delete-icon").style.display =
-                "none";
-        },
-        handleMouseOver(e) {
-            e.target.parentNode.parentNode.style.display = "block";
-        },
         showDialog() {
             this.dialogVisible = true;
         },
@@ -170,64 +153,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.frequent-bookmarks-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    .bookitem {
-        width: 100px;
-        min-height: 100px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: all 0.5s;
-        border-radius: 10px;
-        position: relative;
-        &:hover {
-            background-color: rgba(211, 206, 206, 0.5);
-        }
-        .outer {
-            width: 100%;
-            height: 100%;
-            margin-top: 15px;
-            .add-bg {
-                margin: 15px auto;
-                margin-bottom: 10px;
-                background: #ffffff;
-                width: 50px;
-                height: 50px;
-                border-radius: 8px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                .add-icon {
-                    fill: rgb(77, 71, 71) !important;
-                    font-size: 16px;
-                    font-weight: 200;
-                }
-            }
-            .text {
-                color: #fff;
-                text-align: center;
-            }
-        }
-        a {
-            padding-top: 15px;
-            display: block;
-            height: 100%;
-        }
-        .delete-icon {
-            position: absolute;
-            display: none;
-            right: 4px;
-            top: -10px;
-            .close-icon {
-                fill: #65605c;
-                &:hover {
-                    fill: #fff;
-                }
-            }
-        }
-    }
-}
+@import url("./styles/frequent-website-front-list.less");
 </style>

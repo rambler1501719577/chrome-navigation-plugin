@@ -212,7 +212,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            window.addEventListener("contextmenu", (e) => {
+            this.$el.addEventListener("contextmenu", (e) => {
                 e.preventDefault();
                 this.showContextMenu(e);
             });

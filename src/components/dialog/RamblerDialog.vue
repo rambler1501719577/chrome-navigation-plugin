@@ -21,7 +21,9 @@
                 </div>
             </slot>
         </div>
+        <!-- 延迟渲染，解决background canvas获取不到高度问题 -->
         <div
+            v-if="rendered"
             class="content"
             :style="{ width: renderWidth, height: renderHeight }"
         >
@@ -71,6 +73,7 @@ export default {
                 left: 100,
                 top: 100,
             },
+            rendered: false,
             headerHeight: 38,
             // 页面状态的常量
             viewState: viewState,
@@ -98,6 +101,7 @@ export default {
         visible: function (newVal) {
             if (newVal) {
                 this.$emit("open");
+                this.rendered = true;
                 this.updateDialogs({
                     name: this.name,
                     index: this.index,
@@ -237,6 +241,9 @@ export default {
         }
         window.onresize = this.handleResize;
         this.relocateDialog();
+        if (this.visible) {
+            this.rendered = true;
+        }
     },
     created() {
         this.renderWidth = this.width;

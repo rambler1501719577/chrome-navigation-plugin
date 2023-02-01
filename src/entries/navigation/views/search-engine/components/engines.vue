@@ -122,7 +122,7 @@
         >
             <ul>
                 <li class="popup-menu-item" @click="deleteEngine">删除</li>
-                <li class="popup-menu-item" @click="editEngine">编辑</li>
+                <li class="popup-menu-item">编辑</li>
             </ul>
         </div>
     </div>
@@ -149,7 +149,6 @@ export default {
                 left: 0,
                 top: 0,
             },
-            editType: "add", // 搜索引擎编辑类型、add | update
             showPopupmenu: false, // 搜索引擎上鼠标右键弹出的popup-menu
         };
     },
@@ -178,12 +177,6 @@ export default {
         ...mapActions("engine", ["updateCurrentEngine", "update"]),
         handleFocus() {
             this.showPopup = true;
-        },
-        editEngine() {
-            this.editType = "update";
-            this.dialogVisible = true;
-            this.data.name = this.choosenContextMenu.name;
-            this.data.searchUrl = this.choosenContextMenu.searchUrl;
         },
         deleteEngine() {
             this.update({
@@ -214,7 +207,7 @@ export default {
             this.data.searchUrl = "";
             // 同步到vuex
             this.update({
-                type: this.editType,
+                type: "add",
                 data: data,
             });
             this.dialogVisible = false;
@@ -225,10 +218,7 @@ export default {
             this.data.searchUrl = "";
         },
         showDialog() {
-            this.editType = "add";
             this.dialogVisible = true;
-            this.data.name = "";
-            this.data.searchUrl = "";
         },
         handleBlur() {
             this.showPopup = false;
