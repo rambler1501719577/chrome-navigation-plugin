@@ -28,12 +28,14 @@
             <rambler-dialog
                 :visible.sync="dialogVisible"
                 name="dataManage"
-                title="数据管理"
+                title="系统设置"
                 width="700px"
                 height="500px"
                 :draggable="true"
             >
-                <data-manage></data-manage>
+                <rambler-button @click="clearData" type="danger"
+                    >清空所有数据</rambler-button
+                >
             </rambler-dialog>
             <rambler-dialog
                 :index="101"
@@ -88,11 +90,11 @@
                         </div>
                     </div>
                 </el-tooltip>
-                <!-- 数据管理 -->
+                <!-- 系统设置 -->
                 <el-tooltip
                     class="item"
                     effect="dark"
-                    content="数据管理"
+                    content="系统设置"
                     placement="right"
                 >
                     <div class="box-item">
@@ -118,21 +120,6 @@
                         <div class="icon-wrapper" @click="guide">
                             <rambler-icon
                                 name="guide"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="清空数据"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div class="icon-wrapper" @click="clearData">
-                            <rambler-icon
-                                name="delete-fill"
                                 class="icon"
                             ></rambler-icon>
                         </div>

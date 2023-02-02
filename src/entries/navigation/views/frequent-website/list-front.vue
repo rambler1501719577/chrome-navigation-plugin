@@ -4,6 +4,7 @@
             class="bookitem"
             v-for="bookmark of frequentBookmarks"
             :key="bookmark.id"
+            @contextmenu.stop.prevent="showEditDialog($event, bookmark)"
         >
             <a :href="bookmark.url" target="_blank">
                 <image-card
@@ -21,7 +22,12 @@
                 ></a>
             </div>
         </div>
-        <div class="bookitem" v-if="showAddMore" @click="showDialog">
+        <div
+            class="bookitem"
+            v-if="showAddMore"
+            @click="showDialog"
+            @contextmenu.stop.prevent="doNothing"
+        >
             <div class="outer">
                 <div class="add-bg">
                     <rambler-icon name="add" class="add-icon"></rambler-icon>
@@ -29,88 +35,93 @@
                 <div class="text">添加</div>
             </div>
         </div>
+        <!-- 新建 -->
         <rambler-dialog
-            width="500px"
-            height="165px"
+            width="710px"
+            height="480px"
             title="最常访问"
             name="frequentWebsiteDialog"
             :visible.sync="dialogVisible"
             :draggable="true"
         >
-            <el-form
-                label-position="left"
-                label-width="56px"
-                :model="form"
-                size="small"
-                :rules="rules"
-                ref="form"
-            >
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="form.name" placeholder="名称"></el-input>
-                </el-form-item>
-                <el-form-item label="网址" prop="url">
-                    <el-input
-                        v-model="form.url"
-                        placeholder="网址"
-                        @keydown.enter="handleSubmit"
-                    ></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="btns" style="display: flex; justify-content: flex-end">
-                <rambler-button @click="handleSubmit" type="primary"
-                    >确定</rambler-button
-                >
+            <frequent-website-form
+                type=""
+                @close="handleClose"
+            ></frequent-website-form>
+        </rambler-dialog>
+        <rambler-dialog
+            width="500px"
+            height="200px"
+            title="编辑"
+            name="editFrequentWebsiteDialog"
+            :visible.sync="editDialogVisible"
+            :draggable="true"
+        >
+            <div class="form">
+                <div class="form-item">
+                    <p class="label">网站名称</p>
+                    <input type="text" v-model="form.name" />
+                </div>
+                <div class="form-item search">
+                    <p class="label">网站地址</p>
+                    <input type="text" v-model="form.url" />
+                </div>
             </div>
         </rambler-dialog>
+        <div class="popup" :style="popupStyle" v-show="showPopup">
+            <p class="popup-item" @click="edit">编辑</p>
+            <p class="popup-item" @click="deleteItem">删除</p>
+        </div>
     </div>
 </template>
 
 <script>
+import frequentWebsiteForm from "./components/frequentWebsiteForm.vue";
 const { v4: uuidv4 } = require("uuid");
 import ImageCard from "./components/image-card";
 import { mapGetters, mapActions } from "vuex";
 export default {
     name: "FrequesntBookmarks",
     data() {
-        var urlValidator = (rule, value, callback) => {
-            const reg = /https?:\/\/(\w+\.?)+/;
-            if (!reg.test(value)) {
-                return callback(new Error("请输入包含http(s)的完整地址"));
-            }
-            callback();
-        };
         return {
             commonBookmark: [],
             showAddMore: true,
             dialogVisible: false,
+            showPopup: false,
             form: {
                 name: "",
                 url: "",
             },
-            rules: {
-                name: [
-                    {
-                        required: true,
-                        message: "网站名称不能为空",
-                        trigger: "blur",
-                    },
-                ],
-                url: [
-                    { validator: urlValidator, trigger: "blur" },
-                    {
-                        required: true,
-                        message: "网站地址不能为空",
-                        trigger: "blur",
-                    },
-                ],
+            editDialogVisible: false,
+            editType: "",
+            choosenItem: {},
+            popupPosition: {
+                left: 0,
+                top: 0,
             },
         };
     },
     computed: {
         ...mapGetters(["frequentBookmarks"]),
+        popupStyle() {
+            return {
+                position: "fixed",
+                left: this.popupPosition.left + "px",
+                top: this.popupPosition.top + "px",
+            };
+        },
     },
     components: {
         ImageCard,
+        frequentWebsiteForm,
+    },
+    mounted() {
+        document.addEventListener("click", (e) => {
+            const paths = e.path || (e.composedPath && e.composedPath());
+            if (![].find.call(paths, (item) => item.className == "popup")) {
+                this.showPopup = false;
+            }
+        });
     },
     methods: {
         ...mapActions("frequentBookmark", ["update"]),
@@ -121,6 +132,30 @@ export default {
                     id: site.id,
                 },
             });
+        },
+        deleteItem() {
+            this.showPopup = false;
+            this.deleteFrequentSite(this.choosenItem);
+        },
+        edit() {
+            this.showPopup = false;
+            this.editDialogVisible = true;
+            this.form.name = this.choosenItem.name;
+            this.form.url = this.choosenItem.url;
+        },
+        doNothing() {
+            return;
+        },
+        handleClose() {
+            this.dialogVisible = false;
+            // TODO
+        },
+        showEditDialog(e, item) {
+            const { clientX, clientY } = e;
+            this.popupPosition.left = clientX;
+            this.popupPosition.top = clientY;
+            this.showPopup = true;
+            this.choosenItem = item;
         },
         showDialog() {
             this.dialogVisible = true;
@@ -147,4 +182,5 @@ export default {
 </script>
 <style lang="less" scoped>
 @import url("./styles/frequent-website-front-list.less");
+@import url("../../../../styles/form.less");
 </style>

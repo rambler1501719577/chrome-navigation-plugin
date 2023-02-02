@@ -122,7 +122,6 @@ export default {
         },
         // 跳转目标页面
         go: function (result) {
-            debugger;
             if (!result) {
                 result = this.searchResult[this.verticalIndex];
             }

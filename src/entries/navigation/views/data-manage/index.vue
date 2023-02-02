@@ -1,9 +1,9 @@
 <template>
     <div class="data-manage-container">
         <div class="list">
-            <div class="list-item" @click="switchComponent('bookmark-manage')">
+            <!-- <div class="list-item" @click="switchComponent('bookmark-manage')">
                 <rambler-icon title="书签" name="bookmark"></rambler-icon>
-            </div>
+            </div> -->
             <!-- <div class="list-item" @click="switchComponent('engine-manage')">
                 <rambler-icon title="搜索引擎" name="engine"></rambler-icon>
             </div> -->
@@ -21,14 +21,14 @@
 </template>
 
 <script>
-import BookmarkManage from "../bookmark/manage.vue";
+import BookmarkManage from "../bookmark/bookmark-manage.vue";
 import EngineManage from "../search-engine/manage.vue";
 import FrequentWebsiteManage from "../frequent-website/manage.vue";
 export default {
     name: "DataManage",
     data() {
         return {
-            current: "bookmark-manage", // bookmark-manage | frequent-bookmarks-manage | engine-manage
+            current: "frequent-website-manage", // bookmark-manage | frequent-bookmarks-manage | engine-manage
         };
     },
     components: {

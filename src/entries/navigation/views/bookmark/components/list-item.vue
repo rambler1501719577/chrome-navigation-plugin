@@ -9,9 +9,7 @@
         >
             <div class="title">
                 <rambler-icon name="folder" class="icon"></rambler-icon>
-                <span class="title-text"
-                    >{{ bookmark.title | upper }} -- {{ bookmark.index }}</span
-                >
+                <span class="title-text">{{ bookmark.title | upper }}</span>
             </div>
             <div class="mod-time">
                 <!-- bookmark.dateGroupModified -->
@@ -60,9 +58,7 @@
                     :name="bookmark.title"
                     class="icon"
                 ></favicon>
-                <span class="title-text"
-                    >{{ bookmark.title | upper }}{{ bookmark.index }}</span
-                >
+                <span class="title-text">{{ bookmark.title | upper }}</span>
             </div>
             <div class="mod-time">
                 <div class="delete-box">
