@@ -44,11 +44,17 @@
             </rambler-alert>
             <div class="form">
                 <div class="form-item">
-                    <p class="label">名称</p>
+                    <p class="label">
+                        名称<span class="err">{{ nameValidateResult }}</span>
+                    </p>
                     <input type="text" v-model="data.name" />
                 </div>
                 <div class="form-item search">
-                    <p class="label">搜索地址</p>
+                    <p class="label">
+                        搜索地址<span class="err">{{
+                            searchUrlValidateResult
+                        }}</span>
+                    </p>
                     <input type="text" v-model="data.searchUrl" />
                     <favicon
                         class="favicon"
@@ -70,8 +76,8 @@
             v-show="showPopupmenu"
         >
             <ul>
-                <li class="popup-menu-item" @click="deleteEngine">删除</li>
                 <li class="popup-menu-item" @click="editEngine">编辑</li>
+                <li class="popup-menu-item" @click="deleteEngine">删除</li>
             </ul>
         </div>
     </div>
@@ -79,6 +85,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { isUrl } from "@/utils";
 const { v4: uuidv4 } = require("uuid");
 export default {
     name: "SearchEngine",
@@ -88,13 +95,14 @@ export default {
             data: {
                 name: "",
                 searchUrl: "",
-                host: "",
             },
             choosenContextMenu: {},
             popupPosition: {
                 left: 0,
                 top: 0,
             },
+            nameValidateResult: "", // 验证结果
+            searchUrlValidateResult: "", //搜索字符串验证结果
             editType: "add", // 搜索引擎编辑类型、add | update
             showPopupmenu: false, // 搜索引擎上鼠标右键弹出的popup-menu
         };
@@ -108,7 +116,9 @@ export default {
             };
         },
         iconUrl() {
-            if (!this.data.searchUrl) return "";
+            if (!isUrl(this.data.searchUrl)) {
+                return "";
+            }
             const url = new URL(this.data.searchUrl);
             return url.origin;
         },
@@ -120,7 +130,6 @@ export default {
             this.dialogVisible = true;
             this.data.name = this.choosenContextMenu.name;
             this.data.searchUrl = this.choosenContextMenu.searchUrl;
-            this.data.host = this.choosenContextMenu.host;
         },
         deleteEngine() {
             this.update({
@@ -140,21 +149,55 @@ export default {
             this.popupPosition.top = clientY;
             this.choosenContextMenu = choosen;
         },
+        validate() {
+            if (!this.data.name) {
+                this.nameValidateResult = "名称不能为空";
+                return false;
+            } else {
+                this.nameValidateResult = "";
+            }
+            if (!this.data.searchUrl) {
+                this.searchUrlValidateResult = "搜索地址不能为空";
+                return false;
+            } else {
+                this.searchUrlValidateResult = "";
+            }
+            const decodedUrl = decodeURI(this.data.searchUrl);
+            if (decodedUrl.indexOf("搜索") == -1) {
+                this.searchUrlValidateResult =
+                    "未找到【搜索】关键字，请按照要求添加";
+                return false;
+            } else {
+                this.searchUrlValidateResult = "";
+            }
+            return true;
+        },
         confirm() {
-            // 解析查询url，获取主机
-            const data = {
-                name: this.data.name,
-                searchUrl: decodeURI(this.data.searchUrl),
-                id: uuidv4(),
-            };
+            if (this.validate()) {
+                // 解析查询url，获取主机
+                const data = {
+                    name: this.data.name,
+                    searchUrl: decodeURI(this.data.searchUrl),
+                    id: uuidv4(),
+                };
+                this.data.name = "";
+                this.data.searchUrl = "";
+                // 同步到vuex
+                this.update({
+                    type: this.editType,
+                    data: data,
+                });
+                this.dialogVisible = false;
+            }
+        },
+        resetValidate() {
+            this.nameValidateResult = "";
+            this.searchUrlValidateResult = "";
+        },
+        // 重置表单
+        resetForm() {
             this.data.name = "";
             this.data.searchUrl = "";
-            // 同步到vuex
-            this.update({
-                type: this.editType,
-                data: data,
-            });
-            this.dialogVisible = false;
         },
         cancel() {
             this.dialogVisible = false;

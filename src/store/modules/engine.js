@@ -7,7 +7,7 @@ export default {
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
                 name: "百度",
-                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
+                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=",
             },
         ],
         // 远程engines配置
@@ -95,6 +95,25 @@ export default {
             commit("CLEAR");
             payload.forEach((item) => {
                 commit("ADD_ENGINE", item);
+            });
+        },
+        repairEngine({ commit, state }) {
+            // 修复默认搜索引擎百度
+            // 其余搜索引擎检测不到【搜索】关键字直接剔除
+            state.engines.forEach((engine, index) => {
+                if (engine.name == "百度") {
+                    state.engines.splice(index, 1, {
+                        id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
+                        name: "百度",
+                        searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
+                    });
+                    return;
+                }
+                const { searchUrl, name } = engine;
+                if (decodeURI(searchUrl).indexOf("搜索") == -1) {
+                    console.log(`${name}搜索地址异常,已删除`);
+                    state.engines.splice(index, 1);
+                }
             });
         },
     },

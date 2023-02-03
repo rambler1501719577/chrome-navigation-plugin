@@ -104,6 +104,7 @@
             cursor: pointer;
             margin: 0 20px 20px 0;
             .dir {
+                height: 100%;
                 .icon {
                     font-size: 40px;
                     text-align: center;
@@ -120,6 +121,7 @@
                 }
             }
             .not-dir {
+                height: 100%;
                 .icon {
                     display: flex;
                     justify-content: center;
@@ -140,6 +142,15 @@
         }
         .selected {
             background-color: #e3f4fe;
+            position: relative;
+            .selected-sign {
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                .icon {
+                    fill: green;
+                }
+            }
         }
         .list-item:nth-child(7n) {
             margin-right: 0;

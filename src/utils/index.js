@@ -29,7 +29,7 @@ export function parseTime(time, cFormat) {
         h: date.getHours(),
         i: date.getMinutes(),
         s: date.getSeconds(),
-        a: date.getDay()
+        a: date.getDay(),
     };
     const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
         const value = formatObj[key];
@@ -62,7 +62,7 @@ function getBiggerIcon(iconArr) {
     } else {
         // 根据src中大小进行匹配
         let size = 0;
-        iconArr.forEach(icon => {
+        iconArr.forEach((icon) => {
             const src = icon.src;
             let reg = /\d+/gm;
             // 从后向前匹配数字，分两种情况
@@ -91,16 +91,27 @@ function getBiggerIcon(iconArr) {
 export function getFaviconByUrl(url) {
     return new Promise((resolve, reject) => {
         axios(`http://82.156.8.154/favicon/api/grab/${url}`)
-            .then(res => {
+            .then((res) => {
                 if (res.data.icons.length > 0)
                     resolve(getBiggerIcon(res.data.icons));
                 else resolve("");
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
                 reject("");
             });
     });
+}
+
+/**
+ * 验证网站URL
+ */
+export function isUrl(url) {
+    if (!url) {
+        return false;
+    }
+    const reg = /https?:\/\/(\w+\.?)+/;
+    return reg.test(url);
 }
 
 /**
@@ -185,7 +196,7 @@ export function timeFormat(date) {
 export function scrollToTop(offsetTop) {
     window.scrollTo({
         top: offsetTop,
-        behavior: "smooth"
+        behavior: "smooth",
     });
 }
 /**
@@ -217,7 +228,7 @@ export function message(message) {
     dom.classList = "rambler-message animated bounceIn";
     dom.innerHTML = message;
     document.body.appendChild(dom);
-    setTimeout(function() {
+    setTimeout(function () {
         dom.style = "";
         document.body.removeChild(dom);
     }, 2000);

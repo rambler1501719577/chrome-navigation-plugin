@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { isUrl } from "@/utils";
 export default {
     name: "Favicon",
     props: {
@@ -82,8 +83,7 @@ export default {
                 this.loading = true;
                 if (!newVal) return;
                 // 验证网站
-                let siteReg = /https?:\/\/(\w+\.?)+/;
-                if (!siteReg.test(newVal)) {
+                if (!isUrl(newVal)) {
                     console.log(`【${newVal}】不是正确的url`);
                     this.loadSucc = false;
                 } else {

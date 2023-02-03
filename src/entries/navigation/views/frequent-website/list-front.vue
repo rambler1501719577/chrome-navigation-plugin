@@ -51,7 +51,7 @@
         </rambler-dialog>
         <rambler-dialog
             width="500px"
-            height="200px"
+            height="230px"
             title="编辑"
             name="editFrequentWebsiteDialog"
             :visible.sync="editDialogVisible"
@@ -66,6 +66,11 @@
                     <p class="label">网站地址</p>
                     <input type="text" v-model="form.url" />
                 </div>
+                <div class="footer">
+                    <rambler-button @click="save" type="primary"
+                        >确定</rambler-button
+                    >
+                </div>
             </div>
         </rambler-dialog>
         <div class="popup" :style="popupStyle" v-show="showPopup">
@@ -77,7 +82,6 @@
 
 <script>
 import frequentWebsiteForm from "./components/frequentWebsiteForm.vue";
-const { v4: uuidv4 } = require("uuid");
 import ImageCard from "./components/image-card";
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -125,6 +129,17 @@ export default {
     },
     methods: {
         ...mapActions("frequentBookmark", ["update"]),
+        save() {
+            this.update({
+                type: "update",
+                data: {
+                    id: this.choosenItem.id,
+                    name: this.form.name,
+                    url: this.form.url,
+                },
+            });
+            this.editDialogVisible = false;
+        },
         deleteFrequentSite(site) {
             this.update({
                 type: "delete",
@@ -140,7 +155,7 @@ export default {
         edit() {
             this.showPopup = false;
             this.editDialogVisible = true;
-            this.form.name = this.choosenItem.name;
+            this.form.name = this.choosenItem.name || this.choosenItem.title;
             this.form.url = this.choosenItem.url;
         },
         doNothing() {
@@ -169,7 +184,6 @@ export default {
                         data: {
                             name: this.form.name,
                             url: this.form.url,
-                            id: uuidv4(),
                         },
                     });
                     this.$refs.form.resetFields();

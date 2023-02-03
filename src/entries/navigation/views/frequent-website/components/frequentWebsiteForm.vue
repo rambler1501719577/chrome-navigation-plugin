@@ -22,7 +22,10 @@
             </div>
             <!-- 从书签选择 -->
             <div class="bookmark-list" v-else>
-                <bookmark-list @change="getSelectedData"></bookmark-list>
+                <bookmark-list
+                    ref="bookmarkList"
+                    @change="getSelectedData"
+                ></bookmark-list>
             </div>
             <div class="footer">
                 <rambler-button type="primary" @click="confirm"
@@ -48,20 +51,37 @@ export default {
                 url: "",
             },
             createType: "bookmark", //创建方式 bookmark | custom
+            selectedBookmarks: [],
         };
     },
     methods: {
         ...mapActions("frequentBookmark", ["update"]),
         // 确认添加
         confirm() {
-            this.update({
-                type: "add",
-                data: {
-                    name: this.form.name,
-                    url: this.form.url,
-                    id: uuidv4(),
-                },
-            });
+            if (this.createType == "bookmark") {
+                this.selectedBookmarks.forEach((bookmark) => {
+                    this.update({
+                        type: "add",
+                        data: {
+                            name: bookmark.title,
+                            url: bookmark.url,
+                            id: uuidv4(),
+                            from: "bookmark",
+                        },
+                    });
+                });
+                this.$refs.bookmarkList.clearSelection();
+            } else {
+                this.update({
+                    type: "add",
+                    data: {
+                        name: this.form.name,
+                        url: this.form.url,
+                        id: uuidv4(),
+                        from: "user",
+                    },
+                });
+            }
             this.resetFields();
             this.$emit("close");
         },
@@ -71,8 +91,7 @@ export default {
         },
         // 获取数据
         getSelectedData(payload) {
-            this.form.name = payload.title;
-            this.form.url = payload.url;
+            this.selectedBookmarks = [...payload];
         },
         // 切换创建方式
         handleCustomCreate() {

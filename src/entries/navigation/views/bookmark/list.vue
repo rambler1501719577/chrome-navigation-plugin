@@ -23,7 +23,7 @@
                     v-for="bookmark of bookmarkList"
                     :class="{
                         'list-item': true,
-                        selected: bookmark.title == selected.title,
+                        selected: bookmark.selected,
                     }"
                 >
                     <!-- 文件夹 -->
@@ -31,6 +31,7 @@
                         v-if="isDir(bookmark)"
                         class="dir"
                         @click="handleDirClick(bookmark)"
+                        :title="bookmark.title"
                     >
                         <div class="icon">
                             <rambler-icon name="folder"></rambler-icon>
@@ -43,6 +44,7 @@
                     <div
                         v-else
                         class="not-dir"
+                        :title="bookmark.title"
                         @click="handleBookmarkClicked(bookmark)"
                     >
                         <div class="icon">
@@ -51,6 +53,12 @@
                         <div class="title">
                             {{ bookmark.title }}
                         </div>
+                    </div>
+                    <div v-if="bookmark.selected" class="selected-sign">
+                        <rambler-icon
+                            class="icon"
+                            name="selected-sign"
+                        ></rambler-icon>
                     </div>
                 </div>
             </div>
@@ -68,11 +76,11 @@ export default {
             bookmarkList: [],
             // 访问路径栈
             path: [],
-            selected: {}, //当前选中书签
+            selectedBookmarks: [],
         };
     },
     computed: {
-        ...mapGetters("bookmark", ["localBookmark"]),
+        ...mapGetters(["frequentBookmarks"]),
         currentPath() {
             if (this.path.length == 0) {
                 return {
@@ -87,9 +95,30 @@ export default {
         this.getChildren("0");
     },
     methods: {
+        clearSelection() {
+            this.selectedBookmarks.splice(0, this.selectedBookmarks.length - 1);
+            this.bookmarkList.forEach((item) => (item.selected = false));
+            this.getChildren("0");
+        },
         handleBookmarkClicked(payload) {
-            this.selected = payload;
-            this.$emit("change", payload);
+            // 给默认值
+            if (payload.selected == undefined) {
+                // 添加为响应式数据
+                this.$set(payload, "selected", false);
+            }
+            if (payload.selected) {
+                payload.selected = false;
+                const index = this.selectedBookmarks.findIndex(
+                    (bookmark) => bookmark.id == payload.id
+                );
+                this.selectedBookmarks.splice(index, 1);
+            } else {
+                // 移除反选书签
+                payload.selected = true;
+                this.selectedBookmarks.push(payload);
+            }
+            // 提交到父组件
+            this.$emit("change", this.selectedBookmarks);
         },
         // 点击书签文件夹
         handleDirClick(bookmarkDir) {
@@ -139,7 +168,7 @@ export default {
                 arr.push({
                     dateAdded: 1628582602825,
                     dateGroupModified: 1673316216588,
-                    id: "2",
+                    id: i,
                     index: 1,
                     url: i % 4 == 0 ? "111" : "",
                     parentId: "0",

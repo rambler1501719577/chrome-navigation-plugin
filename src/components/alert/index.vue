@@ -40,5 +40,13 @@ export default {
         background: #fdf6ec;
         color: #e6a23c;
     }
+    .rambler-alert-info {
+        background: #eee;
+        color: #333333;
+    }
+    .rambler-alert-danger {
+        background: #ffe8e6;
+        color: #db2828;
+    }
 }
 </style>

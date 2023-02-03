@@ -1,6 +1,8 @@
+import { v4 as uuidv4 } from "uuid";
 export default {
     namespaced: true,
     state: {
+        // {id: String, name: String, url: String, from: String, index: String}
         frequentBookmarks: [],
         // 远程常用网站
         remoteFrequentBookmark: [
@@ -41,16 +43,28 @@ export default {
     },
     actions: {
         // 通用方法，更新state
-        update({ commit }, payload) {
+        update({ commit, state }, payload) {
             const { type, data } = payload;
             if (type == "add") {
-                commit("ADD_FREQUENT_BOOKMARKS", data);
+                // 判断是否存在,存在即更新，否则添加
+                const index = state.frequentBookmarks.findIndex(
+                    (item) => item.name == data.name && item.url == data.url
+                );
+                if (index !== -1) {
+                    console.log("【frequent-website】添加失败,数据已经存在");
+                    return;
+                    // commit("UPDATE_FREQUENT_BOOKMARKS", data);
+                } else {
+                    payload.id = uuidv4();
+                    commit("ADD_FREQUENT_BOOKMARKS", data);
+                }
             } else if (type == "delete") {
                 commit("DELETE_FREQUENT_BOOKMARKS", data);
             } else {
                 commit("UPDATE_FREQUENT_BOOKMARKS", data);
             }
         },
+        // 导入替换所有的常用网址
         replaceFrequentBookmark({ commit }, payload) {
             if (!payload || !Array.isArray(payload) || payload.length == 0)
                 return;
@@ -59,5 +73,7 @@ export default {
                 commit("ADD_FREQUENT_BOOKMARKS", item);
             });
         },
+        // 自动修复数据格式异常问题
+        autoRepair() {},
     },
 };
