@@ -7,12 +7,7 @@
             <div class="absolute-box">
                 <div class="background-list">
                     <!-- 系统自带背景 -->
-                    <div
-                        class="bg-item system-bg"
-                        v-for="(pic, index) of 9"
-                        @mouseover="handleCoverMouseEnter"
-                        @mouseleave="handleCoverMouseOut"
-                    >
+                    <div class="bg-item system-bg" v-for="(pic, index) of 9">
                         <img
                             :key="index"
                             :src="'/background/' + pic + '.jpg'"
@@ -35,12 +30,7 @@
                         </div>
                     </div>
                     <!-- 自定义背景 -->
-                    <div
-                        class="bg-item custom-bg"
-                        v-if="hasUploadBg"
-                        @mouseover="handleCoverMouseEnter"
-                        @mouseleave="handleCoverMouseOut"
-                    >
+                    <div class="bg-item custom-bg" v-if="hasUploadBg">
                         <img
                             :src="background.customBg"
                             width="100%"
@@ -187,21 +177,6 @@ export default {
                 this.choosen.systemBg = pic + ".jpg";
             }
         },
-        handleCoverMouseOut(event) {
-            try {
-                const { target } = event;
-                if (!target) return;
-                target.querySelector(".tools").style.display = "none";
-            } catch (e) {}
-        },
-        handleCoverMouseEnter(event) {
-            try {
-                const { target } = event;
-                if (!target) return;
-                target.parentNode.querySelector(".tools").style.display =
-                    "flex";
-            } catch (e) {}
-        },
         uploadFile() {
             document.querySelector("#upload").click();
         },
@@ -252,118 +227,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.background-container {
-    height: 490px;
-    display: flex;
-    .title {
-        padding-left: 8px;
-        height: 30px;
-        line-height: 30px;
-        background: #eee;
-        color: #333;
-    }
-    .choices {
-        width: 300px;
-        height: 100%;
-        .absolute-box {
-            height: calc(100% - 30px);
-            overflow: hidden;
-            width: 100%;
-            position: relative;
-            .background-list {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: -15px;
-                bottom: 0;
-                overflow: auto;
-                padding-top: 10px;
-
-                .bg-item:nth-child(2n + 1) {
-                    margin-right: 10px;
-                }
-                .bg-item:nth-child(9) {
-                    margin-bottom: 0;
-                }
-                .bg-item:nth-child(10) {
-                    margin-bottom: 0;
-                }
-                .upload {
-                    box-sizing: border-box;
-                    border: 1px solid #eee;
-                    line-height: 82px;
-                    text-align: center;
-                }
-                .custom-bg {
-                    position: relative;
-                }
-                #upload {
-                    display: none;
-                }
-                .bg-item {
-                    float: left;
-                    width: 145px;
-                    height: 82px;
-                    overflow: hidden;
-                    margin-bottom: 10px;
-                    position: relative;
-                    cursor: pointer;
-                    .tools {
-                        display: none;
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        right: 0;
-                        bottom: 0;
-                        justify-content: center;
-                        align-items: center;
-                        background: rgba(255, 255, 255, 0.8);
-                        .btns {
-                            height: 100%;
-                            width: 100%;
-                            line-height: 0;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            .icon {
-                                font-size: 25px;
-                                fill: rgb(131, 125, 125);
-                                padding: 0 10px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    .preview-box {
-        margin-left: 20px;
-        flex: 1;
-        height: 100%;
-        position: relative;
-        .preview {
-            margin: 10px 0;
-            width: 100%;
-            height: 254px;
-            overflow: hidden;
-            background: #eee;
-            position: relative;
-            .effect {
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-            }
-        }
-        .dynamic-bg {
-            margin: 10px 0;
-        }
-        .btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
-    }
-}
+@import url("./styles/background-manage.less");
 </style>

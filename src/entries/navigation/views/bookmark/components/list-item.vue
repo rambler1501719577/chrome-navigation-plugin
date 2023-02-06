@@ -37,7 +37,11 @@
                         </div>
                     </div>
                 </div>
-                <rambler-icon class="icon" name="edit-fill"></rambler-icon>
+                <rambler-icon
+                    class="icon"
+                    name="edit-fill"
+                    @click.native="showEditDialog"
+                ></rambler-icon>
             </div>
             <div class="opt-btns"></div>
         </div>
@@ -81,9 +85,43 @@
                         </div>
                     </div>
                 </div>
+                <rambler-icon
+                    class="icon"
+                    name="edit-fill"
+                    @click.native="showEditDialog"
+                ></rambler-icon>
             </div>
         </div>
         <!-- bookmark end -->
+        <rambler-dialog
+            :visible.sync="editDialogVisible"
+            name="editBookmark"
+            width="500px"
+            height="300px"
+            title="编辑"
+            :draggable="true"
+        >
+            <div class="form">
+                <div class="form-item">
+                    <p class="label">标题</p>
+                    <input type="text" v-model="data.title" />
+                </div>
+                <div class="form-item" v-if="!isDir">
+                    <p class="label">地址</p>
+                    <input type="text" v-model="data.url" />
+                </div>
+                <div class="form-item">
+                    <p class="label">上级文件夹</p>
+                    <input type="text" v-model="data.parentId" />
+                </div>
+                <div class="footer">
+                    <rambler-button @click="cancelEdit">取消</rambler-button>
+                    <rambler-button type="primary" @click="sureUpdate"
+                        >确定</rambler-button
+                    >
+                </div>
+            </div>
+        </rambler-dialog>
     </div>
 </template>
 
@@ -97,7 +135,15 @@ export default {
         },
     },
     data() {
-        return {};
+        return {
+            editDialogVisible: false,
+            data: {
+                title: "",
+                id: "",
+                url: "",
+                parentId: "",
+            },
+        };
     },
     computed: {
         isDir() {
@@ -113,10 +159,45 @@ export default {
             ).style.display = "block";
             e.stopPropagation();
         },
+        // 取消编辑
+        cancelEdit() {
+            this.editDialogVisible = false;
+            this.data.title = "";
+            this.data.parentId = "";
+            this.data.url = "";
+        },
+        // 更新书签
+        sureUpdate() {
+            try {
+                if (!chrome.bookmarks)
+                    throw new Error("更新书签异常，无法读取书签对象");
+                chrome.bookmarks.update(
+                    this.bookmark.id,
+                    {
+                        title: this.data.title,
+                        url: this.data.url,
+                    },
+                    (res) => {
+                        console.log("修改成功");
+                    }
+                );
+            } catch (e) {
+                console.log("更新书签异常");
+            } finally {
+                this.editDialogVisible = false;
+                this.data.title = "";
+                this.data.url = "";
+                this.$emit("update");
+            }
+        },
         // 取消删除
         cancelDeletet(e) {
             // e.target.parentNode.parentNode.style.display = "none";
             this.closeDeleteTip();
+        },
+        showEditDialog() {
+            this.data = JSON.parse(JSON.stringify(this.bookmark));
+            this.editDialogVisible = true;
         },
         closeDeleteTip() {
             this.$el.querySelector(".alert-box").style.display = "none";
@@ -148,96 +229,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.bookmark-list-item-wrapper {
-    .list-item {
-        height: 40px;
-        display: flex;
-        align-items: center;
-        .title {
-            flex: 1;
-            overflow: hidden;
-            color: #666;
-            font-size: 16px;
-            line-height: 20px;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            .title-text {
-                user-select: none;
-                display: block;
-                width: 100%;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-
-            .icon {
-                font-size: 18px;
-                margin-right: 8px;
-            }
-        }
-        .mod-time {
-            position: relative;
-            height: 100%;
-            padding-top: 11px;
-            width: 100px;
-            color: rgba(0, 0, 0, 0.54);
-            padding-left: 5px;
-            .delete-box {
-                display: inline-block;
-                position: relative;
-                .alert-box {
-                    display: none;
-                    position: absolute;
-                    z-index: 9;
-                    left: -80px;
-                    top: 30px;
-                    width: 180px;
-                    height: 80px;
-                    padding: 12px;
-                    font-size: 14px;
-                    background: #fff;
-                    color: #606266;
-                    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
-                    border: 1px solid #ebeef5;
-                    .alert-bottom-btn {
-                        margin-top: 12px;
-                        display: flex;
-                        justify-content: flex-end;
-                        .sure {
-                            background: rgb(95, 156, 225);
-                            color: #fff;
-                        }
-                        .cancel {
-                            color: rgb(95, 156, 225);
-                        }
-                    }
-                    &:before {
-                        content: "";
-                        position: absolute;
-                        left: 80px;
-                        top: -7px;
-                        width: 0;
-                        height: 0;
-                        border-left: 10px solid transparent;
-                        border-right: 10px solid transparent;
-                        border-bottom: 7px solid #fff;
-                    }
-                }
-            }
-            .icon {
-                font-size: 20px;
-                cursor: pointer;
-                fill: #7a9edf;
-                margin-right: 8px;
-                &:hover {
-                    fill: rgb(89, 120, 218);
-                }
-            }
-        }
-        &:hover {
-            background: #edf3f9;
-        }
-    }
-}
+@import url("../styles/bookmark-item.less");
 </style>

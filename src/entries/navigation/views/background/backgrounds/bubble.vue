@@ -24,7 +24,7 @@ class Bubble {
         this.radius = random(0, maxRadius);
         this.color = randomColor();
         this.x = random(0, boundary.width);
-        this.y = random(0, boundary.height);
+        this.y = random(boundary.height / 2, boundary.height);
         this.speed = random(speed.min, speed.max);
     }
 }

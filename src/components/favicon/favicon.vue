@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { isUrl } from "@/utils";
 export default {
     name: "Favicon",
     props: {
@@ -69,7 +70,7 @@ export default {
             }
             const prepareUrl = new URL(chrome.runtime.getURL("/_favicon/"));
             prepareUrl.searchParams.set("pageUrl", url);
-            prepareUrl.searchParams.set("size", this.size);
+            prepareUrl.searchParams.set("size", 128);
             return prepareUrl.toString();
         },
     },
@@ -81,8 +82,7 @@ export default {
                 this.loading = true;
                 if (!newVal) return;
                 // 验证网站
-                let siteReg = /https?:\/\/(\w+\.?)+/;
-                if (!siteReg.test(newVal)) {
+                if (!isUrl(newVal)) {
                     console.log(`【${newVal}】不是正确的url`);
                     this.loadSucc = false;
                 } else {

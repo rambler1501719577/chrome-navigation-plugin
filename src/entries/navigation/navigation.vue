@@ -28,47 +28,16 @@
             <rambler-dialog
                 :visible.sync="dialogVisible"
                 name="dataManage"
-                title="数据管理"
+                title="系统设置"
                 width="700px"
                 height="500px"
                 :draggable="true"
             >
-                <data-manage></data-manage>
-            </rambler-dialog>
-            <rambler-dialog
-                :index="101"
-                :visible.sync="accountDialogVisible"
-                name="accountSetting"
-                title="账户设置"
-                width="700px"
-                height="220px"
-                :draggable="true"
-            >
-                <account-setting></account-setting>
+                <system-setting></system-setting>
             </rambler-dialog>
 
             <!-- 侧边栏 -->
             <div class="fixed-sidebar" id="sidebar-window">
-                <!-- 账户设置 -->
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="账户设置"
-                    placement="right"
-                    v-if="isLogin"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('accountDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="account"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
-                    </div>
-                </el-tooltip>
                 <!-- 换肤 -->
                 <el-tooltip
                     class="item"
@@ -88,11 +57,11 @@
                         </div>
                     </div>
                 </el-tooltip>
-                <!-- 数据管理 -->
+                <!-- 系统设置 -->
                 <el-tooltip
                     class="item"
                     effect="dark"
-                    content="数据管理"
+                    content="系统设置"
                     placement="right"
                 >
                     <div class="box-item">
@@ -148,8 +117,8 @@
                     <span>切换背景</span>
                 </li>
                 <li @click="open('dialogVisible')">
-                    <rambler-icon name="skin" class="icon"></rambler-icon>
-                    <span>数据管理</span>
+                    <rambler-icon name="setting" class="icon"></rambler-icon>
+                    <span>系统设置</span>
                 </li>
             </ul>
         </div>
@@ -169,6 +138,7 @@ import TimeFlip from "./components/time-flip";
 import DataManage from "./views/data-manage/index";
 import frequentBookmarks from "./views/frequent-website/list-front";
 import Search from "./views/search-engine/search";
+import SystemSetting from "./views/system-setting/index";
 
 import BackgroundSetting from "./views/background/manage";
 import AccountSetting from "./views/account";
@@ -178,8 +148,6 @@ export default {
         return {
             dialogVisible: false,
             skinDialogVisible: false,
-            accountDialogVisible: false,
-            isLogin: false,
             driver: null,
             contextMenuShow: false,
             position: {
@@ -192,7 +160,6 @@ export default {
     async created() {
         const token = await getToken();
         if (token && token.value) {
-            this.isLogin = true;
             // 获取和现在相差时间毫秒数
             const time = token.expirationDate * 1000 - new Date().getTime();
             const hours = (time / 1000 / 60 / 60).toFixed(2);
@@ -212,7 +179,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            window.addEventListener("contextmenu", (e) => {
+            this.$el.addEventListener("contextmenu", (e) => {
                 e.preventDefault();
                 this.showContextMenu(e);
             });
@@ -227,17 +194,14 @@ export default {
         frequentBookmarks: frequentBookmarks,
         DataManage: DataManage,
         BackgroundSetting: BackgroundSetting,
-        AccountSetting: AccountSetting,
         TimeFlip: TimeFlip,
+        SystemSetting: SystemSetting,
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
         open(type) {
             this[type] = true;
-        },
-        closeTest2() {
-            this.test2 = false;
         },
         showContextMenu(e) {
             const contextMenu = document.querySelector(".popup");
@@ -428,7 +392,7 @@ export default {
         z-index: 9999;
         width: 160px;
         background: #fff;
-        box-shadow: 0 2px 2px #333;
+        box-shadow: -2px 2px 2px #cab8b8;
         ul {
             width: 100%;
             list-style: none;
@@ -443,7 +407,7 @@ export default {
                 cursor: pointer;
                 .icon {
                     fill: #333;
-                    margin-right: 4px;
+                    margin: -3px 4px 0 0;
                 }
                 &:hover {
                     background: #eee;

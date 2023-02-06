@@ -4,13 +4,9 @@
             class="bookitem"
             v-for="bookmark of frequentBookmarks"
             :key="bookmark.id"
+            @contextmenu.stop.prevent="showEditDialog($event, bookmark)"
         >
-            <a
-                :href="bookmark.url"
-                target="_blank"
-                @mouseenter.self="handleMouseenter($event)"
-                @mouseleave="handleMouseout($event)"
-            >
+            <a :href="bookmark.url" target="_blank">
                 <image-card
                     :name="bookmark.name"
                     :url="bookmark.url"
@@ -20,14 +16,18 @@
             <div class="delete-icon">
                 <a @click="deleteFrequentSite(bookmark)"
                     ><rambler-icon
-                        @mouseover.native="handleMouseOver"
                         class="close-icon"
                         name="close-light"
                     ></rambler-icon
                 ></a>
             </div>
         </div>
-        <div class="bookitem" v-if="showAddMore" @click="showDialog">
+        <div
+            class="bookitem"
+            v-if="showAddMore"
+            @click="showDialog"
+            @contextmenu.stop.prevent="doNothing"
+        >
             <div class="outer">
                 <div class="add-bg">
                     <rambler-icon name="add" class="add-icon"></rambler-icon>
@@ -35,93 +35,111 @@
                 <div class="text">添加</div>
             </div>
         </div>
-        <el-dialog
-            width="500px"
-            title="本地书签管理"
-            :modal="false"
-            @open="handleOpen"
-            top="10vh"
+        <!-- 新建 -->
+        <rambler-dialog
+            width="710px"
+            height="480px"
+            title="最常访问"
+            name="frequentWebsiteDialog"
             :visible.sync="dialogVisible"
-            :close-on-click-modal="false"
-            v-dialogDrag
+            :draggable="true"
         >
-            <el-form
-                label-position="left"
-                label-width="56px"
-                :model="form"
-                size="small"
-                :rules="rules"
-                ref="form"
-            >
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="form.name" placeholder="名称"></el-input>
-                </el-form-item>
-                <el-form-item label="网址" prop="url">
-                    <el-input
-                        v-model="form.url"
-                        placeholder="网址"
-                        @keydown.enter="handleSubmit"
-                    ></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="btns" style="display: flex; justify-content: flex-end">
-                <el-button size="small" @click="handleSubmit" type="primary"
-                    >确定</el-button
-                >
+            <frequent-website-form
+                type=""
+                @close="handleClose"
+            ></frequent-website-form>
+        </rambler-dialog>
+        <rambler-dialog
+            width="500px"
+            height="230px"
+            title="编辑"
+            name="editFrequentWebsiteDialog"
+            :visible.sync="editDialogVisible"
+            :draggable="true"
+        >
+            <div class="form">
+                <div class="form-item">
+                    <p class="label">网站名称</p>
+                    <input type="text" v-model="form.name" />
+                </div>
+                <div class="form-item search">
+                    <p class="label">网站地址</p>
+                    <input type="text" v-model="form.url" />
+                </div>
+                <div class="footer">
+                    <rambler-button @click="save" type="primary"
+                        >确定</rambler-button
+                    >
+                </div>
             </div>
-        </el-dialog>
+        </rambler-dialog>
+        <div class="popup" :style="popupStyle" v-show="showPopup">
+            <p class="popup-item" @click="edit">编辑</p>
+            <p class="popup-item" @click="deleteItem">删除</p>
+        </div>
     </div>
 </template>
 
 <script>
-const { v4: uuidv4 } = require("uuid");
+import frequentWebsiteForm from "./components/frequentWebsiteForm.vue";
 import ImageCard from "./components/image-card";
 import { mapGetters, mapActions } from "vuex";
 export default {
     name: "FrequesntBookmarks",
     data() {
-        var urlValidator = (rule, value, callback) => {
-            const reg = /https?:\/\/(\w+\.?)+/;
-            if (!reg.test(value)) {
-                return callback(new Error("请输入包含http(s)的完整地址"));
-            }
-            callback();
-        };
         return {
             commonBookmark: [],
             showAddMore: true,
             dialogVisible: false,
+            showPopup: false,
             form: {
                 name: "",
                 url: "",
             },
-            rules: {
-                name: [
-                    {
-                        required: true,
-                        message: "网站名称不能为空",
-                        trigger: "blur",
-                    },
-                ],
-                url: [
-                    { validator: urlValidator, trigger: "blur" },
-                    {
-                        required: true,
-                        message: "网站地址不能为空",
-                        trigger: "blur",
-                    },
-                ],
+            editDialogVisible: false,
+            editType: "",
+            choosenItem: {},
+            popupPosition: {
+                left: 0,
+                top: 0,
             },
         };
     },
     computed: {
         ...mapGetters(["frequentBookmarks"]),
+        popupStyle() {
+            return {
+                position: "fixed",
+                left: this.popupPosition.left + "px",
+                top: this.popupPosition.top + "px",
+            };
+        },
     },
     components: {
         ImageCard,
+        frequentWebsiteForm,
+    },
+    mounted() {
+        document.addEventListener("click", (e) => {
+            const paths = e.path || (e.composedPath && e.composedPath());
+            if (![].find.call(paths, (item) => item.className == "popup")) {
+                this.showPopup = false;
+            }
+        });
     },
     methods: {
         ...mapActions("frequentBookmark", ["update"]),
+        save() {
+            this.update({
+                type: "update",
+                data: {
+                    id: this.choosenItem.id,
+                    name: this.form.name,
+                    url: this.form.url,
+                },
+            });
+            this.editDialogVisible = false;
+        },
         deleteFrequentSite(site) {
             this.update({
                 type: "delete",
@@ -130,16 +148,29 @@ export default {
                 },
             });
         },
-        handleMouseenter(e) {
-            e.target.parentNode.querySelector(".delete-icon").style.display =
-                "block";
+        deleteItem() {
+            this.showPopup = false;
+            this.deleteFrequentSite(this.choosenItem);
         },
-        handleMouseout(e) {
-            e.target.parentNode.querySelector(".delete-icon").style.display =
-                "none";
+        edit() {
+            this.showPopup = false;
+            this.editDialogVisible = true;
+            this.form.name = this.choosenItem.name || this.choosenItem.title;
+            this.form.url = this.choosenItem.url;
         },
-        handleMouseOver(e) {
-            e.target.parentNode.parentNode.style.display = "block";
+        doNothing() {
+            return;
+        },
+        handleClose() {
+            this.dialogVisible = false;
+            // TODO
+        },
+        showEditDialog(e, item) {
+            const { clientX, clientY } = e;
+            this.popupPosition.left = clientX;
+            this.popupPosition.top = clientY;
+            this.showPopup = true;
+            this.choosenItem = item;
         },
         showDialog() {
             this.dialogVisible = true;
@@ -153,7 +184,6 @@ export default {
                         data: {
                             name: this.form.name,
                             url: this.form.url,
-                            id: uuidv4(),
                         },
                     });
                     this.$refs.form.resetFields();
@@ -161,73 +191,10 @@ export default {
                 }
             });
         },
-        handleOpen() {
-            this.$nextTick(() => {
-                this.$refs.form.resetFields();
-            });
-        },
     },
 };
 </script>
 <style lang="less" scoped>
-.frequent-bookmarks-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    .bookitem {
-        width: 100px;
-        min-height: 100px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: all 0.5s;
-        border-radius: 10px;
-        position: relative;
-        &:hover {
-            background-color: rgba(211, 206, 206, 0.5);
-        }
-        .outer {
-            width: 100%;
-            height: 100%;
-            margin-top: 15px;
-            .add-bg {
-                margin: 15px auto;
-                margin-bottom: 10px;
-                background: #ffffff;
-                width: 50px;
-                height: 50px;
-                border-radius: 8px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                .add-icon {
-                    fill: rgb(77, 71, 71) !important;
-                    font-size: 16px;
-                    font-weight: 200;
-                }
-            }
-            .text {
-                color: #fff;
-                text-align: center;
-            }
-        }
-        a {
-            padding-top: 15px;
-            display: block;
-            height: 100%;
-        }
-        .delete-icon {
-            position: absolute;
-            display: none;
-            right: 4px;
-            top: -10px;
-            .close-icon {
-                fill: #65605c;
-                &:hover {
-                    fill: #fff;
-                }
-            }
-        }
-    }
-}
+@import url("./styles/frequent-website-front-list.less");
+@import url("../../../../styles/form.less");
 </style>

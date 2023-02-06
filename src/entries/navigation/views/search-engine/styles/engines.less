@@ -1,0 +1,40 @@
+.search-engines-container {
+    .engine-list {
+        ul {
+            list-style: none;
+            display: flex;
+            li {
+                background-color: #edf2f5;
+                color: #333;
+                font-size: 14px;
+                height: 32px;
+                padding: 0 15px;
+                line-height: 32px;
+                user-select: none;
+                margin-right: 10px;
+                border-radius: 8px;
+                transition: all 0.5s;
+                cursor: pointer;
+            }
+            li.selected {
+                background-color: #18bad7;
+                color: #fff;
+            }
+        }
+    }
+
+    .search-popup-menu {
+        position: fixed;
+        z-index: 99;
+        background-color: #fff;
+        box-shadow: 2px 1px 2px #eee;
+        .popup-menu-item {
+            font-size: 12px;
+            color: #333;
+            padding: 6px;
+            &:hover {
+                background: #ddd;
+            }
+        }
+    }
+}

@@ -1,0 +1,118 @@
+.bookmark-list-item-wrapper {
+    .list-item {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        .title {
+            flex: 1;
+            overflow: hidden;
+            color: #666;
+            font-size: 16px;
+            line-height: 20px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            .title-text {
+                user-select: none;
+                display: block;
+                width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            .icon {
+                font-size: 18px;
+                margin-right: 8px;
+            }
+        }
+        .mod-time {
+            position: relative;
+            height: 100%;
+            padding-top: 11px;
+            width: 100px;
+            color: rgba(0, 0, 0, 0.54);
+            padding-left: 5px;
+            .delete-box {
+                display: inline-block;
+                position: relative;
+                .alert-box {
+                    display: none;
+                    position: absolute;
+                    z-index: 9;
+                    left: -80px;
+                    top: 30px;
+                    width: 180px;
+                    height: 80px;
+                    padding: 12px;
+                    font-size: 14px;
+                    background: #fff;
+                    color: #606266;
+                    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+                    border: 1px solid #ebeef5;
+                    .alert-bottom-btn {
+                        margin-top: 12px;
+                        display: flex;
+                        justify-content: flex-end;
+                        .sure {
+                            background: rgb(95, 156, 225);
+                            color: #fff;
+                        }
+                        .cancel {
+                            color: rgb(95, 156, 225);
+                        }
+                    }
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 80px;
+                        top: -7px;
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-bottom: 7px solid #fff;
+                    }
+                }
+            }
+            .icon {
+                font-size: 20px;
+                cursor: pointer;
+                fill: #7a9edf;
+                margin-right: 8px;
+                &:hover {
+                    fill: rgb(89, 120, 218);
+                }
+            }
+        }
+        &:hover {
+            background: #edf3f9;
+        }
+    }
+    .form {
+        .form-item {
+            margin-bottom: 20px;
+            .label {
+                margin-bottom: 6px;
+                color: #666;
+            }
+            input {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 6px 12px;
+                outline: none;
+                border: none;
+                border: 1px solid rgb(179, 173, 173);
+                border-radius: 3px;
+            }
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            .rambler-button {
+                margin-left: 8px;
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+.frequent-bookmarks-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    .bookitem {
+        width: 100px;
+        min-height: 100px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: all 0.5s;
+        border-radius: 10px;
+        position: relative;
+        &:hover {
+            background-color: rgba(211, 206, 206, 0.5);
+        }
+        &:hover .delete-icon {
+            display: block;
+        }
+        .outer {
+            width: 100%;
+            height: 100%;
+            margin-top: 15px;
+            .add-bg {
+                margin: 15px auto;
+                margin-bottom: 10px;
+                background: #ffffff;
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .add-icon {
+                    fill: rgb(77, 71, 71) !important;
+                    font-size: 16px;
+                    font-weight: 200;
+                }
+            }
+            .text {
+                color: #fff;
+                text-align: center;
+            }
+        }
+        a {
+            padding-top: 15px;
+            display: block;
+            height: 100%;
+        }
+        .delete-icon {
+            position: absolute;
+            display: none;
+            right: 4px;
+            top: -10px;
+            .close-icon {
+                fill: #65605c;
+                &:hover {
+                    fill: #fff;
+                }
+            }
+        }
+    }
+    .popup {
+        background-color: #fff;
+        box-shadow: 1px 1px 2px 0px rgb(209, 208, 208);
+        .popup-item {
+            padding: 6px 8px;
+            font-size: 14px !important;
+            &:hover {
+                background-color: #eee;
+            }
+        }
+    }
+}
