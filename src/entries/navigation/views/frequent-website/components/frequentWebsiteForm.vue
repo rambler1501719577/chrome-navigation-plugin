@@ -70,8 +70,15 @@ export default {
                         },
                     });
                 });
+                this.$ramblerNotification.success(
+                    `成功从【书签栏】添加【${this.selectedBookmarks.length}】条常用网站`
+                );
                 this.$refs.bookmarkList.clearSelection();
             } else {
+                if (!this.form.name || !this.form.url) {
+                    this.$ramblerNotification.warn(`网站名称或地址不能为空`);
+                    return;
+                }
                 this.update({
                     type: "add",
                     data: {
@@ -81,6 +88,7 @@ export default {
                         from: "user",
                     },
                 });
+                this.$ramblerNotification.success(`添加成功`);
             }
             this.resetFields();
             this.$emit("close");

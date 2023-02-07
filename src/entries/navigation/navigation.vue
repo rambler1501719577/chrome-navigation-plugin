@@ -22,6 +22,7 @@
                 width="800px"
                 height="520px"
                 :draggable="true"
+                :appendToBody="true"
             >
                 <background-setting></background-setting>
             </rambler-dialog>
@@ -32,6 +33,7 @@
                 width="700px"
                 height="500px"
                 :draggable="true"
+                :appendToBody="true"
             >
                 <system-setting></system-setting>
             </rambler-dialog>
@@ -122,6 +124,9 @@
                 </li>
             </ul>
         </div>
+
+        <!-- 所有的弹窗组件 -->
+        <notification></notification>
     </div>
 </template>
 
@@ -141,7 +146,6 @@ import Search from "./views/search-engine/search";
 import SystemSetting from "./views/system-setting/index";
 
 import BackgroundSetting from "./views/background/manage";
-import AccountSetting from "./views/account";
 export default {
     name: "IndexLayout",
     data() {
@@ -154,7 +158,6 @@ export default {
                 left: 0,
                 top: 0,
             },
-            test2: true,
         };
     },
     async created() {

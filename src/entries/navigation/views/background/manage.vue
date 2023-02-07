@@ -98,8 +98,8 @@
                 </el-radio-group>
             </div>
             <div class="btn">
-                <el-button type="primary" size="small" @click="reply"
-                    >保存并应用</el-button
+                <rambler-button type="primary" @click="reply"
+                    >保存并应用</rambler-button
                 >
             </div>
         </div>
@@ -214,7 +214,7 @@ export default {
             };
             this.updateBackground(payload);
             this.updateDynamicBackground(this.choosen.dyBackground);
-            this.$message.success("更换成功");
+            this.$ramblerNotification.success("更换背景成功");
         },
     },
     created() {

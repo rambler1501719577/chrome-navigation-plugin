@@ -43,11 +43,9 @@
             name="frequentWebsiteDialog"
             :visible.sync="dialogVisible"
             :draggable="true"
+            :appendToBody="true"
         >
-            <frequent-website-form
-                type=""
-                @close="handleClose"
-            ></frequent-website-form>
+            <frequent-website-form @close="handleClose"></frequent-website-form>
         </rambler-dialog>
         <rambler-dialog
             width="500px"
@@ -55,6 +53,7 @@
             title="编辑"
             name="editFrequentWebsiteDialog"
             :visible.sync="editDialogVisible"
+            :appendToBody="true"
             :draggable="true"
         >
             <div class="form">
@@ -138,6 +137,7 @@ export default {
                     url: this.form.url,
                 },
             });
+            this.$ramblerNotification.success(`修改成功`);
             this.editDialogVisible = false;
         },
         deleteFrequentSite(site) {
@@ -147,6 +147,7 @@ export default {
                     id: site.id,
                 },
             });
+            this.$ramblerNotification.success(`删除【${site.name}】成功`);
         },
         deleteItem() {
             this.showPopup = false;

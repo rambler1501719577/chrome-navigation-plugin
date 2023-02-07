@@ -6,6 +6,7 @@ import "@/directives/drag";
 import "@/directives/bubble";
 import ElementUI from "element-ui";
 import Filters from "@/filters";
+import RamblerNotification from "@/components/notification";
 
 // 全局css样式
 import "styl/scroll.css";
@@ -25,6 +26,8 @@ import RamblerButton from "@/components/button";
 import RamblerAlert from "@/components/alert";
 
 Vue.use(ElementUI);
+Vue.use(RamblerNotification, { name: "ramblerNotification" });
+Vue.prototype.$ramblerNotification({ title: "title", message: "message" });
 Vue.prototype.$axios = axios;
 Vue.prototype.$store = store;
 Vue.config.productionTip = false;

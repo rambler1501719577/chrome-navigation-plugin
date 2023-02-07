@@ -46,11 +46,17 @@ export default {
     methods: {
         ...mapActions("engine", ["repairEngine"]),
         clearData() {
-            localStorage.clear();
-            window.location.reload();
+            this.$ramblerNotification.danger(
+                "已清空所有数据，即将重新载入插件"
+            );
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.reload();
+            }, 2500);
         },
         repairEngines() {
             this.repairEngine();
+            this.$ramblerNotification.success("已修复默认搜索引擎");
         },
     },
 };

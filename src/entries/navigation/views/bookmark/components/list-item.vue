@@ -100,6 +100,7 @@
             height="300px"
             title="编辑"
             :draggable="true"
+            :appendToBody="true"
         >
             <div class="form">
                 <div class="form-item">

@@ -60,6 +60,9 @@ export default {
             type: String,
             default: "engine",
         },
+        appendToBody: {
+            type: Boolean,
+        },
     },
     data() {
         return {
@@ -104,7 +107,7 @@ export default {
                 this.rendered = true;
                 this.updateDialogs({
                     name: this.name,
-                    index: this.index,
+                    index: this.index(this.name),
                 });
             } else {
                 // this.hide();
@@ -244,6 +247,9 @@ export default {
         this.relocateDialog();
         if (this.visible) {
             this.rendered = true;
+        }
+        if (this.appendToBody) {
+            document.body.append(this.$el);
         }
     },
     created() {
