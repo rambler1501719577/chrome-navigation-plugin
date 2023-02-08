@@ -1,4 +1,3 @@
-@import url("../../styles/variable.less");
 .page-container {
     box-sizing: border-box;
     height: 100vh;
@@ -8,7 +7,6 @@
     background-attachment: fixed;
     overflow-x: hidden;
     position: relative;
-    // 在动画背景上层是内容
     .content {
         position: absolute;
         left: 0;
@@ -16,30 +14,24 @@
         width: 100%;
         height: 100vh;
         z-index: 20;
-
-        // 中间主体
-        .center-content {
-            float: left;
-            width: calc(100% - @left-bar-width - @right-bar-width);
-
-            .search {
-                width: 90%;
-                max-width: 1000px;
-                margin: 30px auto;
-                padding: 5px;
-            }
-            .frequent-bookmarks {
-                width: 80%;
-                margin: 0 auto;
-            }
+        overflow: hidden;
+        .search {
+            max-width: 60%;
+            margin: 30px auto;
+            padding: 5px;
         }
-
-        // 左侧固定
+        .frequent-bookmarks {
+            width: 80%;
+            margin: 0 auto;
+        }
         .fixed-sidebar {
-            width: @left-bar-width;
+            padding-top: 15px;
+            width: 60px;
             height: 100%;
-            float: left;
-            background: @left-bar-bg;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #00000954;
 
             .box-item {
                 width: 100%;
@@ -77,26 +69,27 @@
                 }
             }
         }
-
-        .right-bar {
-            padding: 15px;
-            float: left;
-            width: @right-bar-width;
-            height: 100%;
-            background: @right-bar-bg;
-            .time {
-                background-color: rgba(185, 181, 181, 0.414);
-                border-radius: 8px;
-                padding: 10px 0;
-            }
+        .time {
+            position: absolute;
+            right: 60px;
+            bottom: 60px;
         }
+    }
+    .dy-background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
     }
     .popup {
         position: absolute;
         z-index: 9999;
         width: 160px;
         background: #fff;
-        box-shadow: 0 2px 2px #333;
+        box-shadow: -2px 2px 2px #cab8b8;
         ul {
             width: 100%;
             list-style: none;
@@ -111,7 +104,7 @@
                 cursor: pointer;
                 .icon {
                     fill: #333;
-                    margin-right: 4px;
+                    margin: -3px 4px 0 0;
                 }
                 &:hover {
                     background: #eee;

@@ -95,6 +95,7 @@
                     </div>
                 </el-tooltip>
             </div>
+
             <div class="time">
                 <time-flip></time-flip>
             </div>
@@ -131,21 +132,12 @@
 </template>
 
 <script>
+import { event } from "../event";
 import "driver.js/dist/driver.min.css";
 import Driver from "driver.js";
 import { mapActions } from "vuex";
 import { getToken, tokenExpires } from "@/utils/token";
-import { getBookmarks } from "@/api/modules/bookmark";
-import { getTodos } from "@/api/modules/todo";
-import DynamicBackground from "./views/background";
-import TimeFlip from "./components/time-flip";
-
-import DataManage from "./views/data-manage/index";
-import frequentBookmarks from "./views/frequent-website/list-front";
-import Search from "./views/search-engine/search";
-import SystemSetting from "./views/system-setting/index";
-
-import BackgroundSetting from "./views/background/manage";
+import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
     data() {
@@ -190,15 +182,20 @@ export default {
                 this.contextMenuShow = false;
             });
         });
+        // 监听各个组件发送的事件
+        event.$on("guide", this.guide);
+        event.$on("dialog", (payload) => {
+            this.open(payload);
+        });
     },
     components: {
-        DynamicBackground: DynamicBackground,
-        RamblerSearch: Search,
-        frequentBookmarks: frequentBookmarks,
-        DataManage: DataManage,
-        BackgroundSetting: BackgroundSetting,
-        TimeFlip: TimeFlip,
-        SystemSetting: SystemSetting,
+        DynamicBackground: () => import("../views/background"),
+        RamblerSearch: () => import("../views/search-engine/search"),
+        frequentBookmarks: () => import("../views/frequent-website/list-front"),
+        DataManage: () => import("../views/data-manage/index"),
+        BackgroundSetting: () => import("../views/background/manage"),
+        TimeFlip: () => import("../widgets/time-flip"),
+        SystemSetting: () => import("../views/system-setting/index"),
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -222,27 +219,11 @@ export default {
         },
         // 请求远程数据(不缓存)
         loadRemoteData(token) {
-            const promises = [
-                getBookmarks(null, token.value),
-                getTodos(null, token.value),
-            ];
-            Promise.allSettled(promises).then(([bookmarkRes, todoRes]) => {
-                if (
-                    bookmarkRes.status == "fulfilled" &&
-                    bookmarkRes.value.code == 200
-                ) {
-                    const bookmarks = bookmarkRes.value.data.records;
-                    this.updateRemoteBookmark(bookmarks);
-                    console.log(`已更新bookmarks, 共【${bookmarks.length}】条`);
-                }
-                if (
-                    todoRes.status == "fulfilled" &&
-                    todoRes.value.code == 200
-                ) {
-                    const todos = todoRes.value.data;
-                    this.updateRemoteTodo(todos);
-                    console.log(`已更新todos, 共【${todos.length}】条`);
-                }
+            loadCloudData(token.value).then((result) => {
+                const { bookmarks, todos } = result;
+                this.updateRemoteBookmark(bookmarks);
+                this.updateRemoteTodo(todos);
+                this.$ramblerNotification.success("成功同步云端数据");
             });
         },
         loadLocalBookmark: function () {
@@ -304,119 +285,5 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.page-container {
-    box-sizing: border-box;
-    height: 100vh;
-    width: 100vw;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow-x: hidden;
-    position: relative;
-    .content {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100vh;
-        z-index: 20;
-        overflow: hidden;
-        .search {
-            max-width: 60%;
-            margin: 30px auto;
-            padding: 5px;
-        }
-        .frequent-bookmarks {
-            width: 80%;
-            margin: 0 auto;
-        }
-        .fixed-sidebar {
-            padding-top: 15px;
-            width: 60px;
-            height: 100%;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: #00000954;
-
-            .box-item {
-                width: 100%;
-                height: 60px;
-                cursor: pointer;
-                .icon-wrapper {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-                &:hover .icon {
-                    transform: scale(1.3);
-                }
-            }
-
-            .icon {
-                width: 30px;
-                height: 30px;
-                fill: rgb(234, 224, 224);
-                cursor: pointer;
-                margin-bottom: 8px;
-                transition: all 0.3s;
-            }
-            .affix-icon {
-                width: 30px;
-                height: 30px;
-                fill: #ddd;
-                cursor: pointer;
-                transition: all 0.7s;
-
-                &:hover {
-                    transform: rotate(270deg);
-                }
-            }
-        }
-        .time {
-            position: absolute;
-            right: 60px;
-            bottom: 60px;
-        }
-    }
-    .dy-background {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 10;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
-    }
-    .popup {
-        position: absolute;
-        z-index: 9999;
-        width: 160px;
-        background: #fff;
-        box-shadow: -2px 2px 2px #cab8b8;
-        ul {
-            width: 100%;
-            list-style: none;
-            li {
-                height: 40px;
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
-                padding: 0 0 0 8px;
-                font-weight: 300;
-                font-size: 14px;
-                cursor: pointer;
-                .icon {
-                    fill: #333;
-                    margin: -3px 4px 0 0;
-                }
-                &:hover {
-                    background: #eee;
-                }
-            }
-        }
-    }
-}
+@import url("./style.less");
 </style>

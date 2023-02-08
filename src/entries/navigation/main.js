@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Navigation from "./navigation";
+import Layout from "./layout";
 import store from "../../store";
 import axios from "axios";
 import "@/directives/drag";
@@ -12,7 +12,6 @@ import RamblerNotification from "@/components/notification";
 import "styl/scroll.css";
 import "styl/reset.css";
 import "styl/global.css"; //全局样式表(重置某些样式)
-// import "./load-element";
 
 import "animate.css";
 import "@/assets/iconfont/iconfont.css";
@@ -45,5 +44,5 @@ Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));
 
 new Vue({
     store,
-    render: (h) => h(Navigation),
+    render: (h) => h(Layout),
 }).$mount("#app");

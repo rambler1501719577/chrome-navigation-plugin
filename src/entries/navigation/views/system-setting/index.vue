@@ -25,12 +25,14 @@
                 <rambler-button @click="repairEngines"
                     >修复搜索引擎</rambler-button
                 >
+                <rambler-button @click="test">测试</rambler-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { event } from "../../event";
 import { mapActions } from "vuex";
 import AccountSetting from "./widgets/account";
 export default {
@@ -38,8 +40,6 @@ export default {
     data() {
         return {};
     },
-    created() {},
-    computed: {},
     components: {
         AccountSetting,
     },
@@ -53,6 +53,9 @@ export default {
                 localStorage.clear();
                 window.location.reload();
             }, 2500);
+        },
+        test() {
+            event.$emit("test", "fuck?");
         },
         repairEngines() {
             this.repairEngine();
