@@ -137,6 +137,7 @@ export default {
                 type: "delete",
                 data: {
                     id: this.choosenContextMenu.id,
+                    name: this.choosenContextMenu.name,
                 },
             });
             this.$ramblerNotification.success(`删除成功`);
