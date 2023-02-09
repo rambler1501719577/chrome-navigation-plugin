@@ -21,6 +21,7 @@
 
 <script>
 import { isUrl } from "@/utils";
+import { getIconUrl } from "chrome-service";
 export default {
     name: "Favicon",
     props: {
@@ -63,17 +64,6 @@ export default {
             },
         },
     },
-    methods: {
-        getImageUrl: function (url) {
-            if (!chrome.runtime) {
-                return "";
-            }
-            const prepareUrl = new URL(chrome.runtime.getURL("/_favicon/"));
-            prepareUrl.searchParams.set("pageUrl", url);
-            prepareUrl.searchParams.set("size", 128);
-            return prepareUrl.toString();
-        },
-    },
     watch: {
         url: {
             immediate: true,
@@ -87,7 +77,7 @@ export default {
                     this.loadSucc = false;
                 } else {
                     // 获取主机并根据主机查询对应favicon
-                    const url = this.getImageUrl(newVal);
+                    const url = getIconUrl(newVal);
                     if (url) {
                         const image = new Image();
                         image.src = url;

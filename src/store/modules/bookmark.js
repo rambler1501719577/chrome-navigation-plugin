@@ -1,11 +1,12 @@
+import { getBookmarkTree } from "chrome-service";
 export default {
     namespaced: true,
     state: {
         bookmark: [],
-        remoteBookmark: []
+        remoteBookmark: [],
     },
     getters: {
-        localBookmark: state => state.bookmark
+        localBookmark: (state) => state.bookmark,
     },
     mutations: {
         UPDATE_BOOKMARK(state, payload) {
@@ -13,7 +14,7 @@ export default {
         },
         UPDATE_REMOTE_BOOKMARK(state, payload) {
             state.remoteBookmark = payload;
-        }
+        },
     },
     actions: {
         updateRemoteBookmark({ commit }, payload) {
@@ -21,9 +22,9 @@ export default {
         },
         // 异步获取bookmarks
         updateBookmark({ commit }) {
-            chrome.bookmarks.getTree().then(res => {
-                commit("UPDATE_BOOKMARK", res[0].children[0].children);
+            getBookmarkTree().then((bookmarkTree) => {
+                commit("UPDATE_BOOKMARK", bookmarkTree);
             });
-        }
-    }
+        },
+    },
 };

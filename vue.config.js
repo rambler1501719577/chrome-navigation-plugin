@@ -22,21 +22,21 @@ module.exports = {
             entry: "src/entries/navigation/main.js",
             template: "public/navigation.html",
             filename: "navigation.html",
-            title: "New Tab"
+            title: "New Tab",
         },
         popup: {
             entry: "src/entries/popup/main.js",
             template: "public/popup.html",
             filename: "popup.html",
-            title: "Popup"
-        }
+            title: "Popup",
+        },
     },
     devServer: {
         port: port,
         open: false,
         overlay: {
             warnings: false,
-            errors: true
+            errors: true,
         },
         proxy: {
             [WEB_SERVER]: {
@@ -44,22 +44,22 @@ module.exports = {
                 changeOrigin: true,
                 headers: {
                     host: proxyWebAddress,
-                    origin: proxyWebAddress
-                }
-            }
-        }
+                    origin: proxyWebAddress,
+                },
+            },
+        },
     },
     css: {
         loaderOptions: {
             // 全局引入stylus变量, 通过main.js引入不生效
             stylus: {
-                import: "~styl/variable.styl"
-            }
+                import: "~styl/variable.styl",
+            },
         },
-        sourceMap: true
+        sourceMap: true,
     },
     // webpack相关配置
-    chainWebpack: config => {
+    chainWebpack: (config) => {
         config.module
             .rule("image")
             .test(/\.cur$/)
@@ -76,26 +76,28 @@ module.exports = {
             .use("svg-sprite-loader")
             .loader("svg-sprite-loader")
             .options({
-                symbolId: "icon-[name]"
+                symbolId: "icon-[name]",
             })
             .end();
 
         config.resolve.alias
             .set("styl", resolve("src/styles"))
             .set("assets", resolve("src/assets"))
+            .set("chrome-service", resolve("src/entries/navigation/service.js"))
             .set("components", resolve("src/components"));
+
         if (process.env.NODE_ENV === "development") {
             config.devtool("source-map");
         }
     },
-    configureWebpack: config => {
+    configureWebpack: (config) => {
         let plugins = [];
         if (process.env.NODE_ENV === "production") {
             plugins.push(
                 new CompressionPlugin({
                     test: /\.js$|\.html$|\.css/,
                     threshold: 10240,
-                    deleteOriginalAssets: false
+                    deleteOriginalAssets: false,
                 })
             );
             // plugins.push(
@@ -108,5 +110,5 @@ module.exports = {
             // );
         }
         config.plugins = [...config.plugins, ...plugins];
-    }
+    },
 };

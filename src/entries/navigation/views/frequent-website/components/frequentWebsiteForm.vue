@@ -36,6 +36,7 @@
     </div>
 </template>
 <script>
+import _ from "lodash";
 import BookmarkList from "../../bookmark/list";
 const { v4: uuidv4 } = require("uuid");
 import { mapActions } from "vuex";
@@ -55,25 +56,36 @@ export default {
         };
     },
     methods: {
-        ...mapActions("frequentBookmark", ["update"]),
+        ...mapActions("frequentBookmark", ["update", "batchInsert"]),
         // 确认添加
         confirm() {
             if (this.createType == "bookmark") {
-                this.selectedBookmarks.forEach((bookmark) => {
-                    this.update({
-                        type: "add",
-                        data: {
-                            name: bookmark.title,
-                            url: bookmark.url,
-                            id: uuidv4(),
-                            from: "bookmark",
-                        },
+                this.batchInsert({
+                    data: this.selectedBookmarks.map((selectedOne) => {
+                        // 将书签中的title转为常用链接中的name属性，其余保持不变
+                        const obj = selectedOne;
+                        obj.name = selectedOne.title;
+                        delete obj.title;
+                        obj.from = "bookmark";
+                        return obj;
+                    }),
+                })
+                    .then((effectRows) => {
+                        if (effectRows == 0) {
+                            this.$ramblerNotification.warn(
+                                `新增失败，无法重复添加`
+                            );
+                        } else {
+                            this.$ramblerNotification.success(`添加成功`);
+                        }
+                    })
+                    .finally(() => {
+                        this.selectedBookmarks.splice(
+                            0,
+                            this.selectedBookmarks.length
+                        );
+                        this.$refs.bookmarkList.clearSelection();
                     });
-                });
-                this.$ramblerNotification.success(
-                    `成功从【书签栏】添加【${this.selectedBookmarks.length}】条常用网站`
-                );
-                this.$refs.bookmarkList.clearSelection();
             } else {
                 if (!this.form.name || !this.form.url) {
                     this.$ramblerNotification.warn(`网站名称或地址不能为空`);

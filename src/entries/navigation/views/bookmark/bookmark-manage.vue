@@ -88,6 +88,12 @@ import { randomNum } from "@/utils";
 import _ from "lodash";
 import { mapGetters, mapActions } from "vuex";
 import BookmarkItem from "./components/list-item";
+import {
+    createBookmarkFolder,
+    getBookmarkSubTree,
+    updateBookmark,
+    removeBookmark,
+} from "chrome-service";
 export default {
     name: "Bookmark",
     data() {
@@ -158,13 +164,12 @@ export default {
         },
         confirmCreateBookmark() {
             try {
-                if (!chrome.bookmarks) throw new Error("创建文件夹失败");
-                chrome.bookmarks.create({
-                    parentId: this.currentPath ? this.currentPath.id : "0",
-                    title: this.folder.title,
-                });
+                createBookmarkFolder(
+                    this.folder.title,
+                    this.currentPath ? this.currentPath.id : "0"
+                );
             } catch (e) {
-                console.log("创建文件夹失败，无法访问chrome.bookmark对象");
+                console.log("创建文件夹失败");
             } finally {
                 this.folder.title = "";
                 this.folderDialogVisible = false;
@@ -229,61 +234,26 @@ export default {
             }
             this.getChildren(pathTarget.id);
         },
-        // chrome api -> 根据id获取书签
+        // 书签栏子树
         getChildren(bookmarkId) {
-            if (!chrome.bookmarks) {
-                this.bookmarkList = [...this.randomData()];
-            } else {
-                chrome.bookmarks.getChildren(bookmarkId, (list) => {
-                    this.bookmarkList = list;
-                });
-            }
-        },
-        randomData() {
-            const arr = [];
-            const times = randomNum(2, 10);
-            for (let i = 0; i < times; i++) {
-                arr.push({
-                    dateAdded: 1628582602825,
-                    dateGroupModified: 1673316216588,
-                    id: "2",
-                    index: 1,
-                    url: i % 2 == 0 ? "111" : "",
-                    parentId: "0",
-                    title: "随机" + i + "",
-                });
-            }
-            return arr;
+            this.bookmarkList = getBookmarkSubTree(bookmarkId);
         },
         // 编辑行
         editRow: function (row) {
-            if (!chrome.bookmarks) {
-                return this.$message.error("请在扩展程序中操作数据");
-            }
             this.form = _.cloneDeep(row);
             this.dialogVisible = true;
         },
-        // 同步到chrome中
+        // 修改书签
         handleSubmit() {
-            chrome.bookmarks.update(
-                this.form.id,
-                {
-                    title: this.form.title,
-                    url: this.form.url,
-                },
-                (result) => {
-                    // 重新获取bookmark数据
+            updateBookmark(this.form.id, this.form.title, this.form.url).then(
+                (res) => {
                     this.updateBookmark();
                 }
             );
         },
         // 删除行
         deleteRow: function (row) {
-            if (!chrome.bookmarks) {
-                return this.$message.error("请在扩展程序中操作数据");
-            }
-            chrome.bookmarks.remove(row.id, () => {
-                // 重新获取bookmark数据
+            removeBookmark(row.id).then((res) => {
                 this.updateBookmark();
             });
         },

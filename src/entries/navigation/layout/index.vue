@@ -136,7 +136,7 @@ import { event } from "../event";
 import "driver.js/dist/driver.min.css";
 import Driver from "driver.js";
 import { mapActions } from "vuex";
-import { getToken, tokenExpires } from "@/utils/token";
+import { getToken } from "@/utils/token";
 import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
@@ -227,9 +227,6 @@ export default {
             });
         },
         loadLocalBookmark: function () {
-            if (!chrome.bookmarks) {
-                return console.log("请在chrome中调试本地书签");
-            }
             this.updateBookmark();
         },
         defineSteps() {
