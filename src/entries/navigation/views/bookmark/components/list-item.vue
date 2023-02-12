@@ -100,6 +100,7 @@
             height="300px"
             title="编辑"
             :draggable="true"
+            :appendToBody="true"
         >
             <div class="form">
                 <div class="form-item">
@@ -126,6 +127,11 @@
 </template>
 
 <script>
+import {
+    updateBookmark,
+    removeBookmark,
+    removeBookmarkTree,
+} from "chrome-service";
 export default {
     name: "Bookmark",
     props: {
@@ -168,27 +174,17 @@ export default {
         },
         // 更新书签
         sureUpdate() {
-            try {
-                if (!chrome.bookmarks)
-                    throw new Error("更新书签异常，无法读取书签对象");
-                chrome.bookmarks.update(
-                    this.bookmark.id,
-                    {
-                        title: this.data.title,
-                        url: this.data.url,
-                    },
-                    (res) => {
-                        console.log("修改成功");
-                    }
-                );
-            } catch (e) {
-                console.log("更新书签异常");
-            } finally {
+            updateBookmark(
+                this.bookmark.id,
+                this.data.title,
+                this.data.url
+            ).then((res) => {
+                this.$ramblerNotification.success("更新成功");
                 this.editDialogVisible = false;
                 this.data.title = "";
                 this.data.url = "";
                 this.$emit("update");
-            }
+            });
         },
         // 取消删除
         cancelDeletet(e) {
@@ -204,15 +200,16 @@ export default {
         },
         // 确定删除书签
         sureDeleteBookmark() {
-            chrome.bookmarks.remove(this.bookmark.id, (result) => {
+            removeBookmark(this.bookmark.id).then((res) => {
                 this.$emit("update");
                 console.log("remove bookmark successfully");
             });
             this.closeDeleteTip();
         },
         sureDeleteDir() {
-            chrome.bookmarks.removeTree(this.bookmark.id, (res) => {
+            removeBookmarkTree(this.bookmark.id).then((res) => {
                 this.$emit("update");
+                this.$ramblerNotification.success("删除成功");
                 this.closeDeleteTip();
             });
         },

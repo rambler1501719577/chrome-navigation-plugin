@@ -1,6 +1,7 @@
+import { indexStart } from "@/settings";
 const getMaxIndex = (cachedDialogs) => {
     if (!cachedDialogs || cachedDialogs.length == 0) {
-        return 1;
+        return indexStart;
     }
     let sortFunc = (item1, item2) => item2.index - item1.index;
     // 深拷贝一下, 防止排序污染原有数据

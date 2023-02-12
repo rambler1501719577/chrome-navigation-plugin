@@ -67,8 +67,9 @@
 </template>
 
 <script>
-import { randomNum } from "@/utils";
 import { mapGetters } from "vuex";
+import { getBookmarkSubTree } from "chrome-service";
+import _ from "lodash";
 export default {
     name: "Bookmark",
     data() {
@@ -96,7 +97,7 @@ export default {
     },
     methods: {
         clearSelection() {
-            this.selectedBookmarks.splice(0, this.selectedBookmarks.length - 1);
+            this.selectedBookmarks.splice(0, this.selectedBookmarks.length);
             this.bookmarkList.forEach((item) => (item.selected = false));
             this.getChildren("0");
         },
@@ -118,7 +119,7 @@ export default {
                 this.selectedBookmarks.push(payload);
             }
             // 提交到父组件
-            this.$emit("change", this.selectedBookmarks);
+            this.$emit("change", _.cloneDeep(this.selectedBookmarks));
         },
         // 点击书签文件夹
         handleDirClick(bookmarkDir) {
@@ -151,31 +152,11 @@ export default {
             }
             this.getChildren(pathTarget.id);
         },
-        // chrome api -> 根据id获取书签
+        // 获取书签子树
         getChildren(bookmarkId) {
-            if (!chrome.bookmarks) {
-                this.bookmarkList = [...this.randomData()];
-            } else {
-                chrome.bookmarks.getChildren(bookmarkId, (list) => {
-                    this.bookmarkList = list;
-                });
-            }
-        },
-        randomData() {
-            const arr = [];
-            const times = randomNum(2, 10);
-            for (let i = 0; i < 50; i++) {
-                arr.push({
-                    dateAdded: 1628582602825,
-                    dateGroupModified: 1673316216588,
-                    id: i,
-                    index: 1,
-                    url: i % 4 == 0 ? "111" : "",
-                    parentId: "0",
-                    title: "随机随机随机随机随机" + i + "",
-                });
-            }
-            return arr;
+            getBookmarkSubTree(bookmarkId).then((bookmarkSubTree) => {
+                this.bookmarkList = bookmarkSubTree;
+            });
         },
     },
 };

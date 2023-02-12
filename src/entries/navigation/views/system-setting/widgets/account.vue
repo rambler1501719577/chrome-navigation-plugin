@@ -75,6 +75,7 @@ export default {
                 this.isLogin = true;
             }
         });
+        window.exportConfig = this.exportConfig;
     },
     computed: {
         ...mapGetters(["dataSource"]),
@@ -122,9 +123,9 @@ export default {
                     _this.replaceEngines(engine);
                     // 设置默认搜索引擎
                     _this.setDefaultEngine({ dataSource: "local" });
-                    _this.$message.success("导入成功");
+                    _this.$ramblerNotification.success("导入成功");
                 } catch (e) {
-                    _this.$message.error("导入失败, 请刷新重试");
+                    _this.$ramblerNotification.danger("导入失败, 请刷新重试");
                 }
             };
         },

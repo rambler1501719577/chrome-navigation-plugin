@@ -80,6 +80,7 @@
 <script>
 import Engines from "./engines.vue";
 import { mapGetters } from "vuex";
+import { searchFromHistory } from "chrome-service";
 export default {
     name: "Search",
     data() {
@@ -166,25 +167,7 @@ export default {
             });
             return res;
         },
-        // chrome history中搜索
-        searchInHistory(keywords, limit) {
-            return new Promise((resolve) => {
-                if (!keywords) {
-                    resolve([]);
-                }
-                chrome.history.search(
-                    {
-                        text: keywords,
-                        maxResults: limit,
-                    },
-                    (res) => {
-                        resolve(
-                            res.map((ele) => ({ ...ele, from: "history" }))
-                        );
-                    }
-                );
-            });
-        },
+
         async handleInput(keywords) {
             // 重置索引和搜索结果
             this.verticalIndex = 0;
@@ -197,12 +180,8 @@ export default {
             if (this.flatternBookmark.length > 0) {
                 searchRes.push(...this.searchInBookmark(this.keywords));
             }
-            // chrome history对象提供的search匹配机制没理解
-            if (chrome.history) {
-                searchRes.push(
-                    ...(await this.searchInHistory(this.keywords, 20))
-                );
-            }
+            // 搜索历史记录
+            searchRes.push(...(await searchFromHistory(this.keywords, 20)));
             this.searchResult = searchRes;
             if (!this.keywords) {
                 this.searchResult = [];
@@ -249,7 +228,7 @@ export default {
             }
         });
         document.addEventListener("click", (e) => {
-            // chrome下e.path突然失效，可能是遵循标准事件模型，移除了path属性
+            // e.path突然失效，可能是遵循标准事件模型，移除了path属性
             const paths = e.path || (e.composedPath && e.composedPath());
             if (![].find.call(paths, (item) => item.className == "search")) {
                 this.showPopup = false;

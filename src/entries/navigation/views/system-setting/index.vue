@@ -25,12 +25,14 @@
                 <rambler-button @click="repairEngines"
                     >修复搜索引擎</rambler-button
                 >
+                <rambler-button @click="test">测试</rambler-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { event } from "../../event";
 import { mapActions } from "vuex";
 import AccountSetting from "./widgets/account";
 export default {
@@ -38,19 +40,26 @@ export default {
     data() {
         return {};
     },
-    created() {},
-    computed: {},
     components: {
         AccountSetting,
     },
     methods: {
         ...mapActions("engine", ["repairEngine"]),
         clearData() {
-            localStorage.clear();
-            window.location.reload();
+            this.$ramblerNotification.danger(
+                "已清空所有数据，即将重新载入插件"
+            );
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.reload();
+            }, 2500);
+        },
+        test() {
+            event.$emit("test", "fuck?");
         },
         repairEngines() {
             this.repairEngine();
+            this.$ramblerNotification.success("已修复默认搜索引擎");
         },
     },
 };

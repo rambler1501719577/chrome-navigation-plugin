@@ -42,6 +42,26 @@ export default {
         },
     },
     actions: {
+        batchInsert({ commit, state }, payload) {
+            const { data } = payload;
+            let successNum = 0;
+            for (let i = 0; i < data.length; i++) {
+                const current = data[i];
+                // 判断是否存在,存在即更新，否则添加
+                const index = state.frequentBookmarks.findIndex(
+                    (item) =>
+                        item.name === current.name && item.url === current.url
+                );
+                if (index !== -1) {
+                    continue;
+                } else {
+                    current.id = uuidv4();
+                    commit("ADD_FREQUENT_BOOKMARKS", current);
+                    successNum++;
+                }
+            }
+            return successNum;
+        },
         // 通用方法，更新state
         update({ commit, state }, payload) {
             const { type, data } = payload;

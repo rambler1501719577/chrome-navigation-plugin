@@ -27,6 +27,7 @@
             :draggable="true"
             width="600px"
             height="380px"
+            :appendToBody="true"
         >
             <rambler-alert>
                 <span style="font-weight: bold"
@@ -136,8 +137,10 @@ export default {
                 type: "delete",
                 data: {
                     id: this.choosenContextMenu.id,
+                    name: this.choosenContextMenu.name,
                 },
             });
+            this.$ramblerNotification.success(`删除成功`);
         },
         // 鼠标右键
         openContextMenu(e, choosen) {
@@ -187,6 +190,13 @@ export default {
                     type: this.editType,
                     data: data,
                 });
+                if (this.editType == "add") {
+                    this.$ramblerNotification.success(
+                        `添加【${data.name}】搜索引擎成功`
+                    );
+                } else {
+                    this.$ramblerNotification.success(`保存成功`);
+                }
                 this.dialogVisible = false;
             }
         },

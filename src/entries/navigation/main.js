@@ -1,17 +1,17 @@
 import Vue from "vue";
-import Navigation from "./navigation";
+import Layout from "./layout";
 import store from "../../store";
 import axios from "axios";
 import "@/directives/drag";
 import "@/directives/bubble";
 import ElementUI from "element-ui";
 import Filters from "@/filters";
+import RamblerNotification from "@/components/notification";
 
 // 全局css样式
 import "styl/scroll.css";
 import "styl/reset.css";
 import "styl/global.css"; //全局样式表(重置某些样式)
-// import "./load-element";
 
 import "animate.css";
 import "@/assets/iconfont/iconfont.css";
@@ -25,6 +25,8 @@ import RamblerButton from "@/components/button";
 import RamblerAlert from "@/components/alert";
 
 Vue.use(ElementUI);
+Vue.use(RamblerNotification, { name: "ramblerNotification" });
+Vue.prototype.$ramblerNotification({ title: "title", message: "message" });
 Vue.prototype.$axios = axios;
 Vue.prototype.$store = store;
 Vue.config.productionTip = false;
@@ -42,5 +44,5 @@ Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));
 
 new Vue({
     store,
-    render: (h) => h(Navigation),
+    render: (h) => h(Layout),
 }).$mount("#app");
