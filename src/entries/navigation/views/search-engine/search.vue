@@ -183,16 +183,10 @@ export default {
             });
 
             if (this.flatternBookmark.length > 0) {
-                const result = this.searchInBookmark(this.keywords);
-                console.log("book", result);
-                // searchRes.push(...this.searchInBookmark(this.keywords));
+                searchRes.push(...this.searchInBookmark(this.keywords));
             }
-            console.log(1);
             // 搜索历史记录
-            const r = await searchFromHistory(this.keywords, 20);
-            console.log("r", r);
-            // searchRes.push(...(await searchFromHistory(this.keywords, 20)));
-            console.log(searchRes);
+            searchRes.push(...(await searchFromHistory(this.keywords, 20)));
             this.searchResult = searchRes;
         },
         // 切换搜索结果
