@@ -38,62 +38,53 @@
                 <system-setting></system-setting>
             </rambler-dialog>
 
+            <rambler-dialog
+                :visible.sync="noteDialogVisible"
+                name="dataManage"
+                title="日志管理（内部使用）"
+                width="700px"
+                height="500px"
+                :draggable="true"
+                :appendToBody="true"
+            >
+                <log-manage></log-manage>
+            </rambler-dialog>
+
             <!-- 侧边栏 -->
             <div class="fixed-sidebar" id="sidebar-window">
                 <!-- 换肤 -->
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="背景设置"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('skinDialogVisible')"
-                        >
-                            <rambler-icon
-                                name="skin"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
+                <div class="box-item">
+                    <div
+                        class="icon-wrapper"
+                        @click="open('skinDialogVisible')"
+                    >
+                        <rambler-icon name="skin" class="icon"></rambler-icon>
                     </div>
-                </el-tooltip>
+                </div>
                 <!-- 系统设置 -->
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="系统设置"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div
-                            class="icon-wrapper"
-                            @click="open('dialogVisible')"
-                        >
-                            <rambler-icon
-                                name="setting"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
+                <div class="box-item">
+                    <div class="icon-wrapper" @click="open('dialogVisible')">
+                        <rambler-icon
+                            name="setting"
+                            class="icon"
+                        ></rambler-icon>
                     </div>
-                </el-tooltip>
+                </div>
 
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="使用教程"
-                    placement="right"
-                >
-                    <div class="box-item">
-                        <div class="icon-wrapper" @click="guide">
-                            <rambler-icon
-                                name="guide"
-                                class="icon"
-                            ></rambler-icon>
-                        </div>
+                <div class="box-item">
+                    <div class="icon-wrapper" @click="guide">
+                        <rambler-icon name="guide" class="icon"></rambler-icon>
                     </div>
-                </el-tooltip>
+                </div>
+
+                <div class="box-item" v-show="false">
+                    <div
+                        class="icon-wrapper"
+                        @click="open('noteDialogVisible')"
+                    >
+                        <rambler-icon name="note" class="icon"></rambler-icon>
+                    </div>
+                </div>
             </div>
 
             <div class="time">
@@ -146,6 +137,7 @@ export default {
             skinDialogVisible: false,
             driver: null,
             contextMenuShow: false,
+            noteDialogVisible: false,
             position: {
                 left: 0,
                 top: 0,
@@ -196,6 +188,7 @@ export default {
         BackgroundSetting: () => import("../views/background/manage"),
         TimeFlip: () => import("../widgets/time-flip"),
         SystemSetting: () => import("../views/system-setting/index"),
+        LogManage: () => import("../views/log"),
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),

@@ -169,6 +169,10 @@ export default {
         },
 
         async handleInput(keywords) {
+            if (!this.keywords) {
+                this.searchResult = [];
+                return;
+            }
             // 重置索引和搜索结果
             this.verticalIndex = 0;
             const searchRes = [];
@@ -177,15 +181,19 @@ export default {
                 title: this.keywords,
                 from: "engine",
             });
+
             if (this.flatternBookmark.length > 0) {
-                searchRes.push(...this.searchInBookmark(this.keywords));
+                const result = this.searchInBookmark(this.keywords);
+                console.log("book", result);
+                // searchRes.push(...this.searchInBookmark(this.keywords));
             }
+            console.log(1);
             // 搜索历史记录
-            searchRes.push(...(await searchFromHistory(this.keywords, 20)));
+            const r = await searchFromHistory(this.keywords, 20);
+            console.log("r", r);
+            // searchRes.push(...(await searchFromHistory(this.keywords, 20)));
+            console.log(searchRes);
             this.searchResult = searchRes;
-            if (!this.keywords) {
-                this.searchResult = [];
-            }
         },
         // 切换搜索结果
         switchResult: function (keyCode) {

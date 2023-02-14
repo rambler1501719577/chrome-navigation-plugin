@@ -1,9 +1,9 @@
 import _ from "lodash";
 const getters = {
-    theme: state => state.theme.currentTheme,
-    dataSource: state => state.setting.dataSource,
+    theme: (state) => state.theme.currentTheme,
+    dataSource: (state) => state.setting.dataSource,
     // 搜索引擎
-    engines: state => {
+    engines: (state) => {
         if (state.setting.dataSource == "local") {
             return state.engine.engines;
         } else {
@@ -11,7 +11,7 @@ const getters = {
         }
     },
     // 当前搜索引擎
-    currentEngine: state => {
+    currentEngine: (state) => {
         // 根据数据源选择第一条为默认搜索引擎
         if (state.engine.currentEngine) return state.engine.currentEngine;
         let currentEngine = "";
@@ -25,7 +25,7 @@ const getters = {
         }
     },
     // 常用网站
-    frequentBookmarks: state => {
+    frequentBookmarks: (state) => {
         if (state.setting.dataSource == "local") {
             return state.frequentBookmark.frequentBookmarks;
         } else {
@@ -33,14 +33,14 @@ const getters = {
         }
     },
     // 待办
-    todo: state => {
+    todo: (state) => {
         if (state.setting.dataSource == "local") {
             return state.todo.todo;
         } else {
             return state.todo.remoteTodo;
         }
     },
-    bookmark: state => {
+    bookmark: (state) => {
         if (state.setting.dataSource == "local") {
             return state.bookmark.bookmark;
         } else {
@@ -48,12 +48,16 @@ const getters = {
         }
     },
     // 本地和远程书签合并后的集合
-    flatternBookmark: state => {
-        let treeBookmark = [
-            ..._.cloneDeep(state.bookmark.bookmark),
-            ..._.cloneDeep(state.bookmark.remoteBookmark)
-        ];
+    flatternBookmark: (state) => {
+        let treeBookmark = [];
+        if (Array.isArray(state.bookmark.bookmark)) {
+            treeBookmark.push(..._.cloneDeep(state.bookmark.bookmark));
+        }
+        if (Array.isArray(state.bookmark.remoteBookmark)) {
+            treeBookmark.push(..._.cloneDeep(state.bookmark.remoteBookmark));
+        }
         function getChildren(bookmark) {
+            if (!bookmark) return [];
             let arr = [];
             for (let book of bookmark) {
                 if (book.children) {
@@ -70,16 +74,16 @@ const getters = {
         flatternBookmark.push(...getChildren(treeBookmark));
         return flatternBookmark;
     },
-    background: state => {
+    background: (state) => {
         if (state.setting.background.belong == "system") {
             return `/background/${state.setting.background.systemBg}`;
         }
         return state.setting.background.customBg;
     },
-    dynamicBackground: state => {
+    dynamicBackground: (state) => {
         return state.setting.dynamicBackground + "-background";
     },
     // 是否指引过
-    isGuide: state => state.setting.isGuide
+    isGuide: (state) => state.setting.isGuide,
 };
 export default getters;
