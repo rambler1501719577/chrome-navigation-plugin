@@ -1,25 +1,46 @@
 // 日志管理相关接口
 import instance from "@/api/axiosConfig";
-function getAllCookie(cookieArr) {
-    return cookieArr.map(getCookies).join(";");
-}
+
 export function login(data) {
     return new Promise((resolve, reject) => {
         instance({
-            url: "http://82.156.8.154/lrapi/Home/Login",
+            url: "http://82.156.8.154:3001/api/login",
             method: "post",
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             data: {
-                userName: data.username,
-                userPass: data.password,
-                remeberMe: "checked",
-                dc: new Date().getTime().toString(),
-                IsRecordPwd: "on",
+                account: data.username,
+                password: data.password,
             },
         }).then((res) => {
-            console.log(res);
-            const cookies = res.headers["set-cookie"];
-            resolve(getAllCookie(cookies));
+            resolve(res.data);
+        });
+    });
+}
+
+export function loadProjects(cookie) {
+    return new Promise((resolve, reject) => {
+        instance({
+            url: "http://82.156.8.154:3001/api/projects",
+            method: "get",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            params: {
+                cookie: cookie,
+            },
+        }).then((res) => {
+            resolve(res.data.data);
+        });
+    });
+}
+
+export function addLog(data) {
+    return new Promise((resolve, reject) => {
+        instance({
+            url: "http://82.156.8.154:3001/api/log/add",
+            method: "post",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            data: data,
+        }).then((res) => {
+            resolve(res);
         });
     });
 }

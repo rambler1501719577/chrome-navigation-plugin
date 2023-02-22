@@ -26,6 +26,7 @@
             >
                 <background-setting></background-setting>
             </rambler-dialog>
+
             <rambler-dialog
                 :visible.sync="dialogVisible"
                 name="dataManage"
@@ -43,7 +44,7 @@
                 name="dataManage"
                 title="日志管理（内部使用）"
                 width="700px"
-                height="500px"
+                height="335px"
                 :draggable="true"
                 :appendToBody="true"
             >
@@ -77,7 +78,7 @@
                     </div>
                 </div>
 
-                <div class="box-item" v-show="false">
+                <div class="box-item">
                     <div
                         class="icon-wrapper"
                         @click="open('noteDialogVisible')"
