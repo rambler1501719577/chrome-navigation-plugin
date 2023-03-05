@@ -169,6 +169,10 @@ export default {
         },
 
         async handleInput(keywords) {
+            if (!this.keywords) {
+                this.searchResult = [];
+                return;
+            }
             // 重置索引和搜索结果
             this.verticalIndex = 0;
             const searchRes = [];
@@ -177,15 +181,13 @@ export default {
                 title: this.keywords,
                 from: "engine",
             });
+
             if (this.flatternBookmark.length > 0) {
                 searchRes.push(...this.searchInBookmark(this.keywords));
             }
             // 搜索历史记录
             searchRes.push(...(await searchFromHistory(this.keywords, 20)));
             this.searchResult = searchRes;
-            if (!this.keywords) {
-                this.searchResult = [];
-            }
         },
         // 切换搜索结果
         switchResult: function (keyCode) {

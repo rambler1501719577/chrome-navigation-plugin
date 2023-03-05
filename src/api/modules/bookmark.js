@@ -8,7 +8,7 @@ export function getBookmarks(params, token) {
         method: "get",
         params: params,
         headers: {
-            Authorization: token
-        }
+            Authorization: token,
+        },
     });
 }
