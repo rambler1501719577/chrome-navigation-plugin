@@ -6,7 +6,7 @@
             :key="bookmark.id"
             @contextmenu.stop.prevent="showEditDialog($event, bookmark)"
         >
-            <a :href="bookmark.url" target="_blank">
+            <a :href="bookmark.url" target="_self">
                 <image-card
                     :name="bookmark.name"
                     :url="bookmark.url"
