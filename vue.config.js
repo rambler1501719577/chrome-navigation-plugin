@@ -17,6 +17,7 @@ module.exports = {
     // 关闭生产环境的 sourceMap
     productionSourceMap: false,
     // 将webpack部分配置提取出来,如entry和template等
+    // 多入口访问地址 http://ip+端口/入口.html#/
     pages: {
         navigation: {
             entry: "src/entries/navigation/main.js",
