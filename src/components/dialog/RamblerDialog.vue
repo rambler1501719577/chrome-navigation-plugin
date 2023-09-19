@@ -261,7 +261,8 @@ export default {
 
 <style scoped lang="less">
 .rambler-dialog {
-    box-shadow: 0 2px 6px #bebeb5;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+        0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
     position: fixed;
     overflow: hidden;
     border-radius: 8px;

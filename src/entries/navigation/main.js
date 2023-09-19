@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Layout from "./layout";
+import App from "./App";
 import store from "../../store";
 import axios from "axios";
 import "@/directives/drag";
@@ -7,6 +7,7 @@ import "@/directives/bubble";
 import ElementUI from "element-ui";
 import Filters from "@/filters";
 import RamblerNotification from "@/components/notification";
+import { event } from "./event";
 
 // 全局css样式
 import "styl/scroll.css";
@@ -29,6 +30,7 @@ Vue.use(RamblerNotification, { name: "ramblerNotification" });
 Vue.prototype.$ramblerNotification({ title: "title", message: "message" });
 Vue.prototype.$axios = axios;
 Vue.prototype.$store = store;
+Vue.prototype.$event = event;
 Vue.config.productionTip = false;
 
 /**
@@ -39,10 +41,11 @@ Vue.component("Favicon", Favicon);
 Vue.component("RamblerDialog", RamblerDialog);
 Vue.component("RamblerButton", RamblerButton);
 Vue.component("RamblerAlert", RamblerAlert);
+
 // 注册过滤器
 Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));
 
 new Vue({
     store,
-    render: (h) => h(Layout),
+    render: (h) => h(App),
 }).$mount("#app");

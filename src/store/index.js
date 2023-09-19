@@ -11,8 +11,23 @@ import dialog from "./modules/dialog";
 
 import getters from "./getters";
 Vue.use(Vuex);
+const env = process.env.NODE_ENV;
+const persisteKey = "cache-data";
 
-export default new Vuex.Store({
+const persistePlugin = createPersistedState({
+    key: persisteKey,
+    paths: [
+        "frequentBookmark",
+        "setting",
+        "basic",
+        "engine",
+        "todo",
+        "bookmark",
+        "dialog",
+    ],
+});
+
+const store = new Vuex.Store({
     modules: {
         basic,
         setting,
@@ -25,18 +40,13 @@ export default new Vuex.Store({
     getters,
     strict: true,
     // veux持久化配置
-    plugins: [
-        createPersistedState({
-            key: "cache-data",
-            paths: [
-                "frequentBookmark",
-                "setting",
-                "basic",
-                "engine",
-                "todo",
-                "bookmark",
-                "dialog",
-            ],
-        }),
-    ],
+    plugins: [],
 });
+if (env !== "development") {
+    store.plugins.push(persistePlugin);
+} else {
+    localStorage.removeItem(persisteKey);
+    console.log(`当前为【${env}】环境，不开启持久化`);
+}
+
+export default store;

@@ -1,134 +1,44 @@
 <template>
-    <div
-        v-bubble="'heart'"
-        class="page-container"
-        :style="{
-            backgroundImage: `url('${$store.getters.background}')`,
-        }"
-    >
-        <div class="content">
-            <!-- 搜索 -->
-            <div class="search" id="search-window">
-                <rambler-search />
-            </div>
-            <!-- common bookmarks -->
-            <div class="frequent-bookmarks" id="frequent-window">
-                <frequent-bookmarks />
-            </div>
-            <rambler-dialog
-                :visible.sync="skinDialogVisible"
-                name="backgroundSetting"
-                title="背景设置"
-                width="800px"
-                height="520px"
-                :draggable="true"
-                :appendToBody="true"
-            >
-                <background-setting></background-setting>
-            </rambler-dialog>
-
-            <rambler-dialog
-                :visible.sync="dialogVisible"
-                name="dataManage"
-                title="系统设置"
-                width="700px"
-                height="500px"
-                :draggable="true"
-                :appendToBody="true"
-            >
-                <system-setting></system-setting>
-            </rambler-dialog>
-
-            <rambler-dialog
-                :visible.sync="noteDialogVisible"
-                name="dataManage"
-                title="日志管理（内部使用）"
-                width="700px"
-                height="335px"
-                :draggable="true"
-                :appendToBody="true"
-            >
-                <log-manage></log-manage>
-            </rambler-dialog>
-
-            <!-- 侧边栏 -->
-            <div class="fixed-sidebar" id="sidebar-window">
-                <!-- 换肤 -->
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('skinDialogVisible')"
-                    >
-                        <rambler-icon name="skin" class="icon"></rambler-icon>
-                    </div>
-                </div>
-                <!-- 系统设置 -->
-                <div class="box-item">
-                    <div class="icon-wrapper" @click="open('dialogVisible')">
-                        <rambler-icon
-                            name="setting"
-                            class="icon"
-                        ></rambler-icon>
-                    </div>
-                </div>
-
-                <div class="box-item">
-                    <div class="icon-wrapper" @click="guide">
-                        <rambler-icon name="guide" class="icon"></rambler-icon>
-                    </div>
-                </div>
-
-                <div class="box-item">
-                    <div
-                        class="icon-wrapper"
-                        @click="open('noteDialogVisible')"
-                    >
-                        <rambler-icon name="note" class="icon"></rambler-icon>
-                    </div>
-                </div>
-            </div>
-
-            <div class="time">
-                <time-flip></time-flip>
-            </div>
+    <div class="grid-component-container">
+        <!-- 搜索 -->
+        <div class="search" id="search-window">
+            <rambler-search />
         </div>
-        <!-- 动态背景 -->
-        <div class="dy-background">
-            <dynamic-background></dynamic-background>
+        <!-- common bookmarks -->
+        <div class="frequent-bookmarks" id="frequent-window">
+            <grid-component-list></grid-component-list>
         </div>
 
-        <!-- 鼠标右键 -->
-        <div
-            class="popup"
-            v-show="contextMenuShow"
-            :style="{
-                left: position.left + 'px',
-                top: position.top + 'px',
-            }"
-        >
-            <ul>
-                <li @click="open('skinDialogVisible')">
+        <!-- 侧边栏 -->
+        <div class="fixed-sidebar" id="sidebar-window" v-if="false">
+            <!-- 换肤 -->
+            <div class="box-item">
+                <div class="icon-wrapper" @click="open('skinDialogVisible')">
                     <rambler-icon name="skin" class="icon"></rambler-icon>
-                    <span>切换背景</span>
-                </li>
-                <li @click="open('dialogVisible')">
+                </div>
+            </div>
+            <!-- 系统设置 -->
+            <div class="box-item">
+                <div class="icon-wrapper" @click="open('dialogVisible')">
                     <rambler-icon name="setting" class="icon"></rambler-icon>
-                    <span>系统设置</span>
-                </li>
-            </ul>
+                </div>
+            </div>
+
+            <div class="box-item">
+                <div class="icon-wrapper" @click="open('noteDialogVisible')">
+                    <rambler-icon name="note" class="icon"></rambler-icon>
+                </div>
+            </div>
         </div>
 
-        <!-- 所有的弹窗组件 -->
-        <notification></notification>
+        <div class="time">
+            <time-flip></time-flip>
+        </div>
     </div>
 </template>
 
 <script>
-import { event } from "../event";
-import "driver.js/dist/driver.min.css";
-import Driver from "driver.js";
 import { mapActions } from "vuex";
-import { getToken } from "@/utils/token";
 import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
@@ -145,51 +55,18 @@ export default {
             },
         };
     },
-    async created() {
-        const token = await getToken();
-        if (token && token.value) {
-            // 获取和现在相差时间毫秒数
-            const time = token.expirationDate * 1000 - new Date().getTime();
-            const hours = (time / 1000 / 60 / 60).toFixed(2);
-            console.log(`获取用户信息成功, token ${hours} 小时后失效`);
-            // load remote settings and data
-            this.loadRemoteData(token);
-        } else {
-            console.log("未登录或token已过期");
-        }
-        // 加载本地书签
-        this.loadLocalBookmark();
-        // 定义指引步骤
-        this.defineSteps();
-        if (!this.$store.getters.isGuide) {
-            this.guide();
-        }
-    },
     mounted() {
-        this.$nextTick(() => {
-            this.$el.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                this.showContextMenu(e);
-            });
-            window.addEventListener("click", (e) => {
-                this.contextMenuShow = false;
-            });
-        });
         // 监听各个组件发送的事件
-        event.$on("guide", this.guide);
-        event.$on("dialog", (payload) => {
+        this.$event.$on("guide", this.guide);
+        this.$event.$on("dialog", (payload) => {
             this.open(payload);
         });
     },
     components: {
-        DynamicBackground: () => import("../views/background"),
         RamblerSearch: () => import("../views/search-engine/search"),
-        frequentBookmarks: () => import("../views/frequent-website/list-front"),
-        DataManage: () => import("../views/data-manage/index"),
-        BackgroundSetting: () => import("../views/background/manage"),
         TimeFlip: () => import("../widgets/time-flip"),
-        SystemSetting: () => import("../views/system-setting/index"),
         LogManage: () => import("../views/log"),
+        GridComponentList: () => import("./components/grid-list.vue"),
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
@@ -262,15 +139,6 @@ export default {
                 //     }
                 // }
             ]);
-        },
-        // 用户指引
-        guide(e) {
-            this.contextMenuShow = false;
-            this.$nextTick(() => {
-                this.driver.start();
-                this.$store.dispatch("setting/updateIsGuide");
-                if (e) e.stopPropagation();
-            });
         },
     },
 };
