@@ -3,7 +3,6 @@ import NProgress from "nprogress/nprogress";
 import "nprogress/nprogress.css";
 import axios from "axios";
 import qs from "qs";
-import { message } from "@/utils/index";
 NProgress.configure({
     template:
         '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>',
@@ -16,7 +15,7 @@ const service = axios.create({
             arrayFormat: "brackets",
         });
     },
-    baseURL: "http://82.156.8.154:9999",
+    baseURL: "http://82.156.8.154/ext-api",
 });
 
 // 请求的拦截器

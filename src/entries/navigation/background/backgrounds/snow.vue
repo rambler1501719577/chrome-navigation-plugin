@@ -46,33 +46,35 @@ export default {
             snowList: [],
             canvas: null,
             ctx: null,
-            image: null
+            image: null,
+            animationId: null,
         };
     },
     props: {
         maxSnowRadius: {
-            default: () => 13
+            default: () => 13,
         },
         maxSnowVx: {
-            default: () => 2
+            default: () => 2,
         },
         maxSnowVy: {
-            default: () => 4
+            default: () => 4,
         },
         maxSnowCount: {
-            default: () => 100
-        }
+            default: () => 100,
+        },
     },
     methods: {
         // 初始化canvas
         init() {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 this.windowHeight = this.$el.clientHeight;
                 this.windowWidth = this.$el.clientWidth;
                 this.canvas = this.$el.querySelector("#snow-canvas");
                 this.ctx = this.canvas.getContext("2d");
                 this.canvas.style.width = this.canvas.width = this.windowWidth;
-                this.canvas.style.height = this.canvas.height = this.windowHeight;
+                this.canvas.style.height = this.canvas.height =
+                    this.windowHeight;
                 this.createSnows();
                 const image = new Image();
                 image.src = "/img/snow.png";
@@ -85,9 +87,10 @@ export default {
         },
         // 构建雪花数组
         createSnows() {
+            this.snowList.splice(0, this.snowList.length);
             const boundary = {
                 width: this.windowWidth,
-                height: this.windowHeight
+                height: this.windowHeight,
             };
             for (let i = 0; i < this.maxSnowCount; i++) {
                 const snow = new Snow();
@@ -100,10 +103,18 @@ export default {
                 this.snowList.push(snow);
             }
         },
+        clear() {
+            this.ctx &&
+                this.ctx.clearRect(0, 0, this.windowWidth, this.windowHeight);
+        },
+        async drawBg() {
+            await this.init();
+            this.draw();
+        },
         draw() {
-            this.ctx.clearRect(0, 0, this.windowWidth, this.windowHeight);
+            this.clear();
             // repaint
-            this.snowList.forEach(snow => {
+            this.snowList.forEach((snow) => {
                 // update snow,
                 this.ctx.save();
                 snow.update(
@@ -128,13 +139,16 @@ export default {
                 this.ctx.fill();
                 this.ctx.restore();
             });
-            requestAnimationFrame(this.draw);
-        }
+            this.animationId = requestAnimationFrame(this.draw);
+        },
     },
-    async mounted() {
-        await this.init();
-        this.draw();
-    }
+    mounted() {
+        this.drawBg();
+        window.onresize = () => {
+            cancelAnimationFrame(this.animationId);
+            this.drawBg();
+        };
+    },
 };
 </script>
 <style lang="less" scoped>

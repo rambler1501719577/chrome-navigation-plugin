@@ -59,11 +59,15 @@ export default {
             windowWidth: 0,
             canvas: null,
             ctx: null,
+            animationID: null,
         };
     },
-    async mounted() {
-        await this.init();
-        this.draw();
+    mounted() {
+        this.drawBg();
+        window.onresize = () => {
+            cancelAnimationFrame(this.animationID);
+            this.drawBg();
+        };
     },
     methods: {
         generateBubble() {
@@ -112,7 +116,11 @@ export default {
                 this.ctx.fill();
                 this.ctx.restore();
             });
-            requestAnimationFrame(this.draw);
+            this.animationID = requestAnimationFrame(this.draw);
+        },
+        async drawBg() {
+            await this.init();
+            this.draw();
         },
     },
 };

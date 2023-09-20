@@ -5,10 +5,12 @@ export default {
         background: {
             belong: "system", // system | custom
             systemBg: "9.jpg", // 系统背景
-            customBg: "" // 自定义背景Base64串
+            customBg: "", // 自定义背景Base64串
         }, // 背景图片名称 (位置固定：根目录background下)
         isGuide: false,
-        dynamicBackground: "snow" // 特效名称，snow | bubble | empty
+        dynamicBackground: "snow", // 特效名称，snow | bubble | empty
+        fixedBarWidth: 60, // 左侧固定栏宽度
+        boxPadding: 15, // grid-component-container的padding 用于计算grid合适宽高
     },
     mutations: {
         UPDATE_DATASOURCE(state, param) {
@@ -37,7 +39,7 @@ export default {
         UPDATE_IS_GUIDE(state) {
             // 只指引一次，更新后置为false
             state.isGuide = true;
-        }
+        },
     },
     actions: {
         updateDataSource({ commit }, payload) {
@@ -58,11 +60,11 @@ export default {
         },
         updateDynamicBackground({ commit }, payload) {
             commit("UPDATE_DYNAMIC_BACKGROUND", payload);
-        }
+        },
     },
     getters: {
-        belong: state => state.background.belong,
-        background: state => state.background.src,
-        dynamicBackground: state => state.dynamicBackground
-    }
+        belong: (state) => state.background.belong,
+        background: (state) => state.background.src,
+        dynamicBackground: (state) => state.dynamicBackground,
+    },
 };

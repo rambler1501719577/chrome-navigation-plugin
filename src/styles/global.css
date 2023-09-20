@@ -111,6 +111,9 @@ div#driver-page-overlay {
     font-size: 12px;
     cursor: pointer;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 
 @font-face {
     font-family: "龙吟手书";
