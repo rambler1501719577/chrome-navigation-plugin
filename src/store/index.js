@@ -1,52 +1,36 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import basic from "./modules/basic";
-import setting from "./modules/setting";
-import frequentBookmark from "./modules/frequent-bookmark";
 import createPersistedState from "vuex-persistedstate";
-import engine from "./modules/engine";
-import todo from "./modules/todo";
-import bookmark from "./modules/bookmark";
-import dialog from "./modules/dialog";
-
 import getters from "./getters";
-Vue.use(Vuex);
+
 const env = process.env.NODE_ENV;
 const persisteKey = "cache-data";
 
-const persistePlugin = createPersistedState({
-    key: persisteKey,
-    paths: [
-        "frequentBookmark",
-        "setting",
-        "basic",
-        "engine",
-        "todo",
-        "bookmark",
-        "dialog",
-    ],
+Vue.use(Vuex);
+
+// automatic import modules
+let importModules = {};
+const ctx = require.context("./modules", false, /\.js$/);
+ctx.keys().forEach((key) => {
+    // format key
+    const moduleName = key.replace(/\.\/(.*?)\.js$/g, "$1");
+    importModules[moduleName] = ctx(key).default;
 });
 
 const store = new Vuex.Store({
-    modules: {
-        basic,
-        setting,
-        frequentBookmark,
-        engine,
-        todo,
-        bookmark,
-        dialog,
-    },
+    modules: { ...importModules },
     getters,
     strict: true,
     // veux持久化配置
-    plugins: [],
+    plugins:
+        env == !"development"
+            ? [
+                  createPersistedState({
+                      key: persisteKey,
+                      paths: Object.keys(importModules),
+                  }),
+              ]
+            : [],
 });
-if (env !== "development") {
-    store.plugins.push(persistePlugin);
-} else {
-    localStorage.removeItem(persisteKey);
-    console.log(`当前为【${env}】环境，不开启持久化`);
-}
 
 export default store;

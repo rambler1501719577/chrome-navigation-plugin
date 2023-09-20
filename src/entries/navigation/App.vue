@@ -71,6 +71,8 @@ export default {
             // load remote settings and data
             this.loadRemoteData(token);
         } else {
+            this.$store.dispatch("user/clearUserInfo");
+            console.log("已清除用户数据");
             console.log("未登录或token已过期");
         }
         // 加载本地书签

@@ -1,16 +1,8 @@
 <template>
-    <div class="grid-component-container">
-        <!-- 搜索 -->
-        <div class="search" id="search-window">
-            <rambler-search />
-        </div>
-        <!-- common bookmarks -->
-        <div class="frequent-bookmarks" id="frequent-window">
-            <grid-component-list></grid-component-list>
-        </div>
-
+    <div class="layout-container">
         <!-- 侧边栏 -->
-        <div class="fixed-sidebar" id="sidebar-window" v-if="false">
+        <div class="fixed-sidebar" id="sidebar-window">
+            <user-center></user-center>
             <!-- 换肤 -->
             <div class="box-item">
                 <div class="icon-wrapper" @click="open('skinDialogVisible')">
@@ -31,8 +23,15 @@
             </div>
         </div>
 
-        <div class="time">
-            <time-flip></time-flip>
+        <div class="right-content">
+            <!-- 搜索 -->
+            <div class="search" id="search-window">
+                <rambler-search />
+            </div>
+            <!-- common bookmarks -->
+            <div class="grid-list-container" id="frequent-window">
+                <grid-component-list></grid-component-list>
+            </div>
         </div>
     </div>
 </template>
@@ -67,6 +66,7 @@ export default {
         TimeFlip: () => import("../widgets/time-flip"),
         LogManage: () => import("../views/log"),
         GridComponentList: () => import("./components/grid-list.vue"),
+        UserCenter: () => import("./sidebar/user-center.vue"),
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),

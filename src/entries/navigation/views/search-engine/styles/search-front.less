@@ -1,5 +1,10 @@
 .search-container {
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+
     .search-form {
         box-sizing: border-box;
         padding: 0 25px 0 50px;
@@ -8,6 +13,7 @@
         border-radius: 25px;
         background-color: #fff;
         position: relative;
+
         #search {
             display: block;
             width: 100%;
@@ -22,6 +28,7 @@
         #search::placeholder {
             color: #999;
         }
+
         .search-prefix {
             position: absolute;
             left: 20px;
@@ -37,11 +44,12 @@
             height: 25px;
             cursor: pointer;
         }
+
         .popup-panel {
             position: absolute;
             left: 0;
             top: 60px;
-            z-index: 1;
+            z-index: 99;
             width: 100%;
             background: #fff;
             border-radius: 25px;
@@ -58,23 +66,28 @@
                 width: 100%;
                 max-height: calc(50px * 8);
                 overflow: hidden auto;
+
                 .result-item {
                     border-radius: 15px;
                     display: block;
                     height: 50px;
                     box-sizing: border-box;
+
                     &:hover {
                         background: #f7f9fa;
                     }
+
                     .result-item-detail {
                         height: 100%;
                         padding: 0 10px;
                         display: flex;
                         justify-content: flex-start;
                         align-items: center;
+
                         .icon {
                             margin-right: 10px;
                         }
+
                         .title {
                             height: 32px;
                             line-height: 32px;
@@ -83,6 +96,7 @@
                         }
                     }
                 }
+
                 .is-current {
                     background: #f7f9fa;
                 }

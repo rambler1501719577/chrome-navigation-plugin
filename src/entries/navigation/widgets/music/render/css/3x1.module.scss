@@ -1,0 +1,66 @@
+$music-title-height: 20px;
+$music-process-height: 13px;
+
+.music-panel {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    display: flex;
+
+    .cover {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+    }
+
+    .control {
+        padding: 5px 15px 5px 0;
+        flex: 1;
+
+        .title {
+            height: $music-title-height;
+            line-height: $music-title-height;
+            width: 100%;
+            overflow: hidden;
+            color: #3f3f3f;
+
+            img {
+                position: relative;
+                top: 3px;
+                margin-right: 5px;
+                height: 15px;
+            }
+        }
+
+        .process {
+            height: $music-process-height;
+            box-sizing: border-box;
+            padding: 4px 0;
+            position: relative;
+
+            .process-bg {
+                height: 5px;
+                background-color: #83807a;
+                border-radius: 2px;
+            }
+
+            .process-front {
+                position: absolute;
+                height: 5px;
+                width: 80%;
+                background: #ada8a8;
+                top: 4px;
+                left: 0;
+                border-radius: 2px;
+            }
+        }
+
+        .btns {
+            height: calc(100% - $music-process-height - $music-title-height);
+            display: flex;
+            align-items: center;
+        }
+    }
+}

@@ -1,0 +1,98 @@
+$author-width: 100px;
+$type-width: 80px;
+$opts-width: 130px;
+$search-result-height: 35px;
+
+.music-search-container {
+    width: 100%;
+
+    .search-input {
+        margin-bottom: 20px;
+    }
+
+    .search-result {
+        max-height: 300px;
+        min-height: 100px;
+        overflow: hidden auto;
+
+        .header {
+            display: flex;
+
+            p {
+                color: #333;
+                font-size: 16px;
+                height: $search-result-height;
+                line-height: $search-result-height;
+
+            }
+
+            p:nth-child(1) {
+                flex: 1;
+            }
+
+            p:nth-child(2) {
+                width: $author-width;
+            }
+
+            p:nth-child(3) {
+                width: $type-width;
+                text-align: center;
+            }
+
+            p:nth-child(4) {
+                width: $opts-width;
+                text-align: center;
+            }
+        }
+
+        .content {
+            ul {
+                li {
+                    display: flex;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+
+                    p {
+                        height: $search-result-height;
+                        line-height: $search-result-height;
+                    }
+
+                    p:nth-child(1) {
+                        flex: 1;
+                        overflow: hidden;
+                    }
+
+                    p:nth-child(2) {
+                        width: $author-width;
+                        overflow: hidden;
+                    }
+
+                    p:nth-child(3) {
+                        width: $type-width;
+                        overflow: hidden;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    p:nth-child(4) {
+                        width: $opts-width;
+                        overflow: hidden;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    &:hover {
+                        background-color: #eee;
+                    }
+                }
+            }
+        }
+    }
+
+    .empty {
+        line-height: 100px;
+        text-align: center;
+    }
+}
