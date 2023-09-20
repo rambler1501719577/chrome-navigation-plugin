@@ -6,22 +6,22 @@
 import instance from "./axiosConfig";
 
 // get
-export function get({ url, params }) {
+export function get(url, params) {
     return instance({
         url,
         method: "get",
-        params
+        params,
     });
 }
 
 // post
-export function post({ url, data }) {
+export function post(url, data) {
     return instance({
         url,
         method: "post",
         data,
         headers: {
-            "Content-Type": "application/json;charset=utf-8"
-        }
+            "Content-Type": "application/json;charset=utf-8",
+        },
     });
 }

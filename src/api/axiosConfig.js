@@ -15,7 +15,7 @@ const service = axios.create({
             arrayFormat: "brackets",
         });
     },
-    baseURL: "http://82.156.8.154/ext-api",
+    baseURL: "http://www.suhaoblog.cn/ext-api",
 });
 
 // 请求的拦截器

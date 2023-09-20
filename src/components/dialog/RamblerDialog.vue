@@ -1,6 +1,6 @@
 <template>
     <!-- 用于做全屏的遮罩层 -->
-    <div class="rambler-dialog" v-show="visible" :style="dynamicStyle">
+    <div class="rambler-dialog" v-show="visible" :style="initPosition">
         <div
             :class="['rambler_dialog__header', { 'drag-title': allowDrag }]"
             :style="{ height: headerHeight + 'px' }"
@@ -47,6 +47,10 @@ export default {
         draggable: {
             type: Boolean,
             default: false,
+        },
+        center: {
+            type: Boolean,
+            default: true,
         },
         // 页面的标识，类似id
         name: String,
@@ -98,6 +102,13 @@ export default {
                 top: top + "px",
             };
         },
+        initPosition() {
+            const { left, top } = this.position;
+            return {
+                left: -left + "px",
+                top: -top + "px",
+            };
+        },
     },
     watch: {
         // 弹窗隐藏和显示
@@ -105,6 +116,13 @@ export default {
             if (newVal) {
                 this.$emit("open");
                 this.rendered = true;
+                // 依赖width属性计算中间位置
+                if (this.center) {
+                    this.relocateDialog();
+                }
+                if (this.visible) {
+                    this.rendered = true;
+                }
                 this.updateDialogs({
                     name: this.name,
                     index: this.index(this.name),
@@ -229,28 +247,29 @@ export default {
         relocateDialog() {
             const windowHeight = document.body.clientHeight;
             const windowWidth = document.body.clientWidth;
-            const posLeft = (windowWidth - parseInt(this.width)) / 2;
+            const posLeft = windowWidth / 2 - parseInt(this.width) / 2;
             this.position.left = posLeft > 0 ? posLeft : 0;
             const posTop =
                 (windowHeight - parseInt(this.height) - this.headerHeight) / 2;
             this.position.top = posTop > 0 ? posTop : "10vh";
+            this.$el.style.transform = `translate(${posLeft}px, ${posTop}px)`;
+            this.$el.style.left = posLeft + "px";
+            this.$el.style.top = posTop + "px";
         },
     },
     mounted() {
         // 绑定拖拽事件
         this.allowDrag = this.draggable;
-        if (this.draggable) {
-            let dom = this.$el;
-            dom.onmousedown = this.handleMouseDown;
-        }
+        this.$nextTick(() => {
+            if (this.draggable) {
+                let dom = this.$el;
+                dom.onmousedown = this.handleMouseDown;
+            }
+            if (this.appendToBody) {
+                document.body.append(this.$el);
+            }
+        });
         window.onresize = this.handleResize;
-        this.relocateDialog();
-        if (this.visible) {
-            this.rendered = true;
-        }
-        if (this.appendToBody) {
-            document.body.append(this.$el);
-        }
     },
     created() {
         this.renderWidth = this.width;

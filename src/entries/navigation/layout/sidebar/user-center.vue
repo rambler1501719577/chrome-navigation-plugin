@@ -5,6 +5,8 @@
             <rambler-icon name="account" class="unlogin-user"></rambler-icon>
         </div>
         <rambler-dialog
+            width="200"
+            height="200"
             :visible="loginDialogVisible"
             name="user-login-panel"
             :draggable="true"
