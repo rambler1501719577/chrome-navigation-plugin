@@ -40,7 +40,9 @@ export function setToken(payload, time = 60 * 60 * 8) {
                 }
             );
         } else {
-            const expire = new Date(new Date().getTime() + time * 60 * 60);
+            const expire = new Date(
+                new Date().getTime() + time * 60 * 60 * 1000
+            );
             Cookies.set("token", payload, {
                 expires: expire,
             });

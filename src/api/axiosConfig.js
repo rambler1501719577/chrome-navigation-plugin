@@ -2,6 +2,7 @@
 import NProgress from "nprogress/nprogress";
 import "nprogress/nprogress.css";
 import axios from "axios";
+import { getToken } from "@/utils/token";
 import qs from "qs";
 NProgress.configure({
     template:
@@ -19,8 +20,12 @@ const service = axios.create({
 });
 
 // 请求的拦截器
-service.interceptors.request.use((config) => {
+service.interceptors.request.use(async (config) => {
     NProgress.start();
+    const token = await getToken();
+    if (token) {
+        config.headers["Authorization"] = token.value;
+    }
     return config;
 });
 

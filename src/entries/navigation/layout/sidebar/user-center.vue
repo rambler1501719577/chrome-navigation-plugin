@@ -1,25 +1,33 @@
 <template>
     <div class="user-part-container">
-        <div class="login-box" v-if="isLogin">avatar</div>
+        <div class="login-box" v-if="isLogin">
+            <img :src="userInfo.avatar" />
+        </div>
         <div v-else class="unlogin-container" @click="showLoginDialog">
             <rambler-icon name="account" class="unlogin-user"></rambler-icon>
         </div>
         <rambler-dialog
-            width="200"
-            height="200"
+            width="300px"
+            height="200px"
             :visible="loginDialogVisible"
             name="user-login-panel"
             :draggable="true"
         >
-            <input v-model="form.username" />
-            <input v-model="form.password" />
+            <rambler-input v-model="form.username" placeholder="用户名" />
+            <!-- <input v-model="form.password" /> -->
+            <rambler-input
+                type="password"
+                v-model="form.password"
+                placeholder="密码"
+            />
             <rambler-button @click="handleLogin">登录</rambler-button>
         </rambler-dialog>
     </div>
 </template>
 <script>
+import { setToken } from "@/utils/token";
 import { login, fetchUserBookmark } from "@/api/modules/user";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import RamblerDialog from "../../../../components/dialog/RamblerDialog.vue";
 export default {
     components: { RamblerDialog },
@@ -39,6 +47,8 @@ export default {
         }),
     },
     methods: {
+        ...mapActions("user", ["setUserInfo"]),
+        ...mapActions("layout", ["setWidgets"]),
         showLoginDialog() {
             this.loginDialogVisible = true;
         },
@@ -46,12 +56,10 @@ export default {
             login(this.form).then((res) => {
                 const { code, msg } = res.data;
                 if (code == 200) {
-                    const { user, token, token_expires } = res.data.data;
+                    let { user, token, token_expires } = res.data.data;
+                    if (!token_expires) token_expires = 8;
                     setToken(token, token_expires);
-                    dispatcher({
-                        type: userActionType.SET_USER,
-                        payload: user,
-                    });
+                    this.setUserInfo(user);
                     // 获取并更新bookmarks
                     fetchUserBookmark().then((res) => {
                         if (res.data.code == 200) {
@@ -68,23 +76,20 @@ export default {
                                     return item;
                                 }
                             });
-                            dispatcher({
-                                type: layoutActionTypes.SET_LAYOUT,
-                                payload: bookmarks,
-                            });
+                            this.setWidgets(bookmarks);
                         } else {
                             message.error("获取用户书签失败");
                         }
                     });
-                    message.success(msg);
-                    dialogHandler(false);
+                    this.$ramblerNotification.success(msg);
+                    this.loginDialogVisible = false;
                 } else {
-                    message.error(msg);
+                    this.$ramblerNotification.error(msg);
                 }
             });
         },
     },
-    created() {
+    async created() {
         if (this.userInfo) {
             this.isLogin = true;
         }
@@ -98,6 +103,15 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .login-box {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        img {
+            border-radius: 50%;
+            width: 100%;
+        }
+    }
     .unlogin-container {
         display: flex;
         justify-content: center;

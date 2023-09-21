@@ -24,6 +24,7 @@ import Favicon from "@/components/favicon";
 import RamblerDialog from "@/components/dialog/RamblerDialog";
 import RamblerButton from "@/components/button";
 import RamblerAlert from "@/components/alert";
+import RamblerInput from "@/components/input";
 
 Vue.use(ElementUI);
 Vue.use(RamblerNotification, { name: "ramblerNotification" });
@@ -41,6 +42,7 @@ Vue.component("Favicon", Favicon);
 Vue.component("RamblerDialog", RamblerDialog);
 Vue.component("RamblerButton", RamblerButton);
 Vue.component("RamblerAlert", RamblerAlert);
+Vue.component("RamblerInput", RamblerInput);
 
 // 注册过滤器
 Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));

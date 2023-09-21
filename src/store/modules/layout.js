@@ -47,6 +47,116 @@ export default {
                 title: "Vue.js",
                 url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
                 props: {
+                    type: 1,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 1,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 1,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
+                    type: 2,
+                },
+            },
+            {
+                width: 1,
+                height: 1,
+                component: "site",
+                title: "Vue.js",
+                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
+                props: {
                     type: 2,
                 },
             },
@@ -89,8 +199,15 @@ export default {
         EDIT_LAYOUT: function (state, payload) {},
         // delete layout
         DELETE_LAYOUT: function (state, payload) {},
+
+        SET_WIDGETS: function (state, payload) {
+            state.widgets = payload;
+        },
     },
     actions: {
         updateFrequentBookmarks({ commit }, payload) {},
+        setWidgets({ commit }, payload) {
+            commit("SET_WIDGETS", payload);
+        },
     },
 };

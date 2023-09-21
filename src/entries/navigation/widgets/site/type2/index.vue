@@ -1,16 +1,14 @@
 <template>
     <div class="site-container">
-        <div class="box">
-            <div class="icon">
-                <ChromeIcon :url="url" :size="16"></ChromeIcon>
-            </div>
+        <div class="icon">
+            <ChromeIcon :url="url" :size="32"></ChromeIcon>
         </div>
     </div>
 </template>
 <script>
 import ChromeIcon from "@/components/chrome-img";
 export default {
-    name: "Site-Type1",
+    name: "Site-Type2",
     props: {
         url: String,
     },
@@ -25,65 +23,22 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    background-color: #ffffff;
-    overflow: hidden;
-
-    .box {
-        position: relative;
+    background: linear-gradient(#fff2, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0, 25px 25px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    .icon {
+        position: absolute;
         width: 100%;
         height: 100%;
-        overflow: hidden;
+        box-sizing: border-box;
+        z-index: 2;
+        padding: 22px;
 
-        &::before {
-            content: "";
-            width: calc(100% - @border-width);
-            height: calc(100% - @border-width);
-            background-color: #cdd7ff;
-            border-radius: 5px;
-            position: absolute;
-            top: calc(@border-width / 2);
-            left: calc(@border-width / 2);
-            z-index: 2;
-        }
-
-        &::after {
-            content: "";
-            width: 300%;
-            height: 300%;
-            background-color: rgb(255, 255, 255);
-            background-image: conic-gradient(
-                #fff 0%,
-                rgb(101, 87, 106) 45%,
-                #fff 60%
-            );
-            border-radius: 5px;
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            z-index: 1;
-            border-radius: 5px;
-            animation: rotate 2s linear infinite;
-        }
-
-        .icon {
-            position: absolute;
+        img {
             width: 100%;
             height: 100%;
-            box-sizing: border-box;
-            z-index: 2;
-            padding: 22px;
-
-            img {
-                width: 100%;
-                height: 100%;
-            }
         }
-    }
-}
-
-@keyframes rotate {
-    100% {
-        transform: rotate(360deg);
     }
 }
 </style>

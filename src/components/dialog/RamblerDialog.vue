@@ -1,6 +1,6 @@
 <template>
     <!-- 用于做全屏的遮罩层 -->
-    <div class="rambler-dialog" v-show="visible" :style="initPosition">
+    <div class="rambler-dialog" v-show="visible" :style="dynamicStyle">
         <div
             :class="['rambler_dialog__header', { 'drag-title': allowDrag }]"
             :style="{ height: headerHeight + 'px' }"
@@ -100,13 +100,6 @@ export default {
                 zIndex: this.index(this.name),
                 left: left + "px",
                 top: top + "px",
-            };
-        },
-        initPosition() {
-            const { left, top } = this.position;
-            return {
-                left: -left + "px",
-                top: -top + "px",
             };
         },
     },
@@ -252,9 +245,6 @@ export default {
             const posTop =
                 (windowHeight - parseInt(this.height) - this.headerHeight) / 2;
             this.position.top = posTop > 0 ? posTop : "10vh";
-            this.$el.style.transform = `translate(${posLeft}px, ${posTop}px)`;
-            this.$el.style.left = posLeft + "px";
-            this.$el.style.top = posTop + "px";
         },
     },
     mounted() {
