@@ -7,6 +7,7 @@ const env = process.env.NODE_ENV;
 const persisteKey = "cache-data";
 
 Vue.use(Vuex);
+let cacheData = true;
 
 // automatic import modules
 let importModules = {};
@@ -22,15 +23,14 @@ const store = new Vuex.Store({
     getters,
     strict: true,
     // veux持久化配置
-    plugins:
-        env == !"development"
-            ? [
-                  createPersistedState({
-                      key: persisteKey,
-                      paths: Object.keys(importModules),
-                  }),
-              ]
-            : [],
+    plugins: cacheData
+        ? [
+              createPersistedState({
+                  key: persisteKey,
+                  paths: Object.keys(importModules),
+              }),
+          ]
+        : [],
 });
 
 export default store;

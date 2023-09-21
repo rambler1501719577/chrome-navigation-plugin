@@ -7,7 +7,7 @@ export default {
             {
                 id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
                 name: "百度",
-                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=",
+                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
             },
         ],
         // 远程engines配置

@@ -8,11 +8,18 @@ export default {
     namespaced: true,
     state: {
         // 用户信息
-        userInfo: "",
+        userInfo: {
+            nicnname: "",
+            avatar: "",
+            username: "",
+        },
     },
     mutations: {
         SET_USER_INFO(state, data) {
-            state.userInfo = data;
+            const { avatar, nickname, username } = data;
+            state.userInfo.avatar = avatar;
+            state.userInfo.nickname = nickname;
+            state.userInfo.username = username;
         },
         CLEAR_USER_INFO(state) {
             state.userInfo = null;
@@ -36,7 +43,7 @@ export default {
          * @param {Object} context
          * @param {Object} payload
          */
-        async clearUserInfo(context, payload) {
+        async clearUserInfo(context) {
             // 清空token
             await clearToken();
             // 清空用户信息

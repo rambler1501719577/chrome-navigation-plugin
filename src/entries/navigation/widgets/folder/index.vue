@@ -4,6 +4,10 @@
 <script>
 export default {
     name: "Site",
+    props: {},
+    created() {
+        console.log(this.$props);
+    },
 };
 </script>
 <style lang="less" scoped>

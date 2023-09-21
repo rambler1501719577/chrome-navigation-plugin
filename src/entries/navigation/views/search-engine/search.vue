@@ -126,7 +126,10 @@ export default {
             if (!result) {
                 result = this.searchResult[this.verticalIndex];
             }
-            if (result.from == "bookmark" || result.from == "history") {
+            if (
+                (result && result.from == "bookmark") ||
+                result.from == "history"
+            ) {
                 window.open(result.url, "_self");
             } else {
                 const engine = this.engines.find(
@@ -141,6 +144,7 @@ export default {
         },
         // 搜索
         search: function () {
+            debugger;
             const engine = this.engines.find(
                 (item) => item.name == this.currentEngine
             );

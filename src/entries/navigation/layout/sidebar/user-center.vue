@@ -1,26 +1,28 @@
 <template>
     <div class="user-part-container">
         <div class="login-box" v-if="isLogin">
-            <img :src="userInfo.avatar" />
+            <img :src="avatar" />
         </div>
         <div v-else class="unlogin-container" @click="showLoginDialog">
             <rambler-icon name="account" class="unlogin-user"></rambler-icon>
         </div>
         <rambler-dialog
-            width="300px"
-            height="200px"
+            width="400px"
+            height="240px"
             :visible="loginDialogVisible"
             name="user-login-panel"
             :draggable="true"
         >
-            <rambler-input v-model="form.username" placeholder="用户名" />
-            <!-- <input v-model="form.password" /> -->
-            <rambler-input
-                type="password"
-                v-model="form.password"
-                placeholder="密码"
-            />
-            <rambler-button @click="handleLogin">登录</rambler-button>
+            <div style="padding: 20px">
+                <rambler-input v-model="form.username" placeholder="用户名" />
+                <!-- <input v-model="form.password" /> -->
+                <rambler-input
+                    type="password"
+                    v-model="form.password"
+                    placeholder="密码"
+                />
+                <rambler-button @click="handleLogin">登录</rambler-button>
+            </div>
         </rambler-dialog>
     </div>
 </template>
@@ -33,7 +35,6 @@ export default {
     components: { RamblerDialog },
     data() {
         return {
-            isLogin: false,
             loginDialogVisible: false,
             form: {
                 username: "admin",
@@ -43,8 +44,11 @@ export default {
     },
     computed: {
         ...mapState("user", {
-            userInfo: (state) => state.userInfo,
+            avatar: (state) => state.userInfo.avatar,
         }),
+        isLogin: function () {
+            return !this.avatar == "";
+        },
     },
     methods: {
         ...mapActions("user", ["setUserInfo"]),
@@ -88,11 +92,6 @@ export default {
                 }
             });
         },
-    },
-    async created() {
-        if (this.userInfo) {
-            this.isLogin = true;
-        }
     },
 };
 </script>
