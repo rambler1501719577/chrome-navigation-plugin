@@ -6,13 +6,11 @@
     </div>
 </template>
 <script>
-import ChromeIcon from "@/components/chrome-img";
 export default {
     name: "Site-Type2",
     props: {
         url: String,
     },
-    components: { ChromeIcon },
 };
 </script>
 <style lang="less" scoped>

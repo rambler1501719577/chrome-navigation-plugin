@@ -1,8 +1,8 @@
 <template>
-    <div class="site-container">
+    <div class="site-container" @click="visit">
         <div class="box">
             <div class="icon">
-                <ChromeIcon :url="url" :size="16"></ChromeIcon>
+                <ChromeIcon :url="url" :size="32"></ChromeIcon>
             </div>
         </div>
     </div>
@@ -13,8 +13,14 @@ export default {
     name: "Site-Type1",
     props: {
         url: String,
+        openOn: String,
     },
     components: { ChromeIcon },
+    methods: {
+        visit() {
+            window.open(this.url, this.openOn);
+        },
+    },
 };
 </script>
 <style lang="less" scoped>

@@ -3,11 +3,10 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import getters from "./getters";
 
-const env = process.env.NODE_ENV;
+// const env = process.env.NODE_ENV;
 const persisteKey = "cache-data";
 
 Vue.use(Vuex);
-let cacheData = true;
 
 // automatic import modules
 let importModules = {};
@@ -23,14 +22,12 @@ const store = new Vuex.Store({
     getters,
     strict: true,
     // veux持久化配置
-    plugins: cacheData
-        ? [
-              createPersistedState({
-                  key: persisteKey,
-                  paths: Object.keys(importModules),
-              }),
-          ]
-        : [],
+    plugins: [
+        createPersistedState({
+            key: persisteKey,
+            paths: Object.keys(importModules),
+        }),
+    ],
 });
 
 export default store;

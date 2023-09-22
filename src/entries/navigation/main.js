@@ -25,6 +25,7 @@ import RamblerDialog from "@/components/dialog/RamblerDialog";
 import RamblerButton from "@/components/button";
 import RamblerAlert from "@/components/alert";
 import RamblerInput from "@/components/input";
+import ChromeIcon from "@/components/chrome-img/";
 
 Vue.use(ElementUI);
 Vue.use(RamblerNotification, { name: "ramblerNotification" });
@@ -43,6 +44,7 @@ Vue.component("RamblerDialog", RamblerDialog);
 Vue.component("RamblerButton", RamblerButton);
 Vue.component("RamblerAlert", RamblerAlert);
 Vue.component("RamblerInput", RamblerInput);
+Vue.component("ChromeIcon", ChromeIcon);
 
 // 注册过滤器
 Object.keys(Filters).forEach((key) => Vue.filter(key, Filters[key]));

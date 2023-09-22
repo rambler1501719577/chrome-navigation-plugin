@@ -7,7 +7,7 @@ import Site from "../../widgets/site";
 import Folder from "../../widgets/folder";
 import CountDown from "../../widgets/count-down";
 export default {
-    name: "MusicPlayer",
+    name: "LazyWidget",
     props: {
         component: {
             type: String,

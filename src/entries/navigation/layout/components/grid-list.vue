@@ -46,7 +46,7 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.calcLayout();
-            window.onresize = this.calcLayout;
+            window.addEventListener("resize", this.calcLayout);
         });
     },
     components: {

@@ -1,5 +1,5 @@
 <template>
-    <component :is="renderType" :url="url"></component>
+    <component :is="renderType" :url="url" :openOn="props.openOn"></component>
 </template>
 <script>
 import SiteType1 from "./type1";
@@ -12,6 +12,7 @@ export default {
             type: Object,
             default: () => ({
                 type: 1,
+                openOn: "_blank",
             }),
         },
     },

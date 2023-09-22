@@ -22,12 +22,12 @@ export function getToken() {
 /**
  * cookie保存token
  * @param {*} payload token
- * @param {*} time 有效时间(秒数)
+ * @param {*} time 有效时间(小时数)
  */
-export function setToken(payload, time = 60 * 60 * 8) {
+export function setToken(payload, time = 8) {
     return new Promise((resolve) => {
         if (chrome.cookies) {
-            const expirationDate = parseInt(new Date().getTime() / 1000) + time;
+            const expirationDate = new Date().getTime() / 1000 + time * 60 * 60;
             chrome.cookies.set(
                 {
                     url: "http://www.suhaoblog.cn",

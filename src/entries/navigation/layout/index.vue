@@ -33,11 +33,25 @@
                 <grid-component-list></grid-component-list>
             </div>
         </div>
+
+        <rambler-dialog
+            width="1000px"
+            height="440px"
+            :visible.sync="skinDialogVisible"
+            name="change-background"
+            :draggable="true"
+            append-to-body
+        >
+            <div style="padding: 20px">
+                <Background></Background>
+            </div>
+        </rambler-dialog>
     </div>
 </template>
 
-<script>
+<script lang="javascript">
 import { mapActions } from "vuex";
+import Background from "../background/manage.vue"
 import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
@@ -57,9 +71,9 @@ export default {
     mounted() {
         // 监听各个组件发送的事件
         this.$event.$on("guide", this.guide);
-        this.$event.$on("dialog", (payload) => {
-            this.open(payload);
-        });
+        // this.$event.$on("dialog", (payload) => {
+        //     this.open(payload);
+        // });
     },
     components: {
         RamblerSearch: () => import("../views/search-engine/search"),
@@ -67,6 +81,7 @@ export default {
         LogManage: () => import("../views/log"),
         GridComponentList: () => import("./components/grid-list.vue"),
         UserCenter: () => import("./sidebar/user-center.vue"),
+        Background:Background
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),

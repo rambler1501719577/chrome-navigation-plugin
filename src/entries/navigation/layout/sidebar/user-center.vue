@@ -52,9 +52,6 @@ export default {
             },
         };
     },
-    created() {
-        console.log(this.avatar);
-    },
     computed: {
         ...mapState("user", {
             avatar: (state) => state.userInfo.avatar,
