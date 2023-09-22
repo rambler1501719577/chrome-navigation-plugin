@@ -5,6 +5,7 @@
 import Music from "../../widgets/music";
 import Site from "../../widgets/site";
 import Folder from "../../widgets/folder";
+import CountDown from "../../widgets/count-down";
 export default {
     name: "MusicPlayer",
     props: {
@@ -16,6 +17,7 @@ export default {
         Music: Music,
         Site,
         Folder,
+        CountDown,
     },
 };
 </script>

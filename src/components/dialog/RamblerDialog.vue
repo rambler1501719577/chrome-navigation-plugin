@@ -314,7 +314,6 @@ export default {
     }
     .content {
         overflow: hidden auto;
-        padding: 15px;
         background: #fff;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;

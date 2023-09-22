@@ -22,7 +22,9 @@ export default {
             state.userInfo.username = username;
         },
         CLEAR_USER_INFO(state) {
-            state.userInfo = null;
+            state.userInfo.avatar = "";
+            state.userInfo.nickname = "";
+            state.userInfo.username = "";
         },
     },
     actions: {
