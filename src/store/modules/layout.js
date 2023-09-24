@@ -1,3 +1,4 @@
+import { addBookmark } from "@/api/modules/bookmark";
 export default {
     namespaced: true,
     state: {
@@ -194,12 +195,13 @@ export default {
         // reset layout
         SET_LAYOUT: function (state, payload) {},
         // add layout
-        ADD_LAYOUT: function (state, payload) {},
+        ADD_LAYOUT: function (state, payload) {
+            state.widgets.push(payload);
+        },
         // edit layout
         EDIT_LAYOUT: function (state, payload) {},
         // delete layout
         DELETE_LAYOUT: function (state, payload) {},
-
         SET_WIDGETS: function (state, payload) {
             state.widgets = payload;
         },
@@ -208,6 +210,18 @@ export default {
         updateFrequentBookmarks({ commit }, payload) {},
         setWidgets({ commit }, payload) {
             commit("SET_WIDGETS", payload);
+        },
+        addWidget({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                addBookmark(payload).then((res) => {
+                    if (1) {
+                        commit("ADD_LAYOUT", payload);
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                });
+            });
         },
     },
 };

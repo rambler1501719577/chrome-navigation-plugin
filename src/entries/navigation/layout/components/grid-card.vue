@@ -6,6 +6,7 @@ import Music from "../../widgets/music";
 import Site from "../../widgets/site";
 import Folder from "../../widgets/folder";
 import CountDown from "../../widgets/count-down";
+import Add from "../../widgets/add";
 export default {
     name: "LazyWidget",
     props: {
@@ -18,6 +19,7 @@ export default {
         Site,
         Folder,
         CountDown,
+        Add,
     },
 };
 </script>

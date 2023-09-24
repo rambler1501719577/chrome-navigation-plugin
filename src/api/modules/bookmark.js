@@ -12,3 +12,10 @@ export function getBookmarks(params, token) {
         },
     });
 }
+
+// 添加书签
+export function addBookmark(data) {
+    return new Promise((resolve) => {
+        resolve(1);
+    });
+}

@@ -36,9 +36,10 @@
 
         <rambler-dialog
             width="1000px"
-            height="440px"
+            height="530px"
             :visible.sync="skinDialogVisible"
             name="change-background"
+            title="切换背景"
             :draggable="true"
             append-to-body
         >

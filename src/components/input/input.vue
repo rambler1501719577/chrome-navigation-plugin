@@ -20,8 +20,13 @@ export default {
             field: "",
         };
     },
+    created() {
+        this.field = this.value;
+    },
     props: {
-        value: String,
+        value: {
+            type: Number | Boolean | String | Object,
+        },
         type: {
             type: String,
             default: "text",

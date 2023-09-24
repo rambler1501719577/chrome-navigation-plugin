@@ -13,7 +13,9 @@
             :visible.sync="loginDialogVisible"
             name="user-login-panel"
             :draggable="true"
+            title="个人中心"
             append-to-body
+            class="user-center-dialog"
         >
             <div style="padding: 20px" v-if="avatar == ''">
                 <rambler-input v-model="form.username" placeholder="用户名" />
@@ -143,6 +145,11 @@ export default {
 </style>
 
 <style lang="less">
+.user-center-dialog {
+    .rambler_dialog__header {
+        background-color: #098fa8 !important;
+    }
+}
 @avatar-size: 70px;
 .user-info-panel {
     width: 100%;

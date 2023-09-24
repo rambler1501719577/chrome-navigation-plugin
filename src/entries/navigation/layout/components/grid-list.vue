@@ -42,6 +42,11 @@ export default {
             boxPadding: (state) => state.boxPadding,
         }),
     },
+    watch: {
+        widgets: function (newState) {
+            this.calcLayout();
+        },
+    },
     created() {},
     mounted() {
         this.$nextTick(() => {
@@ -209,7 +214,15 @@ export default {
             // 将数据处理成grid布局可识别的列表, 添加布局属性
             // row和column也是通过二维数组模拟填充后得到的真实行列数
             const { cardList, column, row } = this.getProcessedCardList(
-                this.widgets,
+                [
+                    ...this.widgets,
+                    {
+                        width: 1,
+                        height: 1,
+                        component: "add",
+                        title: "添加",
+                    },
+                ],
                 _row,
                 _column
             );
