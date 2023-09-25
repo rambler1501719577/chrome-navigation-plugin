@@ -14,7 +14,10 @@ export function getToken() {
                 }
             );
         } else {
-            resolve({ value: Cookies.get("token") });
+            resolve({
+                value: Cookies.get("token"),
+                expirationDate: Cookies.get("token-expires"),
+            });
         }
     });
 }
@@ -26,8 +29,8 @@ export function getToken() {
  */
 export function setToken(payload, time = 8) {
     return new Promise((resolve) => {
+        const expirationDate = new Date().getTime() / 1000 + time * 60 * 60;
         if (chrome.cookies) {
-            const expirationDate = new Date().getTime() / 1000 + time * 60 * 60;
             chrome.cookies.set(
                 {
                     url: "http://www.suhaoblog.cn",
@@ -44,6 +47,10 @@ export function setToken(payload, time = 8) {
                 new Date().getTime() + time * 60 * 60 * 1000
             );
             Cookies.set("token", payload, {
+                expires: expire,
+            });
+            // 开发环境下保存token-expires来保存过期时间
+            Cookies.set("token-expires", expirationDate, {
                 expires: expire,
             });
             resolve();

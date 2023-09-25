@@ -9,6 +9,7 @@
             width="390px"
             :visible.sync="dialogVisible"
             :name="dialogName"
+            :title="title"
             :draggable="true"
             append-to-body
         >
@@ -50,7 +51,7 @@ export default {
     },
     computed: {
         dialogName: function () {
-            return this.title;
+            return this.title + new Date().getTime();
         },
         displayChildren() {
             return this.props.children.slice(0, 9);

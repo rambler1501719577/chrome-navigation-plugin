@@ -1,5 +1,10 @@
 <template>
-    <component :is="$store.getters.dynamicBackground"></component>
+    <div
+        class="dynamic-proxy-container"
+        :style="{ backdropFilter: 'blur(2px)' }"
+    >
+        <component :is="$store.getters.dynamicBackground"></component>
+    </div>
 </template>
 <script>
 import EmptyBackground from "./backgrounds/empty";
@@ -13,4 +18,9 @@ export default {
     },
 };
 </script>
-<style lang="less"></style>
+<style lang="less">
+.dynamic-proxy-container {
+    width: 100%;
+    height: 100%;
+}
+</style>

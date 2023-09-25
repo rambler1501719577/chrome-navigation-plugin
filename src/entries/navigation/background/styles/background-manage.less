@@ -1,6 +1,7 @@
 .background-container {
     height: 490px;
     display: flex;
+
     .title {
         padding-left: 8px;
         height: 30px;
@@ -8,14 +9,17 @@
         background: #eee;
         color: #333;
     }
+
     .choices {
         width: 300px;
         height: 100%;
+
         .absolute-box {
             height: calc(100% - 30px);
             overflow: hidden;
             width: 100%;
             position: relative;
+
             .background-list {
                 position: absolute;
                 top: 0;
@@ -28,24 +32,30 @@
                 .bg-item:nth-child(2n + 1) {
                     margin-right: 10px;
                 }
+
                 .bg-item:nth-child(9) {
                     margin-bottom: 0;
                 }
+
                 .bg-item:nth-child(10) {
                     margin-bottom: 0;
                 }
+
                 .upload {
                     box-sizing: border-box;
                     border: 1px solid #eee;
                     line-height: 82px;
                     text-align: center;
                 }
+
                 .custom-bg {
                     position: relative;
                 }
+
                 #upload {
                     display: none;
                 }
+
                 .bg-item {
                     float: left;
                     width: 145px;
@@ -54,9 +64,11 @@
                     margin-bottom: 10px;
                     position: relative;
                     cursor: pointer;
+
                     &:hover .tools {
                         display: flex;
                     }
+
                     .tools {
                         display: none;
                         position: absolute;
@@ -67,6 +79,7 @@
                         justify-content: center;
                         align-items: center;
                         background: rgba(255, 255, 255, 0.8);
+
                         .btns {
                             height: 100%;
                             width: 100%;
@@ -74,10 +87,12 @@
                             display: flex;
                             justify-content: center;
                             align-items: center;
+
                             .icon {
                                 font-size: 28px;
                                 fill: rgb(131, 125, 125);
                                 padding: 0 10px;
+
                                 &:hover {
                                     fill: rgb(97, 207, 215);
                                 }
@@ -88,11 +103,13 @@
             }
         }
     }
+
     .preview-box {
         margin-left: 20px;
         flex: 1;
         height: 100%;
         position: relative;
+
         .preview {
             margin: 10px 0;
             width: 100%;
@@ -100,6 +117,7 @@
             overflow: hidden;
             background: #eee;
             position: relative;
+
             .effect {
                 position: absolute;
                 left: 0;
@@ -108,9 +126,15 @@
                 bottom: 0;
             }
         }
+
         .dynamic-bg {
             margin: 10px 0;
         }
+
+        .dynamic-bg-blur {
+            margin: 10px 0;
+        }
+
         .btn {
             position: absolute;
             bottom: 0;

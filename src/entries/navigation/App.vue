@@ -95,6 +95,7 @@ export default {
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
+        ...mapActions("layout", ["setWidgets"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
         showContextMenu(e) {
             const contextMenu = document.querySelector(".popup");
@@ -113,9 +114,9 @@ export default {
         // 请求远程数据(不缓存)
         loadRemoteData(token) {
             loadCloudData(token.value).then((result) => {
-                const { bookmarks, todos } = result;
-                this.updateRemoteBookmark(bookmarks);
-                this.updateRemoteTodo(todos);
+                const { bookmarks } = result;
+                this.setWidgets(bookmarks);
+                // this.updateRemoteTodo(todos);
                 this.$ramblerNotification.success("成功同步云端数据");
             });
         },

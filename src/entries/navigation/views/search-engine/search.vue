@@ -11,11 +11,16 @@
                 autocomplete="off"
                 :placeholder="placeholder"
             />
-            <favicon
+            <chrome-icon
+                :url="searchEngineIcon"
+                :size="32"
+                class="search-prefix"
+            ></chrome-icon>
+            <!-- <favicon
                 class="search-prefix"
                 :url="currentEngineUrl"
                 :size="20"
-            ></favicon>
+            ></favicon> -->
             <!-- 优雅、着实优雅 -->
             <div class="popup-panel" v-show="showPopup">
                 <!-- 搜索引擎 -->
@@ -112,6 +117,13 @@ export default {
         currentEngineUrl: function () {
             return this.engines.find((item) => item.name == this.currentEngine)
                 ?.searchUrl;
+        },
+        searchEngineIcon() {
+            const url = this.engines.find(
+                (item) => item.name == this.currentEngine
+            )?.searchUrl;
+            const urlObject = new URL(url);
+            return urlObject.origin;
         },
     },
     methods: {

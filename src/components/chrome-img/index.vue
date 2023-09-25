@@ -10,7 +10,7 @@ export default {
         // 图标大小，宽高比例为1
         size: {
             type: Number,
-            default: 16,
+            default: 32,
         },
         // 圆形图标
         round: {
@@ -23,6 +23,11 @@ export default {
             isDev: false,
             src: "",
         };
+    },
+    watch: {
+        url: function (newVal) {
+            this.src = this.getIconUrl(newVal, this.size);
+        },
     },
     methods: {
         getIconUrl: function (url, size) {

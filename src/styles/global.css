@@ -160,3 +160,11 @@ div#driver-page-overlay {
         transform: scale(0.2);
     }
 }
+
+.rambler-select {
+    width: 100%;
+    height: 30px;
+    margin-bottom: 20px;
+    outline: none;
+    border: 1px solid #ddd;
+}

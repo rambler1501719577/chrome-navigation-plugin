@@ -214,7 +214,7 @@ export default {
         addWidget({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 addBookmark(payload).then((res) => {
-                    if (1) {
+                    if (res.data.code == 200) {
                         commit("ADD_LAYOUT", payload);
                         resolve();
                     } else {

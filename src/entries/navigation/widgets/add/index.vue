@@ -9,8 +9,12 @@
             append-to-body
             title="添加组件"
         >
-            <div style="padding: 30px 40px 10px" class="dialog-folder">
-                <select v-model="form.component">
+            <div style="padding: 30px 40px 10px" class="dialog-add-component">
+                <select
+                    v-model="form.component"
+                    class="rambler-select"
+                    placeholder="选择要添加的组件"
+                >
                     <option
                         v-for="(component, index) of supportComponents"
                         :value="component.type"
@@ -33,7 +37,9 @@
                 />
                 <rambler-input placeholder="请输入地址" v-model="form.url" />
                 <rambler-input placeholder="请输入标题" v-model="form.title" />
-                <rambler-button @click="sureAdd">确定</rambler-button>
+                <div class="add-confirm-btn">
+                    <rambler-button @click="sureAdd">确定</rambler-button>
+                </div>
             </div>
         </rambler-dialog>
     </div>
@@ -65,8 +71,9 @@ export default {
         },
         // 添加到store并同步到数据库
         sureAdd() {
-            console.log(111);
-            this.addWidget(this.form)
+            const payload = JSON.parse(JSON.stringify(this.form));
+            payload["show"] = true;
+            this.addWidget(payload)
                 .then(() => {
                     this.$ramblerNotification.success("添加成功");
                     this.dialogVisible = false;
@@ -78,45 +85,28 @@ export default {
     },
 };
 </script>
+
 <style lang="less" scoped>
-.folder-container {
+.add-widget-container {
     width: 100%;
     height: 100%;
-    background: #ffffff92;
     border-radius: 5px;
-    overflow: hidden;
-    .grid-box {
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        .grid-box-item {
-            box-sizing: border-box;
-            padding: 3px;
-            width: 33%;
-            height: 33%;
-            img {
-                width: 18px;
-                height: 18px;
-            }
-            .rambler-icon {
-                font-size: 18px;
-            }
-        }
-    }
-}
-</style>
-<style lang="less">
-.add-widget-container {
-    background: #ffffff7d;
-    height: 100%;
-    border-radius: 5px;
+    background: #eeeeee7c;
     display: flex;
     justify-content: center;
     align-items: center;
     .add-icon {
-        fill: #49a1d7;
+        fill: #333;
+        font-size: 18px;
+    }
+}
+</style>
+<style lang="less">
+.dialog-add-component {
+    .add-confirm-btn {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
     }
 }
 </style>

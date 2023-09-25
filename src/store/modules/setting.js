@@ -6,6 +6,7 @@ export default {
             belong: "system", // system | custom
             systemBg: "9.jpg", // 系统背景
             customBg: "", // 自定义背景Base64串
+            blur: 0,
         }, // 背景图片名称 (位置固定：根目录background下)
         isGuide: false,
         dynamicBackground: "snow", // 特效名称，snow | bubble | empty

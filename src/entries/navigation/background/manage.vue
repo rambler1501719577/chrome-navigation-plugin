@@ -2,7 +2,7 @@
     <div class="background-container">
         <div class="choices">
             <div class="title">
-                <h1>所有列表</h1>
+                <h1>所有背景</h1>
             </div>
             <div class="absolute-box">
                 <div class="background-list">
@@ -97,6 +97,10 @@
                     <el-radio label="empty">无</el-radio>
                 </el-radio-group>
             </div>
+            <div class="title">背景模糊</div>
+            <div class="dynamic-bg-blur">
+                <rambler-input v-model="choosen.blur"></rambler-input>
+            </div>
             <div class="btn">
                 <rambler-button type="primary" @click="reply"
                     >保存并应用</rambler-button
@@ -137,6 +141,7 @@ export default {
                 systemBg: "",
                 customBg: "",
                 dyBackground: "",
+                blur: 0,
             },
         };
     },

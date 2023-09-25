@@ -1,11 +1,12 @@
 module.exports = {
     user: {
-        login: "/api/user/oauth"
+        login: "/api/user/oauth",
     },
     bookmark: {
-        list: "/api/collection/selectAll"
+        list: "/api/bookmark/bookmarks",
+        add: "/api/bookmark/create",
     },
     todo: {
-        list: "/api/todo/selectAll"
-    }
+        list: "/api/todo/selectAll",
+    },
 };
