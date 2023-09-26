@@ -17,23 +17,83 @@
 
         <!-- 鼠标右键 -->
         <div
-            class="popup"
+            class="popup global-popup-container"
             v-show="contextMenuShow"
             :style="{
                 left: position.left + 'px',
                 top: position.top + 'px',
             }"
         >
-            <ul>
-                <li @click="execute('skinDialogVisible')">
-                    <rambler-icon name="skin" class="icon"></rambler-icon>
-                    <span>切换背景</span>
+            <div class="contextmenu-item" is-single="true">
+                <li>
+                    <rambler-icon
+                        name="skin"
+                        class="prefix-icon"
+                    ></rambler-icon>
+                    <span>更换背景</span>
                 </li>
-                <li @click="execute('dialogVisible')">
-                    <rambler-icon name="setting" class="icon"></rambler-icon>
+            </div>
+            <div class="contextmenu-item" is-single="true">
+                <li>
+                    <rambler-icon
+                        name="setting"
+                        class="prefix-icon"
+                    ></rambler-icon>
                     <span>系统设置</span>
                 </li>
-            </ul>
+            </div>
+            <div
+                class="contextmenu-item"
+                is-single="true"
+                @mouseenter="showSecondCtxMenu"
+                @mouseleave="hideSecondCtxMenu"
+            >
+                <li>
+                    <rambler-icon
+                        name="setting"
+                        class="prefix-icon"
+                    ></rambler-icon>
+                    <span>撤销隐藏</span>
+                    <rambler-icon
+                        name="back"
+                        class="suffix-icon icon-flip"
+                    ></rambler-icon>
+                </li>
+                <div
+                    class="secondary-contextmenu-container"
+                    v-show="showSecondMenu"
+                >
+                    <div
+                        v-if="hideItems.length == 0"
+                        class="contextmenu-item"
+                        is-single="true"
+                    >
+                        <li>
+                            <rambler-icon
+                                name="skin"
+                                class="prefix-icon"
+                            ></rambler-icon>
+                            <span>空</span>
+                        </li>
+                    </div>
+                    <div
+                        class="contextmenu-item"
+                        is-single="true"
+                        v-for="item of hideItems"
+                        v-else
+                        :key="item.id"
+                        @click.stop="revokeDeleteWidget(item)"
+                    >
+                        <li>
+                            <rambler-icon
+                                name="skin"
+                                class="prefix-icon"
+                            ></rambler-icon>
+                            <span>{{ item.title }}</span>
+                        </li>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 所有的弹窗组件 -->
@@ -42,7 +102,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { getToken } from "@/utils/token";
 import { loadCloudData } from "@/api/modules/index";
 export default {
@@ -58,7 +118,13 @@ export default {
                 left: 0,
                 top: 0,
             },
+            showSecondMenu: false,
         };
+    },
+    computed: {
+        ...mapState("layout", {
+            hideItems: (state) => state.widgets.filter((v) => !v.show),
+        }),
     },
     async created() {
         // 这个组件主要用来处理账户数据等操作
@@ -95,8 +161,24 @@ export default {
     },
     methods: {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
-        ...mapActions("layout", ["setWidgets"]),
+        ...mapActions("layout", ["setWidgets", "revokeWidget"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
+        // 显示桌面右键二级菜单
+        showSecondCtxMenu() {
+            this.showSecondMenu = true;
+        },
+        hideSecondCtxMenu() {
+            this.showSecondMenu = false;
+        },
+        revokeDeleteWidget(item) {
+            this.revokeWidget(item)
+                .then(() => {
+                    this.$ramblerNotification.success("撤销成功");
+                })
+                .catch((err) => {
+                    this.$ramblerNotification.success(err);
+                });
+        },
         showContextMenu(e) {
             const contextMenu = document.querySelector(".popup");
             // 高度非固定，通过子节点个数 × 子节点高度获得
@@ -131,5 +213,43 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@import url("./style/style.less");
+.page-container {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow-x: hidden;
+    position: relative;
+
+    .dy-background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .content {
+        height: 100vh;
+        width: 100vw;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 11;
+        overflow: hidden;
+    }
+
+    .popup {
+        position: absolute;
+        z-index: 9999;
+        width: 160px;
+        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+            0 3px 6px -4px rgba(0, 0, 0, 0.12),
+            0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    }
+}
 </style>

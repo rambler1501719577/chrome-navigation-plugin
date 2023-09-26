@@ -1,4 +1,4 @@
-import { addBookmark, hideBookmark } from "@/api/modules/bookmark";
+import { addBookmark, updateWidgetStatus } from "@/api/modules/bookmark";
 export default {
     namespaced: true,
     state: {
@@ -55,7 +55,7 @@ export default {
         // reset layout
         SET_LAYOUT: function (state, payload) {},
         // add layout
-        ADD_LAYOUT: function (state, payload) {
+        ADD_WIDGET: function (state, payload) {
             state.widgets.push(payload);
         },
         // edit layout
@@ -91,7 +91,7 @@ export default {
             return new Promise((resolve, reject) => {
                 addBookmark(payload).then((res) => {
                     if (res.data.code == 200) {
-                        commit("ADD_LAYOUT", payload);
+                        commit("ADD_WIDGET", payload);
                         resolve();
                     } else {
                         reject();
@@ -109,13 +109,35 @@ export default {
                 resolve();
             });
         },
+        // 撤销隐藏widget
+        revokeWidget({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                if (!payload.id) {
+                    resolve("撤销书签失败, widget不存在");
+                }
+                updateWidgetStatus({ id: payload.id, show: true }).then(
+                    (res) => {
+                        if (res.data.code == 200) {
+                            const newWidget = JSON.parse(
+                                JSON.stringify(payload)
+                            );
+                            newWidget.show = true;
+                            commit("EDIT_WIDGET", newWidget);
+                            resolve();
+                        } else {
+                            reject(res.data.msg);
+                        }
+                    }
+                );
+            });
+        },
         // 隐藏组件
         hideWidget({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 if (!payload.id) {
                     resolve("删除书签失败, id为空");
                 }
-                hideBookmark(payload).then((res) => {
+                updateWidgetStatus(payload).then((res) => {
                     if (res.data.code == 200) {
                         commit("DELETE_WIDGET", payload);
                         resolve();

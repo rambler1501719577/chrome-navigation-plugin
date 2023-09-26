@@ -18,8 +18,8 @@ export function addBookmark(data) {
     });
 }
 
-// 隐藏书签
-export function hideBookmark(data) {
+// 更新widget状态
+export function updateWidgetStatus(data) {
     return instance({
         url: bookmark.hide,
         method: "put",

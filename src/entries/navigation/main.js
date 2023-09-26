@@ -17,6 +17,7 @@ import "styl/global.css"; //全局样式表(重置某些样式)
 import "animate.css";
 import "@/assets/iconfont/iconfont.css";
 import "element-ui/lib/theme-chalk/index.css";
+import "./style/popup.less";
 // 注册图标
 import SvgIcon from "@/icon";
 // import Favicon from "./components/favicon";
