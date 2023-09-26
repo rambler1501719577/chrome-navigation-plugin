@@ -8,14 +8,15 @@
     </div>
 </template>
 <script>
-import ChromeIcon from "@/components/chrome-img";
 export default {
     name: "Site-Type1",
     props: {
         url: String,
         openOn: String,
     },
-    components: { ChromeIcon },
+    data() {
+        return {};
+    },
     methods: {
         visit() {
             window.open(this.url, this.openOn);

@@ -1,4 +1,4 @@
-import { addBookmark } from "@/api/modules/bookmark";
+import { addBookmark, hideBookmark } from "@/api/modules/bookmark";
 export default {
     namespaced: true,
     state: {
@@ -41,146 +41,6 @@ export default {
                     type: 1,
                 },
             },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 1,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 1,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 1,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
-            {
-                width: 1,
-                height: 1,
-                component: "site",
-                title: "Vue.js",
-                url: "https://v2.cn.vuejs.org/v2/guide/installation.html",
-                props: {
-                    type: 2,
-                },
-            },
         ],
     },
     getters: {},
@@ -200,10 +60,25 @@ export default {
         },
         // edit layout
         EDIT_LAYOUT: function (state, payload) {},
-        // delete layout
-        DELETE_LAYOUT: function (state, payload) {},
+        // 删除组件
+        DELETE_WIDGET: function (state, payload) {
+            if (!payload.id) return;
+            const index = state.widgets.findIndex((v) => v.id == payload.id);
+            if (index !== -1) state.widgets.splice(index, 1);
+        },
+        // 更新所有组件
         SET_WIDGETS: function (state, payload) {
             state.widgets = payload;
+        },
+        // 更新组件, 删除并替换一个新的
+        EDIT_WIDGET: function (state, payload) {
+            const { id } = payload;
+            const index = state.widgets.findIndex((v) => v.id == id);
+            if (index !== -1) {
+                state.widgets.splice(index, 1, payload);
+            } else {
+                console.log("更新失败,未找到对应组件");
+            }
         },
     },
     actions: {
@@ -211,6 +86,7 @@ export default {
         setWidgets({ commit }, payload) {
             commit("SET_WIDGETS", payload);
         },
+        // 注册组件
         addWidget({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 addBookmark(payload).then((res) => {
@@ -219,6 +95,32 @@ export default {
                         resolve();
                     } else {
                         reject();
+                    }
+                });
+            });
+        },
+        // 更新Site组件信息
+        updateSiteWidget({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                if (!payload.id) {
+                    reject("widget的id为空,更新失败");
+                }
+                commit("EDIT_WIDGET", payload);
+                resolve();
+            });
+        },
+        // 隐藏组件
+        hideWidget({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                if (!payload.id) {
+                    resolve("删除书签失败, id为空");
+                }
+                hideBookmark(payload).then((res) => {
+                    if (res.data.code == 200) {
+                        commit("DELETE_WIDGET", payload);
+                        resolve();
+                    } else {
+                        reject(res.data.msg);
                     }
                 });
             });

@@ -10,17 +10,17 @@
                 </div>
             </div>
             <!-- 系统设置 -->
-            <div class="box-item">
+            <!-- <div class="box-item">
                 <div class="icon-wrapper" @click="open('dialogVisible')">
                     <rambler-icon name="setting" class="icon"></rambler-icon>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="box-item">
+            <!-- <div class="box-item">
                 <div class="icon-wrapper" @click="open('noteDialogVisible')">
                     <rambler-icon name="note" class="icon"></rambler-icon>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="right-content">
@@ -35,7 +35,7 @@
         </div>
 
         <rambler-dialog
-            width="1000px"
+            width="800px"
             height="530px"
             :visible.sync="skinDialogVisible"
             name="change-background"

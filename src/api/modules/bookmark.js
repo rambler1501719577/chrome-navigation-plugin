@@ -17,3 +17,12 @@ export function addBookmark(data) {
         data: data,
     });
 }
+
+// 隐藏书签
+export function hideBookmark(data) {
+    return instance({
+        url: bookmark.hide,
+        method: "put",
+        data,
+    });
+}

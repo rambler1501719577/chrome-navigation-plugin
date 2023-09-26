@@ -1,7 +1,7 @@
 <template>
     <div
         class="dynamic-proxy-container"
-        :style="{ backdropFilter: 'blur(2px)' }"
+        :style="{ backdropFilter: 'blur(0px)' }"
     >
         <component :is="$store.getters.dynamicBackground"></component>
     </div>

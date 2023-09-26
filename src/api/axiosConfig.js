@@ -16,6 +16,7 @@ const service = axios.create({
             arrayFormat: "brackets",
         });
     },
+    // baseURL: "http://localhost:8889",
     baseURL: "http://www.suhaoblog.cn/ext-api",
 });
 

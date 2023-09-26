@@ -53,7 +53,7 @@ export default {
         return {
             dialogVisible: false,
             form: {
-                component: "",
+                component: "site",
                 width: 1,
                 height: 1,
                 url: "",

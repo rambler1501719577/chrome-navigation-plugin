@@ -10,6 +10,7 @@
         >
             <LazyWidget
                 :component="item.component"
+                :id="item.id"
                 :width="item.width"
                 :height="item.height"
                 :props="item.props"
@@ -31,7 +32,7 @@ export default {
     },
     computed: {
         ...mapState("layout", {
-            widgets: (state) => state.widgets,
+            widgets: (state) => state.widgets.filter((v) => v.show),
             widgetSize: (state) => state.widgetSize,
             gap: (state) => state.gap,
             column: (state) => state.column,
