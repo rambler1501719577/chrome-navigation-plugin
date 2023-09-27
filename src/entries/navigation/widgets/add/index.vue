@@ -45,6 +45,7 @@
     </div>
 </template>
 <script>
+import _ from "lodash";
 import { mapActions } from "vuex";
 import { supportComponents } from "./config";
 export default {
@@ -71,7 +72,7 @@ export default {
         },
         // 添加到store并同步到数据库
         sureAdd() {
-            const payload = JSON.parse(JSON.stringify(this.form));
+            const payload = _.cloneDeep(this.form);
             payload["show"] = true;
             this.addWidget(payload)
                 .then(() => {

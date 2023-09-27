@@ -50,6 +50,18 @@
                                         {{ result.title }}
                                     </div>
                                 </div>
+                                <!-- 远程widgets中搜索结果 -->
+                                <div
+                                    v-else-if="result.from == 'widget'"
+                                    class="result-item-detail"
+                                >
+                                    <div class="icon">
+                                        <el-tag type="warning">组件</el-tag>
+                                    </div>
+                                    <div class="title">
+                                        {{ result.title }}
+                                    </div>
+                                </div>
                                 <!-- 历史搜索结果 -->
                                 <div
                                     v-else-if="result.from == 'history'"
@@ -109,7 +121,7 @@ export default {
             "engines",
             "currentEngine",
             "flatternBookmark",
-            "dataSource",
+            "flatWidgets",
         ]),
         placeholder: function () {
             return `在${this.$store.getters.currentEngine}中搜索`;
@@ -140,7 +152,8 @@ export default {
             }
             if (
                 (result && result.from == "bookmark") ||
-                result.from == "history"
+                result.from == "history" ||
+                result.from == "widget"
             ) {
                 window.open(result.url, "_self");
             } else {
@@ -156,7 +169,6 @@ export default {
         },
         // 搜索
         search: function () {
-            debugger;
             const engine = this.engines.find(
                 (item) => item.name == this.currentEngine
             );
@@ -183,7 +195,22 @@ export default {
             });
             return res;
         },
-
+        searchInRemoteWidgets(keywords) {
+            if (!keywords) return [];
+            let res = [];
+            this.flatWidgets.forEach((element) => {
+                if (
+                    element.title
+                        .toLowerCase()
+                        .indexOf(keywords.toLowerCase()) !== -1
+                )
+                    res.push({
+                        ...element,
+                        from: "widget",
+                    });
+            });
+            return res;
+        },
         async handleInput(keywords) {
             if (!this.keywords) {
                 this.searchResult = [];
@@ -197,9 +224,11 @@ export default {
                 title: this.keywords,
                 from: "engine",
             });
-
             if (this.flatternBookmark.length > 0) {
                 searchRes.push(...this.searchInBookmark(this.keywords));
+            }
+            if (this.flatWidgets.length > 0) {
+                searchRes.push(...this.searchInRemoteWidgets(this.keywords));
             }
             // 搜索历史记录
             searchRes.push(...(await searchFromHistory(this.keywords, 20)));

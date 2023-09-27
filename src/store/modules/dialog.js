@@ -1,11 +1,12 @@
 import { indexStart } from "@/settings";
+import _ from "lodash";
 const getMaxIndex = (cachedDialogs) => {
     if (!cachedDialogs || cachedDialogs.length == 0) {
         return indexStart;
     }
     let sortFunc = (item1, item2) => item2.index - item1.index;
     // 深拷贝一下, 防止排序污染原有数据
-    let cloneTagArr = JSON.parse(JSON.stringify(cachedDialogs));
+    let cloneTagArr = _.cloneDeep(cachedDialogs);
     let maxTagViewIndex = cloneTagArr.sort(sortFunc)[0].index;
     return maxTagViewIndex;
 };

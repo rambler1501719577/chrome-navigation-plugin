@@ -1,4 +1,19 @@
 import _ from "lodash";
+const getChildren = (widget) => {
+    if (
+        !widget.props ||
+        !widget.props.children ||
+        widget.props.children.length == 0
+    ) {
+        return [widget];
+    } else {
+        const children = [];
+        widget.props.children.forEach((item) => {
+            children.push(...getChildren(item));
+        });
+        return children;
+    }
+};
 const getters = {
     theme: (state) => state.theme.currentTheme,
     dataSource: (state) => state.setting.dataSource,
@@ -23,6 +38,14 @@ const getters = {
         if (!currentEngine) {
             return "百度";
         }
+    },
+    flatWidgets: (state) => {
+        const treeWidgets = state.layout.widgets;
+        const widgets = [];
+        treeWidgets.forEach((v) => {
+            widgets.push(...getChildren(v));
+        });
+        return widgets;
     },
     // 常用网站
     frequentBookmarks: (state) => {

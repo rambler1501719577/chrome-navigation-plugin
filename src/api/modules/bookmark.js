@@ -26,3 +26,11 @@ export function updateWidgetStatus(data) {
         data,
     });
 }
+
+export function updateWidgetProps(data) {
+    return instance({
+        url: bookmark.updateProp,
+        method: "put",
+        data,
+    });
+}

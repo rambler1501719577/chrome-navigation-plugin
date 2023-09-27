@@ -127,6 +127,7 @@
 </template>
 
 <script>
+import _ from "lodash";
 import {
     updateBookmark,
     removeBookmark,
@@ -192,7 +193,7 @@ export default {
             this.closeDeleteTip();
         },
         showEditDialog() {
-            this.data = JSON.parse(JSON.stringify(this.bookmark));
+            this.data = _.cloneDeep(this.bookmark);
             this.editDialogVisible = true;
         },
         closeDeleteTip() {

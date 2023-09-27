@@ -10,7 +10,7 @@
             </div>
         </div>
         <div
-            class="fixed-site-contextmenu"
+            class="fixed-site-contextmenu global-popup-container"
             v-if="contextMenuVisible"
             :style="{
                 left: contextMenuPosition.left + 'px',
@@ -20,8 +20,7 @@
             <div class="contextmenu-item" is-single="true">
                 <li @click.stop="hide"><p>隐藏</p></li>
             </div>
-
-            <!-- <div class="contextmenu-item multi">
+            <!-- <div class="contextmenu-item multi-contextmenu-item">
                 <li><p>样式</p></li>
                 <div class="inner-box">
                     <span @click.stop="updateType(1)">款式一</span>
@@ -141,53 +140,7 @@ export default {
     .fixed-site-contextmenu {
         width: 120px;
         position: fixed;
-        background-color: #0b0b0bcc;
-        backdrop-filter: blur(10px);
         z-index: 999;
-        padding: @context-menu-padding;
-        box-sizing: border-box;
-        border-radius: 3px;
-        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-            0 3px 6px -4px rgba(0, 0, 0, 0.12),
-            0 9px 28px 8px rgba(0, 0, 0, 0.05);
-        .contextmenu-item {
-            li {
-                border-radius: 3px;
-                list-style: none;
-                position: relative;
-                display: block;
-                width: 100%;
-                height: 30px;
-                color: #fff;
-                font-size: 12px;
-                line-height: 30px;
-                box-sizing: border-box;
-                padding-left: 5px;
-            }
-        }
-        .contextmenu-item[is-single="true"] {
-            li:hover {
-                background: #787777;
-                color: #fff;
-            }
-        }
-        .multi {
-            .inner-box {
-                padding-left: 0px;
-                span {
-                    display: inline-block;
-                    font-size: 10px;
-                    transform: scale(0.8);
-                    background-color: #737272;
-                    color: #fff;
-                    padding: 5px 6px;
-                    border-radius: 5px;
-                    &:hover {
-                        background-color: #ffffff3e;
-                    }
-                }
-            }
-        }
     }
 }
 </style>

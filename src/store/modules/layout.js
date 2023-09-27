@@ -1,4 +1,9 @@
-import { addBookmark, updateWidgetStatus } from "@/api/modules/bookmark";
+import {
+    addBookmark,
+    updateWidgetStatus,
+    updateWidgetProps,
+} from "@/api/modules/bookmark";
+import _ from "lodash";
 export default {
     namespaced: true,
     state: {
@@ -105,8 +110,31 @@ export default {
                 if (!payload.id) {
                     reject("widget的id为空,更新失败");
                 }
-                commit("EDIT_WIDGET", payload);
-                resolve();
+                const data = _.cloneDeep(payload);
+                if (data.props) {
+                    const propsKeys = Object.keys(data.props);
+                    const props = [];
+                    propsKeys.forEach((key) => {
+                        const temp = {
+                            key: key,
+                            value: data.props[key] + "",
+                        };
+                        props.push(temp);
+                    });
+                    if (!data.hasOwnProperty("show")) {
+                        data.show = true;
+                    }
+                    delete data.props;
+                    data.props = props;
+                }
+                updateWidgetProps(data).then((res) => {
+                    if (res.data.code == 200) {
+                        commit("EDIT_WIDGET", payload);
+                        resolve();
+                    } else {
+                        reject(res.data.msg);
+                    }
+                });
             });
         },
         // 撤销隐藏widget
@@ -118,9 +146,7 @@ export default {
                 updateWidgetStatus({ id: payload.id, show: true }).then(
                     (res) => {
                         if (res.data.code == 200) {
-                            const newWidget = JSON.parse(
-                                JSON.stringify(payload)
-                            );
+                            const newWidget = _.cloneDeep(payload);
                             newWidget.show = true;
                             commit("EDIT_WIDGET", newWidget);
                             resolve();
