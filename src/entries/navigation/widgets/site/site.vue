@@ -7,25 +7,31 @@
             @contextmenu.native.stop.prevent="handleSiteContextMenu"
         >
         </component>
-        <div
-            class="fixed-site-contextmenu global-popup-container"
-            v-if="contextMenuVisible"
-            :style="{
-                left: contextMenuPosition.left + 'px',
-                top: contextMenuPosition.top + 'px',
-            }"
+        <transition
+            name="custom-classes-transition"
+            enter-active-class="rambler__animated fadeInRight"
+            leave-active-class="rambler__animated fadeOut"
         >
-            <div class="contextmenu-item" is-single="true">
-                <li @click.stop="hide"><p>隐藏</p></li>
-            </div>
-            <div class="contextmenu-item multi-contextmenu-item">
-                <li><p>样式</p></li>
-                <div class="inner-box">
-                    <span @click.stop="updateType(1)">款式一</span>
-                    <span @click.stop="updateType(2)">款式二</span>
+            <div
+                class="fixed-site-contextmenu global-popup-container"
+                v-if="contextMenuVisible"
+                :style="{
+                    left: contextMenuPosition.left + 'px',
+                    top: contextMenuPosition.top + 'px',
+                }"
+            >
+                <div class="contextmenu-item" is-single="true">
+                    <li @click.stop="hide"><p>隐藏</p></li>
+                </div>
+                <div class="contextmenu-item multi-contextmenu-item">
+                    <li><p>样式</p></li>
+                    <div class="inner-box">
+                        <span @click.stop="updateType(1)">款式一</span>
+                        <span @click.stop="updateType(2)">款式二</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 <script>

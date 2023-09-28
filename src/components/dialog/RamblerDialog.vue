@@ -1,37 +1,43 @@
 <template>
     <!-- 用于做全屏的遮罩层 -->
-    <div class="rambler-dialog" v-show="visible" :style="dynamicStyle">
-        <div
-            :class="['rambler_dialog__header', { 'drag-title': allowDrag }]"
-            :style="{ height: headerHeight + 'px' }"
-        >
-            <slot name="header">
-                <div class="title">
-                    <rambler-icon
-                        :name="icon"
-                        class="title-icon"
-                    ></rambler-icon>
-                    <span>{{ title }}</span>
-                </div>
-                <div class="btns">
-                    <rambler-icon
-                        name="close"
-                        class="right-icon close"
-                    ></rambler-icon>
-                </div>
-            </slot>
+    <transition
+        name="custom-classes-transition"
+        enter-active-class="rambler__animated fadeInDown"
+        leave-active-class="rambler__animated fadeOutDown"
+    >
+        <div class="rambler-dialog" v-show="visible" :style="dynamicStyle">
+            <div
+                :class="['rambler_dialog__header', { 'drag-title': allowDrag }]"
+                :style="{ height: headerHeight + 'px' }"
+            >
+                <slot name="header">
+                    <div class="title">
+                        <rambler-icon
+                            :name="icon"
+                            class="title-icon"
+                        ></rambler-icon>
+                        <span>{{ title }}</span>
+                    </div>
+                    <div class="btns">
+                        <rambler-icon
+                            name="close"
+                            class="right-icon close"
+                        ></rambler-icon>
+                    </div>
+                </slot>
+            </div>
+            <!-- 延迟渲染，解决background canvas获取不到高度问题 -->
+            <div
+                v-if="rendered"
+                class="content"
+                :style="{ width: renderWidth, height: renderHeight }"
+            >
+                <!-- 这里可以通过v-if控制销毁当前元素 -->
+                <slot></slot>
+            </div>
+            <div class="footer"></div>
         </div>
-        <!-- 延迟渲染，解决background canvas获取不到高度问题 -->
-        <div
-            v-if="rendered"
-            class="content"
-            :style="{ width: renderWidth, height: renderHeight }"
-        >
-            <!-- 这里可以通过v-if控制销毁当前元素 -->
-            <slot></slot>
-        </div>
-        <div class="footer"></div>
-    </div>
+    </transition>
 </template>
 
 <script>

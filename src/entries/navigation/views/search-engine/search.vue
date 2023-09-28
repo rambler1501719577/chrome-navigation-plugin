@@ -211,8 +211,9 @@ export default {
             });
             return res;
         },
-        async handleInput(keywords) {
-            if (!this.keywords) {
+        async handleInput(e) {
+            const keywords = e.target.value;
+            if (!keywords) {
                 this.searchResult = [];
                 return;
             }
@@ -220,18 +221,35 @@ export default {
             this.verticalIndex = 0;
             const searchRes = [];
             // 搜索引擎中搜索
-            searchRes.push({
-                title: this.keywords,
-                from: "engine",
-            });
+            searchRes.push({ title: keywords, from: "engine" });
             if (this.flatternBookmark.length > 0) {
-                searchRes.push(...this.searchInBookmark(this.keywords));
+                const localBookmarkSearchRes = this.searchInBookmark(keywords);
+                for (const r of localBookmarkSearchRes) {
+                    if (
+                        searchRes.findIndex(
+                            (v) => v.title == r.title && v.url == r.url
+                        ) == -1
+                    ) {
+                        searchRes.push(r);
+                    }
+                }
             }
+            // 远程书签中搜索
             if (this.flatWidgets.length > 0) {
-                searchRes.push(...this.searchInRemoteWidgets(this.keywords));
+                const remotelBookmarkSearchRes =
+                    this.searchInRemoteWidgets(keywords);
+                for (const r of remotelBookmarkSearchRes) {
+                    if (
+                        searchRes.findIndex(
+                            (v) => v.title == r.title && v.url == r.url
+                        ) == -1
+                    ) {
+                        searchRes.push(r);
+                    }
+                }
             }
             // 搜索历史记录
-            searchRes.push(...(await searchFromHistory(this.keywords, 20)));
+            searchRes.push(...(await searchFromHistory(keywords, 20)));
             this.searchResult = searchRes;
         },
         // 切换搜索结果

@@ -18,6 +18,8 @@ import "animate.css";
 import "@/assets/iconfont/iconfont.css";
 import "element-ui/lib/theme-chalk/index.css";
 import "./style/popup.less";
+// 动画less文件
+import "./style/animation.less";
 // 注册图标
 import SvgIcon from "@/icon";
 // import Favicon from "./components/favicon";

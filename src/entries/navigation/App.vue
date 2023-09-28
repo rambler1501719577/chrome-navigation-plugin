@@ -16,85 +16,98 @@
         </div>
 
         <!-- 鼠标右键 -->
-        <div
-            class="popup global-popup-container"
-            v-show="contextMenuShow"
-            :style="{
-                left: position.left + 'px',
-                top: position.top + 'px',
-            }"
+        <transition
+            name="custom-classes-transition"
+            enter-active-class="rambler__animated fadeInRight"
+            leave-active-class="rambler__animated fadeOut"
         >
-            <div class="contextmenu-item" is-single="true">
-                <li>
-                    <rambler-icon
-                        name="skin"
-                        class="prefix-icon"
-                    ></rambler-icon>
-                    <span>更换背景</span>
-                </li>
-            </div>
-            <div class="contextmenu-item" is-single="true">
-                <li>
-                    <rambler-icon
-                        name="setting"
-                        class="prefix-icon"
-                    ></rambler-icon>
-                    <span>系统设置</span>
-                </li>
-            </div>
             <div
-                class="contextmenu-item"
-                is-single="true"
-                @mouseenter="showSecondCtxMenu"
-                @mouseleave="hideSecondCtxMenu"
+                class="popup global-popup-container"
+                v-show="contextMenuShow"
+                :style="{
+                    left: position.left + 'px',
+                    top: position.top + 'px',
+                }"
             >
-                <li>
-                    <rambler-icon
-                        name="setting"
-                        class="prefix-icon"
-                    ></rambler-icon>
-                    <span>撤销隐藏</span>
-                    <rambler-icon
-                        name="back"
-                        class="suffix-icon icon-flip"
-                    ></rambler-icon>
-                </li>
+                <div class="contextmenu-item" is-single="true">
+                    <li>
+                        <rambler-icon
+                            name="skin"
+                            class="prefix-icon"
+                        ></rambler-icon>
+                        <span>更换背景</span>
+                    </li>
+                </div>
+                <div class="contextmenu-item" is-single="true">
+                    <li>
+                        <rambler-icon
+                            name="setting"
+                            class="prefix-icon"
+                        ></rambler-icon>
+                        <span>系统设置</span>
+                    </li>
+                </div>
                 <div
-                    class="secondary-contextmenu-container"
-                    v-show="showSecondMenu"
+                    class="contextmenu-item"
+                    is-single="true"
+                    @mouseenter="showSecondCtxMenu"
+                    @mouseleave="hideSecondCtxMenu"
                 >
-                    <div
-                        v-if="hideItems.length == 0"
-                        class="contextmenu-item"
-                        is-single="true"
+                    <li>
+                        <rambler-icon
+                            name="setting"
+                            class="prefix-icon"
+                        ></rambler-icon>
+                        <span>撤销隐藏</span>
+                        <rambler-icon
+                            name="back"
+                            class="suffix-icon icon-flip"
+                        ></rambler-icon>
+                    </li>
+                    <transition
+                        name="custom-classes-transition"
+                        enter-active-class="rambler__animated fadeInRight"
+                        leave-active-class="rambler__animated fadeOut"
                     >
-                        <li>
-                            <rambler-icon
-                                name="skin"
-                                class="prefix-icon"
-                            ></rambler-icon>
-                            <span>空</span>
-                        </li>
-                    </div>
-                    <div
-                        class="contextmenu-item"
-                        is-single="true"
-                        v-for="item of hideItems"
-                        v-else
-                        :key="item.id"
-                        @click.stop="revokeDeleteWidget(item)"
-                    >
-                        <li>
-                            <rambler-icon
-                                name="skin"
-                                class="prefix-icon"
-                            ></rambler-icon>
-                            <span>{{ item.title }}</span>
-                        </li>
-                    </div>
+                        <div
+                            class="local-secondary-contextmenu-container"
+                            v-show="showSecondMenu"
+                            :style="secondMenuStyle"
+                        >
+                            <div
+                                v-if="hideItems.length == 0"
+                                class="contextmenu-item"
+                                is-single="true"
+                            >
+                                <li>
+                                    <rambler-icon
+                                        name="skin"
+                                        class="prefix-icon"
+                                    ></rambler-icon>
+                                    <span>空</span>
+                                </li>
+                            </div>
+                            <div
+                                class="contextmenu-item"
+                                is-single="true"
+                                v-for="item of hideItems"
+                                v-else
+                                :key="item.id"
+                                @click.stop="revokeDeleteWidget(item)"
+                            >
+                                <li>
+                                    <rambler-icon
+                                        name="skin"
+                                        class="prefix-icon"
+                                    ></rambler-icon>
+                                    <span>{{ item.title }}</span>
+                                </li>
+                            </div>
+                        </div>
+                    </transition>
                 </div>
             </div>
-        </div>
+        </transition>
 
         <!-- 所有的弹窗组件 -->
         <notification></notification>
@@ -102,6 +115,10 @@
 </template>
 
 <script>
+// 弹出窗口子元素宽高
+const popupMenuItemHeight = 30;
+const popupMenuItemWidth = 160;
+const popupMenuPadding = 8;
 import { mapActions, mapState } from "vuex";
 import { getToken } from "@/utils/token";
 import { loadCloudData } from "@/api/modules/index";
@@ -110,15 +127,13 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            skinDialogVisible: false,
-            driver: null,
             contextMenuShow: false,
-            noteDialogVisible: false,
             position: {
                 left: 0,
                 top: 0,
             },
             showSecondMenu: false,
+            secondMenuStyle: {},
         };
     },
     computed: {
@@ -165,6 +180,38 @@ export default {
         ...mapActions("todo", ["updateRemoteTodo"]),
         // 显示桌面右键二级菜单
         showSecondCtxMenu() {
+            // 初始定义secondMenuStyle是一个空对象, 所以需要 $set和 $delete来强制更新视图
+            // 二级菜单高度
+            const secondMenuHeight =
+                this.hideItems.length * popupMenuItemHeight +
+                popupMenuPadding * 2;
+            const viewPortWidth = document.documentElement.clientWidth;
+            const viewportHeight = document.documentElement.clientHeight;
+            // 一级弹窗和二级弹窗加起来都不超过可视窗口宽度, 可以在右侧展开二级菜单
+            if (this.position.left + popupMenuItemWidth * 2 >= viewPortWidth) {
+                this.$delete(this.secondMenuStyle, "left");
+                this.$set(this.secondMenuStyle, "right", "100%");
+            } else {
+                this.$delete(this.secondMenuStyle, "right");
+                this.$set(this.secondMenuStyle, "left", "100%");
+            }
+            // 只有当二级菜单顶部展开会被遮挡才从底部展开, 其他情况下从顶部展开,也就是 top:0
+            const contextMenuHeight =
+                document.querySelectorAll(".popup>.contextmenu-item").length *
+                    popupMenuItemHeight +
+                popupMenuPadding * 2;
+            if (
+                (this.position.top > secondMenuHeight &&
+                    secondMenuHeight + contextMenuHeight <= this.top) ||
+                this.position.top + contextMenuHeight + secondMenuHeight >=
+                    viewportHeight
+            ) {
+                this.$delete(this.secondMenuStyle, "top");
+                this.$set(this.secondMenuStyle, "bottom", "0");
+            } else {
+                this.$delete(this.secondMenuStyle, "bottom");
+                this.$set(this.secondMenuStyle, "top", "0");
+            }
             this.showSecondMenu = true;
         },
         hideSecondCtxMenu() {
@@ -180,18 +227,28 @@ export default {
                 });
         },
         showContextMenu(e) {
-            const contextMenu = document.querySelector(".popup");
             // 高度非固定，通过子节点个数 × 子节点高度获得
             const contextMenuHeight =
-                contextMenu.querySelectorAll("li").length * 40;
-            const viewportHeight =
-                document.documentElement.clientHeight ||
-                document.body.clientHeight;
+                document.querySelectorAll(".popup>.contextmenu-item").length *
+                    popupMenuItemHeight +
+                popupMenuPadding * 2;
+            const contextMenuWidth = popupMenuItemWidth;
+            // 视口宽高
+            const viewPortWidth = document.documentElement.clientWidth;
+            const viewportHeight = document.documentElement.clientHeight;
             const heightGap = viewportHeight - contextMenuHeight;
             this.contextMenuShow = true;
             const { pageX, pageY } = e;
-            this.position.left = pageX;
-            this.position.top = pageY > heightGap ? heightGap : pageY;
+            if (pageX + contextMenuWidth >= viewPortWidth) {
+                this.position.left = viewPortWidth - contextMenuWidth;
+            } else {
+                this.position.left = pageX;
+            }
+            if (pageY >= heightGap) {
+                this.position.top = heightGap;
+            } else {
+                this.position.top = pageY;
+            }
         },
         // 请求远程数据(不缓存)
         loadRemoteData(token) {
@@ -250,6 +307,13 @@ export default {
         box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
             0 3px 6px -4px rgba(0, 0, 0, 0.12),
             0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        .local-secondary-contextmenu-container {
+            position: absolute;
+            background-color: #2c2c2c;
+            width: 160px;
+            border-radius: 8px;
+            padding: 8px;
+        }
     }
 }
 </style>
