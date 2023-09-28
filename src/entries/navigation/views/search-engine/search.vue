@@ -220,7 +220,7 @@ export default {
             // 重置索引和搜索结果
             this.verticalIndex = 0;
             const searchRes = [];
-            // 搜索引擎中搜索
+            // 搜索引擎中搜索 + 过滤重复
             searchRes.push({ title: keywords, from: "engine" });
             if (this.flatternBookmark.length > 0) {
                 const localBookmarkSearchRes = this.searchInBookmark(keywords);
@@ -234,7 +234,7 @@ export default {
                     }
                 }
             }
-            // 远程书签中搜索
+            // 远程书签中搜索 + 过滤重复
             if (this.flatWidgets.length > 0) {
                 const remotelBookmarkSearchRes =
                     this.searchInRemoteWidgets(keywords);
