@@ -42,7 +42,7 @@
             :draggable="true"
             append-to-body
         >
-            <div style="padding: 30px 40px 10px" class="dialog-folder">
+            <div class="dialog-folder">
                 <div v-for="item of props.children" class="folder-item">
                     <div class="icon-container">
                         <site

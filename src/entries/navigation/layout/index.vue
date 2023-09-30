@@ -34,18 +34,24 @@
             </div>
         </div>
 
-        <rambler-dialog
-            width="800px"
-            height="530px"
+        <!-- <el-dialog
+            title="提示"
             :visible.sync="skinDialogVisible"
-            name="change-background"
-            title="切换背景"
-            :draggable="true"
             append-to-body
+            width="800"
         >
             <div style="padding: 20px">
                 <Background></Background>
             </div>
+        </el-dialog> -->
+
+        <rambler-dialog
+            :visible.sync="skinDialogVisible"
+            title="更换背景"
+            width="800px"
+            top="100px"
+        >
+            <Background></Background>
         </rambler-dialog>
     </div>
 </template>
