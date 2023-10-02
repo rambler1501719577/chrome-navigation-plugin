@@ -2,7 +2,8 @@ import Cookies from "js-cookie";
 
 // chrome或者本地server获取token
 export function getToken() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+        const nowTimestamp = new Date().getTime();
         if (chrome.cookies) {
             chrome.cookies.get(
                 {
@@ -10,20 +11,32 @@ export function getToken() {
                     name: "token",
                 },
                 (cookie) => {
-                    resolve(cookie);
+                    if (cookie.expirationDate * 1000 > nowTimestamp) {
+                        resolve(cookie);
+                    } else {
+                        reject(new Error("cookie已经超过有效日期"));
+                    }
                 }
             );
         } else {
-            resolve({
-                value: Cookies.get("token"),
-                expirationDate: Cookies.get("token-expires"),
-            });
+            const expirationTime = Cookies.get("token-expires");
+            if (expirationTime) {
+                const expireTimestamp = parseInt(expirationTime) * 1000;
+                if (expireTimestamp > nowTimestamp) {
+                    resolve({
+                        value: Cookies.get("token"),
+                        expirationDate: expirationTime,
+                    });
+                }
+            }
+            reject(new Error("js-cookie存储的token已经过期"));
         }
     });
 }
 
 /**
  * cookie保存token
+ * 并通过expirationDate保存token剩余有效秒数
  * @param {*} payload token
  * @param {*} time 有效时间(小时数)
  */

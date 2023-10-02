@@ -33,5 +33,19 @@ const RamblerNotification = {
         window[`$${args.name}`] = notify;
     },
 };
+
+["success", "danger", "warn", "info"].forEach((alias) => {
+    const notify = (params) => {
+        params.id = v4();
+        event.$emit("add", params);
+    };
+    RamblerNotification[alias] = (message) => {
+        notify({
+            type: alias,
+            message,
+        });
+    };
+});
+
 // 提供install方法
 export default RamblerNotification;

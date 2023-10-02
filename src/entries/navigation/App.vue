@@ -143,15 +143,15 @@ export default {
     },
     async created() {
         // 这个组件主要用来处理账户数据等操作
-        const token = await getToken();
-        if (token && token.value) {
+        try {
+            const token = await getToken();
             // 获取和现在相差时间毫秒数
             const time = token.expirationDate * 1000 - new Date().getTime();
             const hours = (time / 1000 / 60 / 60).toFixed(2);
             console.log(`获取用户信息成功, token ${hours} 小时后失效`);
             // load remote settings and data
             this.loadRemoteData(token);
-        } else {
+        } catch (e) {
             this.$store.dispatch("user/clearUserInfo");
             console.log("已清除用户数据");
             console.log("未登录或token已过期");
