@@ -78,9 +78,12 @@ export default {
     mounted() {
         // 监听各个组件发送的事件
         this.$event.$on("guide", this.guide);
-        // this.$event.$on("dialog", (payload) => {
-        //     this.open(payload);
-        // });
+        this.$event.$on("openDialog", type => {
+            const dialogVisible = type+"DialogVisible"
+            if(this.hasOwnProperty(dialogVisible)){
+                this[dialogVisible] = true
+            }
+        })
     },
     components: {
         RamblerSearch: () => import("../views/search-engine/search"),

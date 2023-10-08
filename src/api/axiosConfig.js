@@ -5,7 +5,6 @@ import axios from "axios";
 import { getToken } from "@/utils/token";
 import qs from "qs";
 import RamblerNotification from "../components/notification";
-console.log(RamblerNotification);
 const whiteApiList = ["/api/public/user/oauth"];
 NProgress.configure({
     template:

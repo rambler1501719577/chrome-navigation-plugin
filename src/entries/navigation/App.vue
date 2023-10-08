@@ -29,7 +29,11 @@
                     top: position.top + 'px',
                 }"
             >
-                <div class="contextmenu-item" is-single="true">
+                <div
+                    class="contextmenu-item"
+                    is-single="true"
+                    @click="openDialog('skin')"
+                >
                     <li>
                         <rambler-icon
                             name="skin"
@@ -53,7 +57,7 @@
                     @mouseenter="showSecondCtxMenu"
                     @mouseleave="hideSecondCtxMenu"
                 >
-                    <li>
+                    <li @click.stop="doNothing">
                         <rambler-icon
                             name="setting"
                             class="prefix-icon"
@@ -178,6 +182,11 @@ export default {
         ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
         ...mapActions("layout", ["setWidgets", "revokeWidget"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
+        doNothing() {},
+        // 通过事件总线发送事件, 弹出layout中的弹窗
+        openDialog(type) {
+            this.$event.$emit("openDialog", type);
+        },
         // 显示桌面右键二级菜单
         showSecondCtxMenu() {
             // 初始定义secondMenuStyle是一个空对象, 所以需要 $set和 $delete来强制更新视图

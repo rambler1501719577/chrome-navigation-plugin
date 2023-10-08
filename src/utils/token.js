@@ -11,7 +11,7 @@ export function getToken() {
                     name: "token",
                 },
                 (cookie) => {
-                    if (cookie.expirationDate * 1000 > nowTimestamp) {
+                    if (cookie && cookie.expirationDate * 1000 > nowTimestamp) {
                         resolve(cookie);
                     } else {
                         reject(new Error("cookie已经超过有效日期"));

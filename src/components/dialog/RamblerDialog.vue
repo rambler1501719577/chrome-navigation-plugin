@@ -20,36 +20,46 @@
             @close="close"
             @closed="closed"
         >
-            <!-- 有写弹窗头部则采用输入的 -->
+            <!-- 自定义header -->
             <template v-if="$slots.title">
-                <span slot="title">
-                    <slot name="title" />
-                </span>
+                <div class="rambler-header-container">
+                    <span slot="title">
+                        <slot name="title" />
+                    </span>
+                </div>
             </template>
             <!-- 自定义默认头部 -->
-            <template v-if="!$slots.title">
-                <div slot="title" class="biu-default-header-box">
-                    <div class="biu-default-header-title">{{ title }}</div>
+            <template v-if="!$slots.title && !emptyTitle">
+                <div slot="title" class="rambler-header-container">
+                    <div class="rambler-default-header-title">{{ title }}</div>
                     <div
-                        class="biu-default-header-close"
+                        class="rambler-default-header-close"
                         @click="beforeClose2"
                         v-if="showClose"
                     >
-                        <span class="biu-icon-guanbi2"></span>
+                        <rambler-icon name="close"></rambler-icon>
                     </div>
                 </div>
             </template>
+            <!-- 不显示header -->
+            <template v-else>
+                <div slot="title" class="rambler-empty-header"></div>
+            </template>
             <!-- 弹窗内容区域 -->
-            <slot />
+            <div class="rambler-default-content">
+                <slot />
+            </div>
             <!-- 弹窗底部区域 -->
             <template v-if="$slots.footer">
-                <span slot="footer">
-                    <slot name="footer" />
-                </span>
+                <div class="rambler-default-footer-container">
+                    <span slot="footer">
+                        <slot name="footer" />
+                    </span>
+                </div>
             </template>
             <!-- 自定义默认头部 -->
             <template v-if="!$slots.footer">
-                <div slot="footer" class="biu-default-header-box"></div>
+                <div slot="footer" class="rambler-empty-footer-container"></div>
             </template>
         </el-dialog>
     </div>
@@ -61,6 +71,10 @@ export default {
     name: "biuDialog",
     props: {
         visible: {
+            type: Boolean,
+            default: false,
+        },
+        emptyTitle: {
             type: Boolean,
             default: false,
         },
@@ -123,7 +137,6 @@ export default {
                 return this.visible;
             },
             set(val) {
-                console.log(val);
                 this.$emit("update:visible", val); // visible 改变的时候通知父组件
             },
         },
@@ -176,11 +189,23 @@ export default {
 
 <style lang="less">
 .rambler-dialog {
-    // .el-dialog__header {
-    //     padding: 0;
-    // }
+    .el-dialog__header {
+        padding: 0;
+        .rambler-header-container {
+            padding: 20px 20px 10px;
+        }
+    }
+    .el-dialog__body {
+        padding: 0;
+        .rambler-default-content {
+            padding: 20px;
+        }
+    }
     .el-dialog__footer {
         padding: 0;
+        .rambler-default-footer-container {
+            padding: 20px 20px 10px;
+        }
     }
 }
 </style>

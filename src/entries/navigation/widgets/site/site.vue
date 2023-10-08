@@ -73,6 +73,11 @@ export default {
         window.addEventListener("click", () => {
             if (this.contextMenuVisible) this.contextMenuVisible = false;
         });
+        this.$event.$on("widget-contextmenu", (payload) => {
+            if (payload !== this.id && this.contextMenuVisible) {
+                this.contextMenuVisible = false;
+            }
+        });
     },
     methods: {
         ...mapActions("layout", ["updateSiteWidget", "hideWidget"]),
@@ -103,6 +108,7 @@ export default {
             this.contextMenuPosition.left = pageX;
             this.contextMenuPosition.top = pageY;
             this.contextMenuVisible = true;
+            this.$event.$emit("widget-contextmenu", this.id);
         },
         // 隐藏组件
         hide() {

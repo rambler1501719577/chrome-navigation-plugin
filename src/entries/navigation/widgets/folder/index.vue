@@ -38,7 +38,7 @@
             width="390px"
             :visible.sync="dialogVisible"
             :name="dialogName"
-            :title="title"
+            :emptyTitle="true"
             :draggable="true"
             append-to-body
         >
@@ -97,6 +97,11 @@ export default {
         window.addEventListener("click", () => {
             if (this.contextMenuVisible) this.contextMenuVisible = false;
         });
+        this.$event.$on("widget-contextmenu", (payload) => {
+            if (payload !== this.id && this.contextMenuVisible) {
+                this.contextMenuVisible = false;
+            }
+        });
     },
     methods: {
         ...mapActions("layout", ["hideWidget"]),
@@ -108,6 +113,7 @@ export default {
             this.contextMenuPosition.left = pageX;
             this.contextMenuPosition.top = pageY;
             this.contextMenuVisible = true;
+            this.$event.$emit("widget-contextmenu", this.id);
         },
         hide() {
             this.hideWidget({ id: this.id, status: false });
