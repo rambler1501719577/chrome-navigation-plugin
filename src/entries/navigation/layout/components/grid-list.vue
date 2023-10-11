@@ -13,7 +13,7 @@
                 :id="item.id"
                 :width="item.width"
                 :height="item.height"
-                :props="item.props"
+                :prop="item.props"
                 :url="item.url"
                 :title="item.title"
             ></LazyWidget>

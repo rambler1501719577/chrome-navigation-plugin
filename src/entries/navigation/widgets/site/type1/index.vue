@@ -1,5 +1,5 @@
 <template>
-    <div class="site-container" @click="visit">
+    <div class="site-container">
         <div class="box">
             <div class="icon">
                 <ChromeIcon :url="url" :size="32"></ChromeIcon>
@@ -13,14 +13,6 @@ export default {
     props: {
         url: String,
         openOn: String,
-    },
-    data() {
-        return {};
-    },
-    methods: {
-        visit() {
-            window.open(this.url, this.openOn);
-        },
     },
 };
 </script>
@@ -79,10 +71,13 @@ export default {
             box-sizing: border-box;
             z-index: 2;
             padding: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             img {
-                width: 100%;
-                height: 100%;
+                width: 40px;
+                height: 40px;
             }
         }
     }

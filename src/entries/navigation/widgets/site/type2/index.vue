@@ -1,5 +1,5 @@
 <template>
-    <div class="site-container" @click="visit">
+    <div class="site-container">
         <div class="icon">
             <ChromeIcon :url="url" :size="32"></ChromeIcon>
         </div>
@@ -12,11 +12,7 @@ export default {
         url: String,
         openOn: String,
     },
-    methods: {
-        visit() {
-            window.open(this.url, this.openOn);
-        },
-    },
+    methods: {},
 };
 </script>
 <style lang="less" scoped>
@@ -27,18 +23,21 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    background: #eeeeeecc;
+    background: #f3f3f3;
+    position: relative;
     .icon {
         position: absolute;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         z-index: 2;
-        padding: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
-            width: 100%;
-            height: 100%;
+            width: 40px;
+            height: 40px;
         }
     }
 }

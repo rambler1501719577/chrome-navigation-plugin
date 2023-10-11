@@ -34,17 +34,6 @@
             </div>
         </div>
 
-        <!-- <el-dialog
-            title="提示"
-            :visible.sync="skinDialogVisible"
-            append-to-body
-            width="800"
-        >
-            <div style="padding: 20px">
-                <Background></Background>
-            </div>
-        </el-dialog> -->
-
         <rambler-dialog
             :visible.sync="skinDialogVisible"
             title="更换背景"
