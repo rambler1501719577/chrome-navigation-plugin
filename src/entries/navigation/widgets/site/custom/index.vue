@@ -1,5 +1,10 @@
 <template>
-    <div class="site-container">
+    <div
+        class="custom-site-container"
+        :style="{
+            background: prop.backgroundColor,
+        }"
+    >
         <div class="icon">
             <ChromeIcon :url="url" :size="32"></ChromeIcon>
         </div>
@@ -7,23 +12,44 @@
 </template>
 <script>
 export default {
-    name: "Site-Type2",
+    name: "Custom-Site",
+    watch: {
+        prop: {
+            handler: function (newVal) {
+                console.log(1);
+            },
+            deep: true,
+        },
+    },
     props: {
         url: String,
         openOn: String,
+        prop: {
+            type: Object | undefined,
+            default: () => ({
+                iconSize: 36,
+                backgroundColor: "#ffffff",
+                fontColor: "#333333",
+            }),
+        },
     },
-    methods: {},
+    data() {
+        return {
+            containerStyle: {
+                background: "red",
+            },
+        };
+    },
 };
 </script>
 <style lang="less" scoped>
 @site-text-height: 20px;
 @border-width: 8px;
 
-.site-container {
+.custom-site-container {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    background: #f3f3f3;
     position: relative;
     .icon {
         position: absolute;

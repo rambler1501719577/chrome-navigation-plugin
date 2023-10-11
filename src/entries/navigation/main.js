@@ -30,7 +30,7 @@ import RamblerAlert from "@/components/alert";
 import RamblerInput from "@/components/input";
 import ChromeIcon from "@/components/chrome-img/";
 
-Vue.use(ElementUI);
+Vue.use(ElementUI, { size: "medium" });
 Vue.use(RamblerNotification, { name: "ramblerNotification" });
 Vue.prototype.$ramblerNotification({ title: "title", message: "message" });
 Vue.prototype.$axios = axios;
