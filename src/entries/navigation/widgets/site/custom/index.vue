@@ -6,7 +6,19 @@
         }"
     >
         <div class="icon">
-            <ChromeIcon :url="url" :size="32"></ChromeIcon>
+            <ChromeIcon
+                v-if="!prop.text || prop.text == ''"
+                :url="url"
+                :size="32"
+            ></ChromeIcon>
+            <span
+                v-else
+                :style="{
+                    color: prop.textColor,
+                    fontSize: prop.textSize + 'px',
+                }"
+                >{{ prop.text }}</span
+            >
         </div>
     </div>
 </template>
@@ -14,9 +26,9 @@
 export default {
     name: "Custom-Site",
     watch: {
-        prop: {
+        "prop.backgroundColor": {
             handler: function (newVal) {
-                console.log(1);
+                console.log(newVal);
             },
             deep: true,
         },
@@ -27,9 +39,10 @@ export default {
         prop: {
             type: Object | undefined,
             default: () => ({
-                iconSize: 36,
+                text: "示例",
+                textSize: 36,
+                textColor: "#333333",
                 backgroundColor: "#ffffff",
-                fontColor: "#333333",
             }),
         },
     },

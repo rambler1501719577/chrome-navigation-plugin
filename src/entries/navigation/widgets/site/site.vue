@@ -116,42 +116,72 @@
                                 <el-radio-button label="SiteType2"
                                     >普通</el-radio-button
                                 >
-                                <el-radio-button label="Custom"
+                                <el-radio-button label="SiteTypeCustom"
                                     >自定义</el-radio-button
                                 >
                             </el-radio-group>
                         </div>
                     </div>
-                    <template v-if="form.renderType == 'Custom'">
-                        <!-- <div class="form-item">
-                            <el-switch
-                                v-model="form.backgroundType"
-                                active-text="背景图片"
-                                inactive-text="背景色"
-                            >
-                            </el-switch>
-                        </div> -->
+                    <template v-if="form.renderType == 'SiteTypeCustom'">
                         <template v-if="!form.backgroundType">
-                            <div class="form-item">
-                                <div class="label">
-                                    <p>背景色</p>
+                            <div class="custom-design-box">
+                                <div class="form-item">
+                                    <div class="label">
+                                        <p>背景色</p>
+                                    </div>
+                                    <div class="form-content">
+                                        <el-color-picker
+                                            v-model="form.backgroundColor"
+                                        ></el-color-picker>
+                                        <el-button
+                                            type="text"
+                                            style="margin-left: 15px"
+                                            @click="chooseFile"
+                                            >上传背景?</el-button
+                                        >
+                                    </div>
                                 </div>
-                                <div class="form-content">
-                                    <el-color-picker
-                                        v-model="form.backgroundColor"
-                                    ></el-color-picker>
+                                <div class="form-item">
+                                    <div class="label">
+                                        <p>图标文本</p>
+                                    </div>
+                                    <div class="form-content">
+                                        <el-checkbox
+                                            v-model="form.withText"
+                                            style="margin-left: 5px"
+                                        ></el-checkbox>
+                                        <el-input
+                                            v-model="form.text"
+                                            maxlength="5"
+                                            show-word-limit
+                                            placeholder="输入图标文本"
+                                            :disabled="!form.withText"
+                                            style="
+                                                width: 200px;
+                                                margin-left: 20px;
+                                            "
+                                        ></el-input>
+                                    </div>
+                                </div>
+                                <div class="form-item" v-if="form.withText">
+                                    <div class="label">
+                                        <p>文本颜色</p>
+                                    </div>
+                                    <div class="form-content">
+                                        <el-color-picker
+                                            v-model="form.textColor"
+                                        ></el-color-picker>
+                                        <span style="margin: 0 15px 0 15px"
+                                            >字体大小</span
+                                        >
+                                        <el-input-number
+                                            v-model="form.textSize"
+                                            style="width: 120px"
+                                        ></el-input-number>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-item">
-                                <div class="label">
-                                    <p>文字颜色</p>
-                                </div>
-                                <div class="form-content">
-                                    <el-color-picker
-                                        v-model="form.fontColor"
-                                    ></el-color-picker>
-                                </div></div
-                        ></template>
+                        </template>
                         <template v-else>
                             <el-button>上传背景</el-button>
                         </template>
@@ -189,7 +219,7 @@ import _ from "lodash";
 import { mapActions } from "vuex";
 import SiteType1 from "./type1";
 import SiteType2 from "./type2";
-import Custom from "./custom";
+import SiteTypeCustom from "./custom";
 export default {
     name: "Site",
     props: {
@@ -220,9 +250,12 @@ export default {
                 title: "",
                 props: [],
                 renderType: "",
-                backgroundColor: "",
-                fontColor: "",
+                backgroundColor: "#ffffff",
                 backgroundType: false, // false代表背景色模式
+                withText: false, //是否含有文本
+                textColor: "",
+                textSize: 30,
+                text: "示例",
             },
         };
     },
@@ -232,7 +265,11 @@ export default {
         },
         extraActions: function () {
             const extraActionKey = Object.keys(this.props).filter(
-                (item) => item !== "openOn" && item !== "type"
+                (item) =>
+                    item !== "openOn" &&
+                    item !== "type" &&
+                    item != "backgroundColor" &&
+                    item != "textColor"
             );
             return extraActionKey.map((e) => ({
                 title: e,
@@ -240,11 +277,15 @@ export default {
             }));
         },
         previewProp: function () {
-            const previewProps = Object.assign(this.props, {
+            const previewProps = {
+                ...this.props,
                 backgroundColor: this.form.backgroundColor,
-                fontColor: this.form.fontColor,
-            });
-            console.log(previewProps);
+            };
+            if (this.form.withText) {
+                previewProps["text"] = this.form.text;
+                previewProps["textSize"] = this.form.textSize;
+                previewProps["textColor"] = this.form.textColor;
+            }
             return previewProps;
         },
     },
@@ -263,11 +304,15 @@ export default {
         openInNewTab() {
             window.open(this.url, "_blank");
         },
+        chooseFile() {
+            // TODO 显示选择文件弹窗
+            this.$ramblerNotification.info("开发中");
+        },
         // 样式切换回调
         handleStyleChange(type) {},
         // 更新当前书签属性
         sureUpdate() {
-            const payload = {
+            const originData = {
                 component: "site",
                 height: this.height,
                 width: this.width,
@@ -275,8 +320,26 @@ export default {
                 url: this.form.url,
                 show: true,
                 title: this.form.title,
-                url: this.form.url,
+                props: {
+                    background: this.form.backgroundColor,
+                    type: this.form.renderType.replace("SiteType", ""),
+                },
             };
+            if (this.form.text != "") {
+                originData.props["text"] = this.form.text;
+                originData.props["textSize"] = this.form.textSize;
+                originData.props["textColor"] = this.form.textColor;
+            }
+            const payload = _.cloneDeep(originData);
+            console.log(payload);
+            this.updateSiteWidget(payload)
+                .then((res) => {
+                    console.log(res);
+                    this.editFormVisible = false;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 访问
         visit() {
@@ -329,7 +392,7 @@ export default {
     components: {
         SiteType1: SiteType1,
         SiteType2: SiteType2,
-        Custom: Custom,
+        SiteTypeCustom: SiteTypeCustom,
     },
 };
 </script>
@@ -349,6 +412,9 @@ export default {
     display: flex;
     .form {
         flex: 1;
+        .custom-design-box {
+            width: 100%;
+        }
         .form-item {
             display: flex;
             justify-content: space-around;

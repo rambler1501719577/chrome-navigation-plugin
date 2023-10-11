@@ -61,7 +61,7 @@ export default {
 <style></style>
 <style lang="less" scoped>
 .rambler-notification-container {
-    z-index: 999;
+    z-index: 9999; // 超过element弹窗层级
     position: fixed;
     // left: 50%;
     // transform: translateX(-50%);
