@@ -2,22 +2,22 @@
     <div
         class="custom-site-container"
         :style="{
-            background: prop.backgroundColor,
+            background: customStyle.backgroundColor,
         }"
     >
         <div class="icon">
             <ChromeIcon
-                v-if="!prop.text || prop.text == ''"
+                v-if="!customStyle.text || customStyle.text == ''"
                 :url="url"
                 :size="32"
             ></ChromeIcon>
             <span
                 v-else
                 :style="{
-                    color: prop.textColor,
-                    fontSize: prop.textSize + 'px',
+                    color: customStyle.textColor,
+                    fontSize: customStyle.textSize + 'px',
                 }"
-                >{{ prop.text }}</span
+                >{{ customStyle.text }}</span
             >
         </div>
     </div>
@@ -25,31 +25,37 @@
 <script>
 export default {
     name: "Custom-Site",
-    watch: {
-        "prop.backgroundColor": {
-            handler: function (newVal) {
-                console.log(newVal);
-            },
-            deep: true,
-        },
-    },
     props: {
         url: String,
         openOn: String,
         prop: {
-            type: Object | undefined,
-            default: () => ({
-                text: "示例",
-                textSize: 36,
-                textColor: "#333333",
-                backgroundColor: "#ffffff",
-            }),
+            type: Object,
+            required: true,
+        },
+    },
+    watch: {
+        prop: {
+            deep: true,
+            immediate: true,
+            handler: function (newVal) {
+                if (newVal.style) {
+                    const styles = JSON.parse(newVal.style);
+                    this.customStyle.backgroundColor =
+                        styles.backgroundColor || "#ffffff";
+                    this.customStyle.text = styles.text;
+                    this.customStyle.textSize = styles.textSize || 30;
+                    this.customStyle.textColor = styles.textColor || "#333333";
+                }
+            },
         },
     },
     data() {
         return {
-            containerStyle: {
-                background: "red",
+            customStyle: {
+                backgroundColor: "red",
+                textColor: "",
+                textSize: 0,
+                text: "",
             },
         };
     },

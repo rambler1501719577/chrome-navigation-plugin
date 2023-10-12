@@ -3,8 +3,8 @@
         <component
             :is="renderType"
             :url="url"
-            :props="props"
-            :openOn="props.openOn"
+            :prop="prop"
+            :openOn="prop.openOn"
             @click.native="visit"
             @contextmenu.native.stop.prevent="handleSiteContextMenu"
         >
@@ -69,8 +69,21 @@
                 <div class="contextmenu-item multi-contextmenu-item">
                     <li><p>样式</p></li>
                     <div class="inner-box">
-                        <span @click.stop="updateType(1)">款式一</span>
-                        <span @click.stop="updateType(2)">款式二</span>
+                        <span
+                            @click.stop="updateType(1)"
+                            :class="[prop.type == '1' ? 'choosen' : '']"
+                            >流金边框</span
+                        >
+                        <span
+                            @click.stop="updateType(2)"
+                            :class="[prop.type == '2' ? 'choosen' : '']"
+                            >普通</span
+                        >
+                        <span
+                            @click.stop="customSite"
+                            :class="[prop.type == 'Custom' ? 'choosen' : '']"
+                            >自定义</span
+                        >
                     </div>
                 </div>
             </div>
@@ -149,10 +162,11 @@
                                         <el-checkbox
                                             v-model="form.withText"
                                             style="margin-left: 5px"
+                                            @change="handleShowTextChange"
                                         ></el-checkbox>
                                         <el-input
                                             v-model="form.text"
-                                            maxlength="5"
+                                            maxlength="10"
                                             show-word-limit
                                             placeholder="输入图标文本"
                                             :disabled="!form.withText"
@@ -228,7 +242,7 @@ export default {
         width: String | Number,
         height: String | Number,
         title: String,
-        props: {
+        prop: {
             type: Object,
             default: () => ({
                 type: 1,
@@ -250,42 +264,42 @@ export default {
                 title: "",
                 props: [],
                 renderType: "",
-                backgroundColor: "#ffffff",
+                backgroundColor: "",
                 backgroundType: false, // false代表背景色模式
                 withText: false, //是否含有文本
                 textColor: "",
                 textSize: 30,
-                text: "示例",
+                text: "",
             },
         };
     },
     computed: {
         renderType: function () {
-            return "SiteType" + this.props.type;
+            return "SiteType" + this.prop.type;
         },
         extraActions: function () {
-            const extraActionKey = Object.keys(this.props).filter(
+            const extraActionKey = Object.keys(this.prop).filter(
                 (item) =>
-                    item !== "openOn" &&
-                    item !== "type" &&
-                    item != "backgroundColor" &&
-                    item != "textColor"
+                    item !== "openOn" && item !== "type" && item != "style"
             );
             return extraActionKey.map((e) => ({
                 title: e,
-                value: this.props[e],
+                value: this.prop[e],
             }));
         },
         previewProp: function () {
             const previewProps = {
-                ...this.props,
+                ...this.prop,
+            };
+            const style = {
                 backgroundColor: this.form.backgroundColor,
             };
             if (this.form.withText) {
-                previewProps["text"] = this.form.text;
-                previewProps["textSize"] = this.form.textSize;
-                previewProps["textColor"] = this.form.textColor;
+                style["text"] = this.form.text;
+                style["textSize"] = this.form.textSize;
+                style["textColor"] = this.form.textColor;
             }
+            previewProps["style"] = JSON.stringify(style);
             return previewProps;
         },
     },
@@ -304,6 +318,17 @@ export default {
         openInNewTab() {
             window.open(this.url, "_blank");
         },
+        handleShowTextChange() {
+            this.form.text = this.title;
+        },
+        customSite() {
+            if (this.prop.hasOwnProperty("style")) {
+                this.updateType("Custom");
+            } else {
+                this.showEdit();
+                this.form.renderType = "SiteTypeCustom";
+            }
+        },
         chooseFile() {
             // TODO 显示选择文件弹窗
             this.$ramblerNotification.info("开发中");
@@ -312,6 +337,14 @@ export default {
         handleStyleChange(type) {},
         // 更新当前书签属性
         sureUpdate() {
+            const styles = {
+                backgroundColor: this.form.backgroundColor,
+            };
+            if (this.form.text != "") {
+                styles["text"] = this.form.text;
+                styles["textSize"] = this.form.textSize;
+                styles["textColor"] = this.form.textColor;
+            }
             const originData = {
                 component: "site",
                 height: this.height,
@@ -321,24 +354,17 @@ export default {
                 show: true,
                 title: this.form.title,
                 props: {
-                    background: this.form.backgroundColor,
                     type: this.form.renderType.replace("SiteType", ""),
+                    style: JSON.stringify(styles),
                 },
             };
-            if (this.form.text != "") {
-                originData.props["text"] = this.form.text;
-                originData.props["textSize"] = this.form.textSize;
-                originData.props["textColor"] = this.form.textColor;
-            }
             const payload = _.cloneDeep(originData);
-            console.log(payload);
             this.updateSiteWidget(payload)
-                .then((res) => {
-                    console.log(res);
+                .then(() => {
                     this.editFormVisible = false;
                 })
                 .catch((err) => {
-                    console.log(err);
+                    this.$ramblerNotification.danger("保存失败");
                 });
         },
         // 访问
@@ -354,6 +380,17 @@ export default {
             this.form.title = this.title;
             this.form.url = this.url;
             this.form.renderType = this.renderType;
+            this.form.text = "";
+            if (this.prop.hasOwnProperty("style")) {
+                const style = JSON.parse(this.prop.style);
+                this.form.backgroundColor = style.backgroundColor;
+                if (style.text && style.text !== "") {
+                    this.form.withText = true;
+                    this.form.text = style.text;
+                    this.form.textColor = style.textColor;
+                    this.form.textSize = style.textSize;
+                }
+            }
         },
         // 切换类型
         updateType(type) {
@@ -363,7 +400,7 @@ export default {
                 height: this.height,
                 component: "site",
                 title: this.title,
-                props: this.props,
+                props: this.prop,
                 url: this.url,
                 show: true,
             };
@@ -446,15 +483,15 @@ export default {
         align-items: center;
         background-size: cover;
         .preview {
-            width: 100px;
-            height: 130px;
+            width: 80px;
+            height: 110px;
             .icon {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
             }
             .title {
                 height: 30px;
-                width: 100px;
+                width: 80px;
                 text-align: center;
                 color: #ffffffae;
                 font-size: 12px;

@@ -43,10 +43,10 @@
             append-to-body
         >
             <div class="dialog-folder">
-                <div v-for="item of props.children" class="folder-item">
+                <div v-for="item of prop.children" class="folder-item">
                     <div class="icon-container">
                         <site
-                            :props="item.props"
+                            :prop="item.props"
                             :url="item.url"
                             :title="item.title"
                         ></site>
@@ -74,7 +74,7 @@ export default {
     },
     props: {
         id: String,
-        props: {
+        prop: {
             type: Object,
             default: () => ({
                 children: [],
@@ -90,7 +90,7 @@ export default {
             return this.title + new Date().getTime();
         },
         displayChildren() {
-            return this.props.children.slice(0, 9);
+            return this.prop.children.slice(0, 9);
         },
     },
     mounted() {
