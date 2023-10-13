@@ -68,7 +68,7 @@
 <script>
 import { startDrag } from "./util";
 export default {
-    name: "biuDialog",
+    name: "RamblerDialog",
     props: {
         visible: {
             type: Boolean,

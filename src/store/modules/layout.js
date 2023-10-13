@@ -114,6 +114,7 @@ export default {
                 if (data.props) {
                     const propsKeys = Object.keys(data.props);
                     const props = [];
+                    // 将自定义属性转为 { key:"", value:"" }格式
                     propsKeys.forEach((key) => {
                         const temp = {
                             key: key,

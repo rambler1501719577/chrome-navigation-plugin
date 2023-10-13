@@ -35,10 +35,10 @@
                 <div class="contextmenu-item" is-single="true">
                     <li @click.stop="showEdit">
                         <rambler-icon
-                            name="open"
+                            name="edit"
                             class="prefix-icon"
                         ></rambler-icon
-                        ><span>编辑</span>
+                        ><span>编辑组件</span>
                     </li>
                 </div>
                 <template v-if="extraActions.length > 0">
@@ -54,6 +54,22 @@
                                 class="prefix-icon"
                             ></rambler-icon
                             ><span>{{ item.title }}</span>
+                        </li>
+                    </div>
+                </template>
+                <template v-if="fastLinks.length > 0">
+                    <div
+                        class="contextmenu-item"
+                        is-single="true"
+                        v-for="item of fastLinks"
+                        :key="item.key"
+                    >
+                        <li @click="visitFastLink(item)">
+                            <rambler-icon
+                                name="fast"
+                                class="prefix-icon"
+                            ></rambler-icon
+                            ><span>{{ item.key }}</span>
                         </li>
                     </div>
                 </template>
@@ -96,135 +112,13 @@
             width="600px"
             top="100px"
         >
-            <div class="edit-site-container">
-                <div class="form">
-                    <div class="form-item">
-                        <div class="label">
-                            <p>标题</p>
-                        </div>
-                        <div class="form-content">
-                            <el-input v-model="form.title"></el-input>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label">
-                            <p>地址</p>
-                        </div>
-                        <div class="form-content">
-                            <el-input v-model="form.url"></el-input>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="label">
-                            <p>样式</p>
-                        </div>
-                        <div class="form-content">
-                            <el-radio-group
-                                v-model="form.renderType"
-                                @input="handleStyleChange"
-                            >
-                                <el-radio-button label="SiteType1"
-                                    >流金</el-radio-button
-                                >
-                                <el-radio-button label="SiteType2"
-                                    >普通</el-radio-button
-                                >
-                                <el-radio-button label="SiteTypeCustom"
-                                    >自定义</el-radio-button
-                                >
-                            </el-radio-group>
-                        </div>
-                    </div>
-                    <template v-if="form.renderType == 'SiteTypeCustom'">
-                        <template v-if="!form.backgroundType">
-                            <div class="custom-design-box">
-                                <div class="form-item">
-                                    <div class="label">
-                                        <p>背景色</p>
-                                    </div>
-                                    <div class="form-content">
-                                        <el-color-picker
-                                            v-model="form.backgroundColor"
-                                        ></el-color-picker>
-                                        <el-button
-                                            type="text"
-                                            style="margin-left: 15px"
-                                            @click="chooseFile"
-                                            >上传背景?</el-button
-                                        >
-                                    </div>
-                                </div>
-                                <div class="form-item">
-                                    <div class="label">
-                                        <p>图标文本</p>
-                                    </div>
-                                    <div class="form-content">
-                                        <el-checkbox
-                                            v-model="form.withText"
-                                            style="margin-left: 5px"
-                                            @change="handleShowTextChange"
-                                        ></el-checkbox>
-                                        <el-input
-                                            v-model="form.text"
-                                            maxlength="10"
-                                            show-word-limit
-                                            placeholder="输入图标文本"
-                                            :disabled="!form.withText"
-                                            style="
-                                                width: 200px;
-                                                margin-left: 20px;
-                                            "
-                                        ></el-input>
-                                    </div>
-                                </div>
-                                <div class="form-item" v-if="form.withText">
-                                    <div class="label">
-                                        <p>文本颜色</p>
-                                    </div>
-                                    <div class="form-content">
-                                        <el-color-picker
-                                            v-model="form.textColor"
-                                        ></el-color-picker>
-                                        <span style="margin: 0 15px 0 15px"
-                                            >字体大小</span
-                                        >
-                                        <el-input-number
-                                            v-model="form.textSize"
-                                            style="width: 120px"
-                                        ></el-input-number>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <el-button>上传背景</el-button>
-                        </template>
-                    </template>
-                    <div class="confirm-btn">
-                        <rambler-button type="primary" @click="sureUpdate">
-                            确定
-                        </rambler-button>
-                    </div>
-                </div>
-                <div
-                    class="preview-box"
-                    :style="{
-                        backgroundImage: `url('${$store.getters.background}')`,
-                    }"
-                >
-                    <div class="preview">
-                        <div class="icon">
-                            <component
-                                :is="form.renderType"
-                                :url="url"
-                                :prop="previewProp"
-                            >
-                            </component>
-                        </div>
-                        <div class="title">{{ form.title }}</div>
-                    </div>
-                </div>
-            </div>
+            <edit-form
+                :prop="prop"
+                :id="id"
+                :url="url"
+                :title="title"
+                @sure="sureUpdate"
+            ></edit-form>
         </rambler-dialog>
     </div>
 </template>
@@ -234,6 +128,7 @@ import { mapActions } from "vuex";
 import SiteType1 from "./type1";
 import SiteType2 from "./type2";
 import SiteTypeCustom from "./custom";
+import EditForm from "./site-edit-form.vue";
 export default {
     name: "Site",
     props: {
@@ -257,6 +152,7 @@ export default {
                 left: 0,
                 top: 0,
             },
+            activePanel: "site-info",
             editFormVisible: false, // 编辑弹窗
             form: {
                 id: "",
@@ -270,8 +166,31 @@ export default {
                 textColor: "",
                 textSize: 30,
                 text: "",
+                // 快捷链接数组
+                siteLinks: [],
             },
+            fastLinks: [],
         };
+    },
+    created() {
+        if (this.prop.hasOwnProperty("link")) {
+            this.$watch(
+                "prop.link",
+                function (newVal) {
+                    if (newVal) {
+                        this.fastLinks = [];
+                        const links = JSON.parse(this.prop.link);
+                        Object.keys(links).forEach((key) => {
+                            this.fastLinks.push({
+                                key: key,
+                                value: links[key],
+                            });
+                        });
+                    }
+                },
+                { immediate: true }
+            );
+        }
     },
     computed: {
         renderType: function () {
@@ -280,27 +199,15 @@ export default {
         extraActions: function () {
             const extraActionKey = Object.keys(this.prop).filter(
                 (item) =>
-                    item !== "openOn" && item !== "type" && item != "style"
+                    item !== "openOn" &&
+                    item !== "type" &&
+                    item !== "style" &&
+                    item !== "link"
             );
             return extraActionKey.map((e) => ({
                 title: e,
                 value: this.prop[e],
             }));
-        },
-        previewProp: function () {
-            const previewProps = {
-                ...this.prop,
-            };
-            const style = {
-                backgroundColor: this.form.backgroundColor,
-            };
-            if (this.form.withText) {
-                style["text"] = this.form.text;
-                style["textSize"] = this.form.textSize;
-                style["textColor"] = this.form.textColor;
-            }
-            previewProps["style"] = JSON.stringify(style);
-            return previewProps;
         },
     },
     mounted() {
@@ -316,10 +223,12 @@ export default {
     methods: {
         ...mapActions("layout", ["updateSiteWidget", "hideWidget"]),
         openInNewTab() {
+            this.contextMenuVisible = false;
             window.open(this.url, "_blank");
         },
-        handleShowTextChange() {
-            this.form.text = this.title;
+        // 快捷链接访问
+        visitFastLink(link) {
+            window.open(link.value, "_self");
         },
         customSite() {
             if (this.prop.hasOwnProperty("style")) {
@@ -329,36 +238,10 @@ export default {
                 this.form.renderType = "SiteTypeCustom";
             }
         },
-        chooseFile() {
-            // TODO 显示选择文件弹窗
-            this.$ramblerNotification.info("开发中");
-        },
-        // 样式切换回调
-        handleStyleChange(type) {},
         // 更新当前书签属性
-        sureUpdate() {
-            const styles = {
-                backgroundColor: this.form.backgroundColor,
-            };
-            if (this.form.text != "") {
-                styles["text"] = this.form.text;
-                styles["textSize"] = this.form.textSize;
-                styles["textColor"] = this.form.textColor;
-            }
-            const originData = {
-                component: "site",
-                height: this.height,
-                width: this.width,
-                id: this.id,
-                url: this.form.url,
-                show: true,
-                title: this.form.title,
-                props: {
-                    type: this.form.renderType.replace("SiteType", ""),
-                    style: JSON.stringify(styles),
-                },
-            };
-            const payload = _.cloneDeep(originData);
+        sureUpdate(payload) {
+            payload["width"] = this.width;
+            payload["height"] = this.height;
             this.updateSiteWidget(payload)
                 .then(() => {
                     this.editFormVisible = false;
@@ -375,22 +258,6 @@ export default {
         showEdit() {
             this.contextMenuVisible = false;
             this.editFormVisible = true;
-            // 赋值
-            this.form.id = this.id;
-            this.form.title = this.title;
-            this.form.url = this.url;
-            this.form.renderType = this.renderType;
-            this.form.text = "";
-            if (this.prop.hasOwnProperty("style")) {
-                const style = JSON.parse(this.prop.style);
-                this.form.backgroundColor = style.backgroundColor;
-                if (style.text && style.text !== "") {
-                    this.form.withText = true;
-                    this.form.text = style.text;
-                    this.form.textColor = style.textColor;
-                    this.form.textSize = style.textSize;
-                }
-            }
         },
         // 切换类型
         updateType(type) {
@@ -430,6 +297,7 @@ export default {
         SiteType1: SiteType1,
         SiteType2: SiteType2,
         SiteTypeCustom: SiteTypeCustom,
+        EditForm,
     },
 };
 </script>
@@ -442,67 +310,5 @@ export default {
     width: 120px;
     position: fixed;
     z-index: 999;
-}
-</style>
-<style lang="less">
-.edit-site-container {
-    display: flex;
-    .form {
-        flex: 1;
-        .custom-design-box {
-            width: 100%;
-        }
-        .form-item {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin-bottom: 20px;
-            .label {
-                width: 65px;
-                height: 100%;
-                vertical-align: middle;
-            }
-            .form-content {
-                flex: 1;
-                display: flex;
-                align-items: center;
-            }
-        }
-        .confirm-btn {
-            display: flex;
-            justify-content: flex-end;
-        }
-    }
-    .preview-box {
-        margin-left: 40px;
-        width: 200px;
-        height: 200px;
-        border-radius: 5px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-size: cover;
-        .preview {
-            width: 80px;
-            height: 110px;
-            .icon {
-                width: 80px;
-                height: 80px;
-            }
-            .title {
-                height: 30px;
-                width: 80px;
-                text-align: center;
-                color: #ffffffae;
-                font-size: 12px;
-                font-weight: bold;
-                line-height: 30px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
-            }
-        }
-    }
 }
 </style>
