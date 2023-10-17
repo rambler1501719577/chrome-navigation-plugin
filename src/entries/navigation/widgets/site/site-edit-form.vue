@@ -342,7 +342,6 @@ export default {
             this.form.text = this.title;
         },
         deleteRow(id) {
-            console.log(id);
             const idx = this.form.siteLinks.findIndex((v) => v.id == id);
             if (idx !== -1) {
                 this.form.siteLinks.splice(idx, 1);
@@ -394,6 +393,10 @@ export default {
                     link: JSON.stringify(links),
                 },
             };
+            // 防止序列化 {} 这样的数据，影响后续判断是否存在快捷标签
+            if (Object.keys(originData.props.link).length == 0) {
+                delete originData.props.link;
+            }
             const payload = _.cloneDeep(originData);
             this.$emit("sure", payload);
         },

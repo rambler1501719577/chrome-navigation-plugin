@@ -173,24 +173,22 @@ export default {
         };
     },
     created() {
-        if (this.prop.hasOwnProperty("link")) {
-            this.$watch(
-                "prop.link",
-                function (newVal) {
-                    if (newVal) {
-                        this.fastLinks = [];
-                        const links = JSON.parse(this.prop.link);
-                        Object.keys(links).forEach((key) => {
-                            this.fastLinks.push({
-                                key: key,
-                                value: links[key],
-                            });
+        this.$watch(
+            "prop",
+            function (newVal) {
+                if (newVal.link) {
+                    this.fastLinks = [];
+                    const links = JSON.parse(this.prop.link);
+                    Object.keys(links).forEach((key) => {
+                        this.fastLinks.push({
+                            key: key,
+                            value: links[key],
                         });
-                    }
-                },
-                { immediate: true }
-            );
-        }
+                    });
+                }
+            },
+            { immediate: true }
+        );
     },
     computed: {
         renderType: function () {
@@ -252,7 +250,7 @@ export default {
         },
         // 访问
         visit() {
-            window.open(this.url, this.openOn);
+            window.open(this.url, "_self");
         },
         // 打开编辑弹窗
         showEdit() {
