@@ -2,6 +2,7 @@ import {
     addBookmark,
     updateWidgetStatus,
     updateWidgetProps,
+    deleteWidget,
 } from "@/api/modules/bookmark";
 import _ from "lodash";
 export default {
@@ -159,17 +160,30 @@ export default {
             });
         },
         // 隐藏组件
-        hideWidget({ commit }, payload) {
+        hide({ commit }, id) {
             return new Promise((resolve, reject) => {
-                if (!payload.id) {
-                    resolve("删除书签失败, id为空");
-                }
+                const payload = { id: id, status: false };
                 updateWidgetStatus(payload).then((res) => {
                     if (res.data.code == 200) {
                         commit("DELETE_WIDGET", payload);
                         resolve();
                     } else {
                         reject(res.data.msg);
+                    }
+                });
+            });
+        },
+        // 删除组件
+        delete({ commit }, ids) {
+            return new Promise((resolve, reject) => {
+                deleteWidget({
+                    ids: ids,
+                }).then((res) => {
+                    if (res.data.code == 200) {
+                        console.log("删除成功");
+                        resolve();
+                    } else {
+                        reject("删除失败");
                     }
                 });
             });

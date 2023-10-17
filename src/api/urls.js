@@ -7,6 +7,7 @@ module.exports = {
         add: "/api/bookmark/create",
         hide: "/api/bookmark/updateStatus",
         updateProp: "/api/bookmark/updateProps",
+        destory: "/api/bookmark/destroy",
     },
     todo: {
         list: "/api/todo/selectAll",

@@ -6,7 +6,7 @@
             :prop="prop"
             :openOn="prop.openOn"
             @click.native="visit"
-            @contextmenu.native.stop.prevent="handleSiteContextMenu"
+            @contextmenu.native.stop.prevent="handleCommonWidgetContextMenu"
         >
         </component>
         <!-- 右键弹出菜单 -->
@@ -41,22 +41,6 @@
                         ><span>编辑组件</span>
                     </li>
                 </div>
-                <template v-if="extraActions.length > 0">
-                    <div
-                        class="contextmenu-item"
-                        is-single="true"
-                        v-for="item of extraActions"
-                        :key="item.title"
-                    >
-                        <li @click.stop="openInNewTab">
-                            <rambler-icon
-                                name="open"
-                                class="prefix-icon"
-                            ></rambler-icon
-                            ><span>{{ item.title }}</span>
-                        </li>
-                    </div>
-                </template>
                 <template v-if="fastLinks.length > 0">
                     <div
                         class="contextmenu-item"
@@ -74,12 +58,21 @@
                     </div>
                 </template>
                 <div class="contextmenu-item" is-single="true">
-                    <li @click.stop="hide">
+                    <li @click.stop="hideWidget">
                         <rambler-icon
                             name="hide"
                             class="prefix-icon"
                         ></rambler-icon>
                         <span>隐藏</span>
+                    </li>
+                </div>
+                <div class="contextmenu-item" is-single="true">
+                    <li @click.stop="deleteWidget">
+                        <rambler-icon
+                            name="hide"
+                            class="prefix-icon"
+                        ></rambler-icon>
+                        <span>删除</span>
                     </li>
                 </div>
                 <div class="contextmenu-item multi-contextmenu-item">
@@ -122,21 +115,21 @@
         </rambler-dialog>
     </div>
 </template>
-<script>
+<script lang="javascript">
 import _ from "lodash";
 import { mapActions } from "vuex";
 import SiteType1 from "./type1";
 import SiteType2 from "./type2";
 import SiteTypeCustom from "./custom";
 import EditForm from "./site-edit-form.vue";
+import widgetMixin from "../../mixins/widget-common";
 export default {
     name: "Site",
+    mixins:[widgetMixin],
     props: {
-        id: String,
         url: String,
         width: String | Number,
         height: String | Number,
-        title: String,
         prop: {
             type: Object,
             default: () => ({
@@ -147,13 +140,7 @@ export default {
     },
     data() {
         return {
-            contextMenuVisible: false,
-            contextMenuPosition: {
-                left: 0,
-                top: 0,
-            },
             activePanel: "site-info",
-            editFormVisible: false, // 编辑弹窗
             form: {
                 id: "",
                 url: "",
@@ -194,32 +181,9 @@ export default {
         renderType: function () {
             return "SiteType" + this.prop.type;
         },
-        extraActions: function () {
-            const extraActionKey = Object.keys(this.prop).filter(
-                (item) =>
-                    item !== "openOn" &&
-                    item !== "type" &&
-                    item !== "style" &&
-                    item !== "link"
-            );
-            return extraActionKey.map((e) => ({
-                title: e,
-                value: this.prop[e],
-            }));
-        },
-    },
-    mounted() {
-        window.addEventListener("click", () => {
-            if (this.contextMenuVisible) this.contextMenuVisible = false;
-        });
-        this.$event.$on("widget-contextmenu", (payload) => {
-            if (payload !== this.id && this.contextMenuVisible) {
-                this.contextMenuVisible = false;
-            }
-        });
     },
     methods: {
-        ...mapActions("layout", ["updateSiteWidget", "hideWidget"]),
+        ...mapActions("layout", ["updateSiteWidget",]),
         openInNewTab() {
             this.contextMenuVisible = false;
             window.open(this.url, "_blank");
@@ -252,11 +216,6 @@ export default {
         visit() {
             window.open(this.url, "_self");
         },
-        // 打开编辑弹窗
-        showEdit() {
-            this.contextMenuVisible = false;
-            this.editFormVisible = true;
-        },
         // 切换类型
         updateType(type) {
             const originData = {
@@ -279,17 +238,6 @@ export default {
                     console.log(err);
                 });
         },
-        handleSiteContextMenu: function (e) {
-            const { pageX, pageY } = e;
-            this.contextMenuPosition.left = pageX;
-            this.contextMenuPosition.top = pageY;
-            this.contextMenuVisible = true;
-            this.$event.$emit("widget-contextmenu", this.id);
-        },
-        // 隐藏组件
-        hide() {
-            this.hideWidget({ id: this.id, status: false });
-        },
     },
     components: {
         SiteType1: SiteType1,
@@ -305,7 +253,7 @@ export default {
     height: 100%;
 }
 .fixed-site-contextmenu {
-    width: 120px;
+    width: 160px;
     position: fixed;
     z-index: 999;
 }

@@ -46,6 +46,7 @@
                 <div v-for="item of prop.children" class="folder-item">
                     <div class="icon-container">
                         <site
+                            :id="item.id"
                             :prop="item.props"
                             :url="item.url"
                             :title="item.title"
