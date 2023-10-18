@@ -5,8 +5,20 @@
     border-radius: 8px;
     backdrop-filter: blur(3px);
 
+
+    // .contextmenu-item-danger {
+    //     li {
+    //         color: #f22222a0 !important;
+
+    //         .prefix-icon {
+    //             fill: #f22222a0 !important;
+    //         }
+    //     }
+    // }
+
     .contextmenu-item {
         position: relative;
+        width: 100%;
 
         li {
             border-radius: 3px;
@@ -26,7 +38,7 @@
             .prefix-icon {
                 fill: #fff;
                 position: relative;
-                top: 1px;
+                top: -10px;
                 margin-right: 4px;
             }
 
@@ -35,6 +47,15 @@
                 right: 3px;
                 top: 10px;
                 fill: #fff;
+            }
+
+            span {
+                display: inline-block;
+                width: calc(100% - 24px);
+                text-overflow: ellipsis;
+                white-space: wrap;
+                overflow: hidden;
+                height: 30px;
             }
 
             .icon-flip {

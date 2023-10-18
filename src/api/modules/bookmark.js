@@ -27,10 +27,20 @@ export function updateWidgetStatus(data) {
     });
 }
 
+// 更新组件属性
 export function updateWidgetProps(data) {
     return instance({
         url: bookmark.updateProp,
         method: "put",
         data,
+    });
+}
+
+// 删除组件
+export function deleteWidget(params) {
+    return instance({
+        url: bookmark.destory,
+        method: "delete",
+        params: params,
     });
 }

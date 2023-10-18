@@ -21,7 +21,7 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="javascript">
 import { mapState } from "vuex";
 import LazyWidget from "./grid-card";
 export default {

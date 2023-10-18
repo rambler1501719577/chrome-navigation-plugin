@@ -25,13 +25,6 @@
                 <div class="contextmenu-item" is-single="true">
                     <li @click.stop="hide"><p>隐藏</p></li>
                 </div>
-                <!-- <div class="contextmenu-item multi-contextmenu-item">
-                <li><p>样式</p></li>
-                <div class="inner-box">
-                    <span @click.stop="updateType(1)">款式一</span>
-                    <span @click.stop="updateType(2)">款式二</span>
-                </div>
-            </div> -->
             </div>
         </transition>
         <rambler-dialog
@@ -46,6 +39,7 @@
                 <div v-for="item of prop.children" class="folder-item">
                     <div class="icon-container">
                         <site
+                            :id="item.id"
                             :prop="item.props"
                             :url="item.url"
                             :title="item.title"
