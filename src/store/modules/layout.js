@@ -174,13 +174,13 @@ export default {
             });
         },
         // 删除组件
-        delete({ commit }, ids) {
+        delete({ commit }, id) {
             return new Promise((resolve, reject) => {
                 deleteWidget({
-                    ids: ids,
+                    ids: id,
                 }).then((res) => {
                     if (res.data.code == 200) {
-                        console.log("删除成功");
+                        commit("DELETE_WIDGET", { id: id });
                         resolve();
                     } else {
                         reject("删除失败");

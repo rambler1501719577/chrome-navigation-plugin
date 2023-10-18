@@ -54,6 +54,7 @@ export default {
             }
             this.hide(this.id);
         },
+        // 删除组件（物理删除）
         deleteWidget() {
             this.delete(this.id)
                 .then(() => {
@@ -64,8 +65,8 @@ export default {
                 });
         },
         // 更新组件(组件基本属性和附加属性prop)，更新任意属性需要传整个对象过来
-        updateWidget() {},
-        // 删除组件（物理删除）
-        deleteWidget() {},
+        updateWidget() {
+            //
+        },
     },
 };
