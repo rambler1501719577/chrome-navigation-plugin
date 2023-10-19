@@ -8,7 +8,7 @@
                 gridArea: item.gridArea,
             }"
         >
-            <LazyWidget
+            <grid-card
                 :component="item.component"
                 :id="item.id"
                 :width="item.width"
@@ -16,14 +16,13 @@
                 :prop="item.props"
                 :url="item.url"
                 :title="item.title"
-            ></LazyWidget>
+            ></grid-card>
             <p class="title">{{ item.title }}</p>
         </div>
     </div>
 </template>
 <script lang="javascript">
 import { mapState } from "vuex";
-import LazyWidget from "./grid-card";
 export default {
     data() {
         return {
@@ -54,9 +53,6 @@ export default {
             this.calcLayout();
             window.addEventListener("resize", this.calcLayout);
         });
-    },
-    components: {
-        LazyWidget,
     },
     methods: {
         calcColumns: function (boxWidth, widgetSize, gap) {

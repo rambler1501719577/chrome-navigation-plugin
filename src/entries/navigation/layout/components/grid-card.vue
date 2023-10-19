@@ -8,7 +8,7 @@ import Folder from "../../widgets/folder";
 import CountDown from "../../widgets/count-down";
 import Add from "../../widgets/add";
 export default {
-    name: "LazyWidget",
+    name: "GridCard",
     props: {
         component: {
             type: String,

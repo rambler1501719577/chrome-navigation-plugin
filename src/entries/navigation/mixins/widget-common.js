@@ -57,9 +57,7 @@ export default {
         // 删除组件（物理删除）
         deleteWidget() {
             this.delete(this.id)
-                .then(() => {
-                    console.log("删除成功");
-                })
+                .then(() => {})
                 .catch((e) => {
                     console.log(e);
                 });

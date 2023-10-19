@@ -2,7 +2,7 @@
     <div
         class="folder-container"
         @click="preview"
-        @contextmenu.stop.prevent="handleSiteContextMenu"
+        @contextmenu.stop.prevent="handleCommonWidgetContextMenu"
     >
         <div class="grid-box">
             <div v-for="item of displayChildren" class="grid-box-item">
@@ -23,21 +23,13 @@
                 }"
             >
                 <div class="contextmenu-item" is-single="true">
-                    <li @click.stop="hide"><p>隐藏</p></li>
+                    <li @click.stop="hideWidget"><p>隐藏</p></li>
                 </div>
-                <!-- <div class="contextmenu-item multi-contextmenu-item">
-                <li><p>样式</p></li>
-                <div class="inner-box">
-                    <span @click.stop="updateType(1)">款式一</span>
-                    <span @click.stop="updateType(2)">款式二</span>
-                </div>
-            </div> -->
             </div>
         </transition>
         <rambler-dialog
             width="390px"
             :visible.sync="dialogVisible"
-            :name="dialogName"
             :emptyTitle="true"
             :draggable="true"
             append-to-body
@@ -59,18 +51,14 @@
     </div>
 </template>
 <script>
-import { mapActions } from "vuex";
+import widgetCommon from "../../mixins/widget-common";
 import Site from "../site/index";
 export default {
     name: "Folder",
+    mixins: [widgetCommon],
     data() {
         return {
             dialogVisible: false,
-            contextMenuVisible: false,
-            contextMenuPosition: {
-                left: 0,
-                top: 0,
-            },
         };
     },
     props: {
@@ -87,37 +75,13 @@ export default {
         Site,
     },
     computed: {
-        dialogName: function () {
-            return this.title + new Date().getTime();
-        },
         displayChildren() {
             return this.prop.children.slice(0, 9);
         },
     },
-    mounted() {
-        window.addEventListener("click", () => {
-            if (this.contextMenuVisible) this.contextMenuVisible = false;
-        });
-        this.$event.$on("widget-contextmenu", (payload) => {
-            if (payload !== this.id && this.contextMenuVisible) {
-                this.contextMenuVisible = false;
-            }
-        });
-    },
     methods: {
-        ...mapActions("layout", ["hideWidget"]),
         preview() {
             this.dialogVisible = true;
-        },
-        handleSiteContextMenu: function (e) {
-            const { pageX, pageY } = e;
-            this.contextMenuPosition.left = pageX;
-            this.contextMenuPosition.top = pageY;
-            this.contextMenuVisible = true;
-            this.$event.$emit("widget-contextmenu", this.id);
-        },
-        hide() {
-            this.hideWidget({ id: this.id, status: false });
         },
     },
 };

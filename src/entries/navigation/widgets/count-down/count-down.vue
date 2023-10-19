@@ -39,6 +39,18 @@
                         <span>隐藏</span>
                     </li>
                 </div>
+                <div
+                    class="contextmenu-item contextmenu-item-danger"
+                    is-single="true"
+                >
+                    <li @click.stop="deleteWidget">
+                        <rambler-icon
+                            name="delete"
+                            class="prefix-icon"
+                        ></rambler-icon>
+                        <span>删除</span>
+                    </li>
+                </div>
                 <div class="contextmenu-item multi-contextmenu-item">
                     <li><p>大小</p></li>
                     <div class="inner-box">
