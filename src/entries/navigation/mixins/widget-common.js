@@ -1,4 +1,6 @@
 import { mapActions } from "vuex";
+const popupMenuItemHeight = 30;
+const popupMenuPadding = 8;
 export default {
     // 所有组件都会接受的公用属性
     props: {
@@ -16,6 +18,9 @@ export default {
                 top: 0,
             },
             editFormVisible: false, // 编辑弹窗
+            contextMenuWidth: 160, // 可被组件重写，这里给默认值160
+            showSecondMenu: false, // 显示二级菜单
+            secondMenuStyle: {}, // 右键二级菜单位置
         };
     },
     mounted() {
@@ -37,12 +42,43 @@ export default {
             this.contextMenuVisible = false;
             this.editFormVisible = true;
         },
+        // 弹出右键菜单
         handleCommonWidgetContextMenu: function (e) {
             const { pageX, pageY } = e;
             this.contextMenuPosition.left = pageX;
             this.contextMenuPosition.top = pageY;
-            this.contextMenuVisible = true;
+            const { clientWidth } = document.documentElement;
+            // 超出右边可视区域自动贴边，暂不考虑高度高出问题
+            if (this.contextMenuWidth + pageX > clientWidth) {
+                this.contextMenuPosition.left =
+                    clientWidth - this.contextMenuWidth;
+            }
+            if (!this.contextMenuVisible) {
+                this.contextMenuVisible = true;
+            }
             this.$event.$emit("widget-contextmenu", this.id);
+        },
+        // 右键弹窗二级菜单显示
+        showSecondCtxMenu() {
+            // 初始定义secondMenuStyle是一个空对象, 所以需要 $set和 $delete来强制更新视图
+            const viewPortWidth = document.documentElement.clientWidth;
+            // 一级弹窗和二级弹窗加起来都不超过可视窗口宽度, 可以在右侧展开二级菜单
+            if (
+                this.contextMenuPosition.left + this.contextMenuWidth * 2 >=
+                viewPortWidth
+            ) {
+                this.$delete(this.secondMenuStyle, "left");
+                this.$set(this.secondMenuStyle, "right", "100%");
+            } else {
+                this.$delete(this.secondMenuStyle, "right");
+                this.$set(this.secondMenuStyle, "left", "100%");
+            }
+            // 高度溢出先不考虑
+            this.$set(this.secondMenuStyle, "top", "0");
+            this.showSecondMenu = true;
+        },
+        hideSecondCtxMenu() {
+            this.showSecondMenu = false;
         },
         // 以下是通用组件增删改查接口，组件内部可以覆盖（重写）
         /**

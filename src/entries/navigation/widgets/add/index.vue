@@ -48,7 +48,8 @@
                         <div class="form-content">
                             <el-radio-group v-model="form.size">
                                 <el-radio-button
-                                    v-for="size of supportSize"
+                                    v-for="(size, index) of supportSize"
+                                    :key="index"
                                     :label="size[0] + 'x' + size[1]"
                                 ></el-radio-button>
                             </el-radio-group>

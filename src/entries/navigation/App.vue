@@ -62,7 +62,7 @@
                             name="setting"
                             class="prefix-icon"
                         ></rambler-icon>
-                        <span>撤销隐藏</span>
+                        <span>撤销删除</span>
                         <rambler-icon
                             name="back"
                             class="suffix-icon icon-flip"

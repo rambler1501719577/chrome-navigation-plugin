@@ -21,6 +21,7 @@
                 :style="{
                     left: contextMenuPosition.left + 'px',
                     top: contextMenuPosition.top + 'px',
+                    width: contextMenuWidth + 'px',
                 }"
             >
                 <div class="contextmenu-item" is-single="true">
@@ -45,16 +46,46 @@
                     <div
                         class="contextmenu-item"
                         is-single="true"
-                        v-for="item of fastLinks"
-                        :key="item.key"
+                        @mouseenter="showSecondCtxMenu"
+                        @mouseleave="hideSecondCtxMenu"
                     >
-                        <li @click="visitFastLink(item)">
+                        <li @click.stop="doNothing">
                             <rambler-icon
                                 name="fast"
                                 class="prefix-icon"
-                            ></rambler-icon
-                            ><span>{{ item.key }}</span>
+                            ></rambler-icon>
+                            <span>快捷访问</span>
+                            <rambler-icon
+                                name="back"
+                                class="suffix-icon icon-flip"
+                            ></rambler-icon>
                         </li>
+                        <transition
+                            name="custom-classes-transition"
+                            enter-active-class="rambler__animated fadeInRight"
+                            leave-active-class="rambler__animated fadeOut"
+                        >
+                            <div
+                                class="local-secondary-contextmenu-container"
+                                v-show="showSecondMenu"
+                                :style="secondMenuStyle"
+                            >
+                                <div
+                                    class="contextmenu-item"
+                                    is-single="true"
+                                    v-for="item of fastLinks"
+                                    :key="item.key"
+                                >
+                                    <li @click="visitFastLink(item)">
+                                        <rambler-icon
+                                            name="fast"
+                                            class="prefix-icon"
+                                        ></rambler-icon
+                                        ><span>{{ item.key }}</span>
+                                    </li>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
                 </template>
                 <div class="contextmenu-item" is-single="true">
@@ -63,7 +94,7 @@
                             name="hide"
                             class="prefix-icon"
                         ></rambler-icon>
-                        <span>隐藏</span>
+                        <span>删除</span>
                     </li>
                 </div>
                 <div
@@ -75,7 +106,7 @@
                             name="delete"
                             class="prefix-icon"
                         ></rambler-icon>
-                        <span>删除</span>
+                        <span>彻底删除</span>
                     </li>
                 </div>
                 <div class="contextmenu-item multi-contextmenu-item">
@@ -144,6 +175,7 @@ export default {
     data() {
         return {
             activePanel: "site-info",
+            contextMenuWidth: 160, // 右键弹出菜单宽度
             form: {
                 id: "",
                 url: "",
@@ -187,6 +219,9 @@ export default {
     },
     methods: {
         ...mapActions("layout", ["updateSiteWidget"]),
+        doNothing() {
+            // todo
+        },
         openInNewTab() {
             this.contextMenuVisible = false;
             window.open(this.url, "_blank");
@@ -251,12 +286,16 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.local-secondary-contextmenu-container {
+    position: absolute;
+    background: #333;
+    width: 100px;
+}
 @context-menu-padding: 8px;
 .proxy-site-container {
     height: 100%;
 }
 .fixed-site-contextmenu {
-    width: 160px;
     position: fixed;
     z-index: 999;
 }

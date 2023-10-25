@@ -4,10 +4,13 @@
         @click="preview"
         @contextmenu.stop.prevent="handleCommonWidgetContextMenu"
     >
+        <div class="folder-bg">
+            <rambler-icon name="folder"></rambler-icon>
+        </div>
         <div class="grid-box">
-            <div v-for="item of displayChildren" class="grid-box-item">
+            <!-- <div v-for="item of displayChildren" class="grid-box-item">
                 <ChromeIcon :url="item.url" :size="32"></ChromeIcon>
-            </div>
+            </div> -->
         </div>
         <transition
             name="custom-classes-transition"
@@ -23,7 +26,7 @@
                 }"
             >
                 <div class="contextmenu-item" is-single="true">
-                    <li @click.stop="hideWidget"><p>隐藏</p></li>
+                    <li @click.stop="hideWidget"><p>删除</p></li>
                 </div>
             </div>
         </transition>
@@ -91,10 +94,28 @@ export default {
 .folder-container {
     width: 100%;
     height: 100%;
-    background: #ffffff92;
+    background-size: cover;
     border-radius: 5px;
     overflow: hidden;
+    position: relative;
+    .folder-bg {
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        .rambler-icon {
+            position: relative;
+            // left: -7px;
+            top: 4px;
+            font-size: 80px;
+            // fill: rgb(244, 202, 37);
+        }
+    }
     .grid-box {
+        position: absolute;
+        z-index: 1;
         width: 100%;
         height: 100%;
         display: grid;
