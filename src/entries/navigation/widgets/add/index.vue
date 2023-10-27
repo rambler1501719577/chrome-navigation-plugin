@@ -84,15 +84,14 @@
     </div>
 </template>
 <script>
+import widgetMixin from "../../mixins/widget-common";
 import _ from "lodash";
-import { mapActions } from "vuex";
 import { supportWidgets, widgetPreviewProp } from "./config";
 export default {
     name: "Add-Component",
     data() {
         return {
             dialogVisible: false,
-
             form: {
                 component: "site",
                 size: "1x1",
@@ -100,9 +99,10 @@ export default {
                 title: "",
             },
             supportWidgets: supportWidgets,
-            choosen: "folder",
+            choosen: "site",
         };
     },
+    mixins: [widgetMixin],
     computed: {
         previewWidget: function () {
             return this.choosen;
@@ -123,7 +123,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions("layout", ["addWidget"]),
         showAddDialog() {
             this.dialogVisible = true;
         },
@@ -154,7 +153,7 @@ export default {
                 payload["prop"] = prop;
             }
             payload["show"] = true;
-            this.addWidget(payload)
+            this.add(payload)
                 .then(() => {
                     this.$ramblerNotification.success("添加成功");
                     this.dialogVisible = false;
@@ -185,6 +184,7 @@ export default {
 </style>
 <style lang="less">
 .dialog-add-component {
+    padding: 15px;
     height: 500px;
     display: flex;
     .component-gallary {

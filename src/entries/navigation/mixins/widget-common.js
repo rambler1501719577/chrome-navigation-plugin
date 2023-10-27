@@ -34,7 +34,7 @@ export default {
         });
     },
     methods: {
-        ...mapActions("layout", ["updateSiteWidget", "hide", "delete"]),
+        ...mapActions("layout", ["updateSiteWidget", "add", "hide", "delete"]),
         // 打开编辑弹窗
         showEdit() {
             this.contextMenuVisible = false;

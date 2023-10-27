@@ -36,7 +36,7 @@ export default {
                 const list = state.widgets.filter((v) => v.show)
                 list.push({
                     component:"add",
-                    id:new Date().getTime(),
+                    id:new Date().getTime().toString(),
                     width:1,
                     height:1,
                     title:"添加",

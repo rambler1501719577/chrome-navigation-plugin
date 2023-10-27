@@ -92,11 +92,12 @@ export default {
         setWidgets({ commit }, payload) {
             commit("SET_WIDGETS", payload);
         },
-        // 注册组件
-        addWidget({ commit }, payload) {
+        // 注册组件(通用)
+        add({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 addBookmark(payload).then((res) => {
                     if (res.data.code == 200) {
+                        payload.id = res.data.data.id;
                         commit("ADD_WIDGET", payload);
                         resolve();
                     } else {
