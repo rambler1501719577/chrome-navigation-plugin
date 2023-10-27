@@ -1,5 +1,5 @@
 <template>
-    <div class="background-container">
+    <div class="background-container" style="padding: 20px">
         <div class="choices">
             <div class="title">
                 <h1>所有背景</h1>

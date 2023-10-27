@@ -52,9 +52,7 @@ export default {
             new Sortable(container, {
                 animation: 150,
                 ghostClass: 'blue-background-class',
-                onEnd: function (evt) {
-                    console.log(evt)
-                },
+                onEnd: function (evt) {},
             })
         });
     },

@@ -1,7 +1,7 @@
 <template>
     <div class="rambler-dialog-container">
         <el-dialog
-            :custom-class="customClass"
+            :custom-class="customClass + ' rambler-dialog'"
             :title="$slots.title ? '' : title"
             :visible.sync="show"
             :width="width"
@@ -197,9 +197,6 @@ export default {
     }
     .el-dialog__body {
         padding: 0;
-        .rambler-default-content {
-            padding: 20px;
-        }
     }
     .el-dialog__footer {
         padding: 0;

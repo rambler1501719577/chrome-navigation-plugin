@@ -1,6 +1,4 @@
 import { mapActions } from "vuex";
-const popupMenuItemHeight = 30;
-const popupMenuPadding = 8;
 export default {
     // 所有组件都会接受的公用属性
     props: {
