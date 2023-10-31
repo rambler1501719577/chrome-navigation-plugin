@@ -16,11 +16,6 @@
                 :size="32"
                 class="search-prefix"
             ></chrome-icon>
-            <!-- <favicon
-                class="search-prefix"
-                :url="currentEngineUrl"
-                :size="20"
-            ></favicon> -->
             <!-- 优雅、着实优雅 -->
             <div class="popup-panel" v-show="showPopup">
                 <!-- 搜索引擎 -->

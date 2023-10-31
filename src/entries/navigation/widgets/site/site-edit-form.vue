@@ -395,6 +395,7 @@ export default {
             };
             // 防止序列化 {} 这样的数据，影响后续判断是否存在快捷标签
             if (Object.keys(originData.props.link).length == 0) {
+                ``;
                 delete originData.props.link;
             }
             const payload = _.cloneDeep(originData);
@@ -421,6 +422,7 @@ export default {
 </style>
 <style lang="less">
 .edit-site-container {
+    padding: 15px;
     display: flex;
     .form {
         flex: 1;

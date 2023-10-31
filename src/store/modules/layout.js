@@ -86,6 +86,10 @@ export default {
                 console.log("更新失败,未找到对应组件");
             }
         },
+        // 清空所有的组件
+        DELETE_ALL_WIDGETS: function (state) {
+            state.widgets.splice(0, state.widgets.length);
+        },
     },
     actions: {
         updateFrequentBookmarks({ commit }, payload) {},
@@ -188,6 +192,10 @@ export default {
                     }
                 });
             });
+        },
+        // 重置组件列表
+        reset({ commit }) {
+            commit("DELETE_ALL_WIDGETS");
         },
     },
 };

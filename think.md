@@ -18,3 +18,15 @@ this.$event.$on("widget-contextmenu", (payload) => {
     }
 });
 ```
+
+# 续签 token
+
+## 通过 localstorage 保存 refresh_token 安全性问题
+
+鉴于 refresh_token 保存在本地, 不存在恶意续签获取 token 情况, 后面会考虑做非对称加密, 公钥放在客户端, 私钥放在服务端, 客户端对 token 做一次签名, 在服务端进行解密验证, 过滤部分恶意请求
+
+## 过期验证
+
+目前设置 token 有效时间是 24 小时, 第二天需要重新登录, 对用户非常不友好, 因此根据主流解决方案, 通过 access_token 短期 token 作为请求凭证, refresh_token 作为更新 token 的票据
+access_token 过期后, 会拿 refresh_token 来更新 access_token, refresh_token 不主动过期, 只有当调用 replaceToken 接口时, 才在服务端验证票据是否过期
+因此: 只有当服务端验证 refresh_token 过期, 客户端才算真正意义上的过期 !!!!!

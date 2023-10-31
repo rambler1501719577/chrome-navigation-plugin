@@ -46,9 +46,7 @@
 </template>
 
 <script lang="javascript">
-import { mapActions } from "vuex";
 import Background from "../background/manage.vue"
-import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
     data() {
@@ -83,8 +81,6 @@ export default {
         Background:Background
     },
     methods: {
-        ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
-        ...mapActions("todo", ["updateRemoteTodo"]),
         open(type) {
             this[type] = true;
         },
@@ -101,18 +97,6 @@ export default {
             const { pageX, pageY } = e;
             this.position.left = pageX;
             this.position.top = pageY > heightGap ? heightGap : pageY;
-        },
-        // 请求远程数据(不缓存)
-        loadRemoteData(token) {
-            loadCloudData(token.value).then((result) => {
-                const { bookmarks, todos } = result;
-                this.updateRemoteBookmark(bookmarks);
-                this.updateRemoteTodo(todos);
-                this.$ramblerNotification.success("成功同步云端数据");
-            });
-        },
-        loadLocalBookmark: function () {
-            this.updateBookmark();
         },
         defineSteps() {
             this.driver = new Driver({

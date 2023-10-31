@@ -7,3 +7,7 @@ export function login(data) {
 export function fetchUserBookmark() {
     return get("/api/bookmark/bookmarks");
 }
+
+export function replaceToken(data) {
+    return post("/api/public/user/replaceToken", data);
+}

@@ -3,10 +3,9 @@ import { getBookmarks } from "./bookmark";
 
 /**
  * 请求云端书签、待办、设置等
- * @param {*} token token
  * @returns 云端数据
  */
-export function loadCloudData(token) {
+export function loadCloudData() {
     return new Promise((resolve, reject) => {
         // 请求队列
         const promises = [getBookmarks()];
@@ -37,6 +36,8 @@ export function loadCloudData(token) {
                     result["bookmarks"] = Array.isArray(bookmarks)
                         ? bookmarks
                         : [];
+                } else {
+                    reject("获取书签失败");
                 }
                 // if (
                 //     todoRes.status == "fulfilled" &&

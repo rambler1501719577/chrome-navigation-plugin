@@ -75,9 +75,11 @@ export default {
             login(this.form).then((res) => {
                 const { code, msg } = res.data;
                 if (code == 200) {
-                    let { user, token, token_expires } = res.data.data;
+                    let { user, access_token, refresh_token, token_expires } =
+                        res.data.data;
                     if (!token_expires) token_expires = 8;
-                    setToken(token, token_expires);
+                    localStorage.setItem("refresh_token", refresh_token);
+                    setToken(access_token, token_expires);
                     this.setUserInfo(user);
                     // 获取并更新bookmarks
                     fetchUserBookmark().then((res) => {

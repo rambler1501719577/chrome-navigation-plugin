@@ -124,7 +124,7 @@ const popupMenuItemHeight = 30;
 const popupMenuItemWidth = 160;
 const popupMenuPadding = 8;
 import { mapActions, mapState } from "vuex";
-import { getToken } from "@/utils/token";
+import { getRefreshToken } from "@/utils/token";
 import { loadCloudData } from "@/api/modules/index";
 export default {
     name: "IndexLayout",
@@ -147,18 +147,21 @@ export default {
     },
     async created() {
         // 这个组件主要用来处理账户数据等操作
+        // 由于用户信息已经做了持久化, 登录后除非手动删除不会消失
+        // 因此登录过期的唯一可能在于replaceToken
         try {
-            const token = await getToken();
-            // 获取和现在相差时间毫秒数
-            const time = token.expirationDate * 1000 - new Date().getTime();
-            const hours = (time / 1000 / 60 / 60).toFixed(2);
-            console.log(`获取用户信息成功, token ${hours} 小时后失效`);
+            const token = getRefreshToken();
+            if (!token) {
+                throw new Error("refresh_token过期, 用户客户端登录过期");
+            }
             // load remote settings and data
-            this.loadRemoteData(token);
+            this.loadRemoteData();
         } catch (e) {
             this.$store.dispatch("user/clearUserInfo");
-            console.log("已清除用户数据");
-            console.log("未登录或token已过期");
+            console.log("用户客户端登录过期, 清空用户信息成功");
+            this.$store.dispatch("layout/reset");
+            console.log("重置layout -> widgets");
+            this.$ramblerNotification.success("登录信息已过期, 请重新登录");
         }
         // 加载本地书签
         this.loadLocalBookmark();
@@ -260,13 +263,17 @@ export default {
             }
         },
         // 请求远程数据(不缓存)
-        loadRemoteData(token) {
-            loadCloudData(token.value).then((result) => {
-                const { bookmarks } = result;
-                this.setWidgets(bookmarks);
-                // this.updateRemoteTodo(todos);
-                this.$ramblerNotification.success("成功同步云端数据");
-            });
+        loadRemoteData() {
+            loadCloudData()
+                .then((result) => {
+                    const { bookmarks } = result;
+                    this.setWidgets(bookmarks);
+                    // this.updateRemoteTodo(todos);
+                    this.$ramblerNotification.success("成功同步云端数据");
+                })
+                .catch((errMsg) => {
+                    this.$ramblerNotification.danger(errMsg);
+                });
         },
         loadLocalBookmark: function () {
             this.updateBookmark();

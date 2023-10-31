@@ -90,3 +90,13 @@ export function clearToken() {
         }
     });
 }
+
+// 获取refresh_token
+export function getRefreshToken() {
+    const cacheRefreshItem = localStorage.getItem("refresh_token");
+    if (cacheRefreshItem) {
+        return cacheRefreshItem;
+    } else {
+        return "";
+    }
+}
