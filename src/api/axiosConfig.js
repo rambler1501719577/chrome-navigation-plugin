@@ -3,10 +3,17 @@ import NProgress from "nprogress/nprogress";
 import "nprogress/nprogress.css";
 import axios from "axios";
 import store from "../store/index";
-import { setToken, getToken, getRefreshToken } from "@/utils/token";
+import {
+    setToken,
+    getToken,
+    getRefreshToken,
+    removeRefreshToken,
+} from "@/utils/token";
 import qs from "qs";
 import RamblerNotification from "../components/notification";
 import { replaceToken } from "./modules/user";
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
 const whiteApiList = [
     "/api/public/user/oauth",
     "/api/public/user/replaceToken",
@@ -16,7 +23,7 @@ NProgress.configure({
         '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>',
 });
 let isReplacingToken = false;
-const requestQueue = [];
+let cancelTokens = []; // 待取消接口数组
 // axios实例
 const service = axios.create({
     timeout: 5000, // request timeout
@@ -34,60 +41,37 @@ service.interceptors.request.use(async (config) => {
     NProgress.start();
     const { url } = config;
     // 防止缓存请求队列缓存自己
-    const isWhiteUrl = whiteApiList.findIndex((v) => v == url) !== -1;
-    if (isWhiteUrl) {
-        return config;
-    }
+    if (whiteApiList.findIndex((v) => v == url) !== -1) return config;
     try {
+        // getToken返回一个promise, 如果token存在且有效, 则resolve, 否则reject
         const token = await getToken();
         // token正常, 设置授权头并请求
         if (token && token.value) {
             config.headers["Authorization"] = token.value;
+            console.log("token有效, 直接请求");
+            return config;
         }
     } catch (e) {
+        console.log("token过期, 正在更新token");
         // getToken如果获取不到token, 会reject promise, 因此在catch中处理感觉可读性更好
-        // 尝试从localstorage读取refresh_token并更新token
         const refreshToken = getRefreshToken();
-        if (refreshToken == "") {
-            throw new Error("未发现refresh_token");
-        }
-        // 在更换token中, 请求依次放入等待队列
-        console.log("正在替换token,请求入队列");
-        // 将请求包装在promise中, 放入等待队列
-        const retryRequest = (token) => {
-            return new Promise((resolve) => {
-                config.headers["Authorization"] = token;
-                resolve(config);
-            });
-        };
-        requestQueue.push(retryRequest);
-        console.log(`缓存请求: ${url}`);
-        // 更换token,保存token,并将响应的token作为参数顺序调用等待队列
-        if (!isReplacingToken) {
-            console.log("开始替换token...");
-            isReplacingToken = true;
-            try {
-                const res = await replaceToken({ token: refreshToken });
-                const { token, token_expires } = res.data.data;
-                // 保存token
-                await setToken(token, token_expires);
-                const promiseQueue = requestQueue.map((req) => req(token));
-                console.log("token替换成功, 开始执行缓存队列缓存的请求");
-                Promise.all(promiseQueue).then(() => {
-                    return new Promise((resolve) => {
-                        isReplacingToken = false;
-                        requestQueue.splice(0, requestQueue.length);
-                        resolve();
-                    });
-                });
-            } catch (e) {
-                console.log("refresh_token失效, 客户端登录过期");
-                store.dispatch("user/clearUserInfo");
-                store.dispatch("layout/reset");
-                RamblerNotification.danger("登录过期, 请重新登录");
-            }
+        if (refreshToken == "") throw new Error("未发现refresh_token");
+        // 先将阻塞的接口放入待取消数组中,如果更新token失败,则取消发送,并提示用户登录过期
+        // 否则等待更新token之后在重新设置config.Authorization请求头
+        // 刀先架脖子上, 如果replaceToken失败, 人头落地
+        config.cancelToken = source.token;
+        cancelTokens.push(() => source.cancel("取消请求"));
+        try {
+            // 尝试从localstorage读取refresh_token并更新token
+            await refreshingToken(refreshToken);
+        } catch (e) {
+            console.log(e);
         }
     }
+    try {
+        const token = await getToken();
+        config.headers["Authorization"] = token.value;
+    } catch (e) {}
     return config;
 });
 
@@ -98,22 +82,83 @@ service.interceptors.response.use(
         return response;
     },
     (error) => {
-        // 针对错误进行处理
-        let { response } = error;
-        if (response) {
-            handleCommonError(response);
-            NProgress.done();
-            return Promise.reject(response);
+        // 取消请求
+        if (axios.isCancel(error)) {
+            console.log("取消请求");
         } else {
-            // 没网情况
-            let { msg } = error;
-            if (!msg) msg = "网络异常或者服务器已停";
-            RamblerNotification.danger(msg);
-            NProgress.done();
-            return Promise.reject(msg);
+            // 针对错误进行处理
+            let { response } = error;
+            if (response) {
+                handleCommonError(response);
+                NProgress.done();
+                return Promise.reject(response);
+            } else {
+                // 没网情况
+                let { msg } = error;
+                if (!msg) msg = "网络异常或者服务器已停";
+                RamblerNotification.danger(msg);
+                NProgress.done();
+                return Promise.reject(msg);
+            }
         }
     }
 );
+
+/**
+ * 刷新token
+ */
+async function refreshingToken(refreshToken) {
+    if (!isReplacingToken) {
+        isReplacingToken = true;
+        return new Promise((resolve, reject) => {
+            // 请求刷新令牌
+            replaceToken({ token: refreshToken })
+                .then((res) => {
+                    if (res.data.code == 200) {
+                        console.log("token获取成功");
+                        const { token, token_expires } = res.data.data;
+                        setToken(token, token_expires)
+                            .then(() => {
+                                console.log(
+                                    "token更新成功, 即将继续发送阻塞的请求"
+                                );
+                                resolve(token);
+                            })
+                            .catch(() => {
+                                console.log("更新token失败, 未知异常");
+                                reject("更新token失效");
+                            });
+                    } else {
+                        console.log("refresh_token过期, 取消所有阻塞的请求");
+                        store.dispatch("user/clearUserInfo");
+                        store.dispatch("layout/reset");
+                        removeRefreshToken();
+                        RamblerNotification.danger("登录过期, 请重新登录");
+                        // 取消队列执行, 取消请求
+                        cancelTokens.forEach((cancel) => {
+                            cancel();
+                        });
+                        reject("refresh_token过期");
+                    }
+                })
+                .finally(() => {
+                    // 恢复变量值
+                    isReplacingToken = false;
+                });
+        });
+    } else {
+        // 阻塞当前请求
+        return new Promise((resolve, reject) => {
+            const id = setInterval(() => {
+                console.log("waiting for fetching a new token....");
+                if (!isReplacingToken) {
+                    clearTimeout(id);
+                    resolve();
+                }
+            }, 1000);
+        });
+    }
+}
 
 /**
  * 处理请求错误

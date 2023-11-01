@@ -145,7 +145,11 @@ export default {
             hideItems: (state) => state.widgets.filter((v) => !v.show),
         }),
     },
-    async created() {
+    async mounted() {
+        // 加载本地书签
+        this.loadLocalBookmark();
+    },
+    mounted() {
         // 这个组件主要用来处理账户数据等操作
         // 由于用户信息已经做了持久化, 登录后除非手动删除不会消失
         // 因此登录过期的唯一可能在于replaceToken
@@ -161,12 +165,8 @@ export default {
             console.log("用户客户端登录过期, 清空用户信息成功");
             this.$store.dispatch("layout/reset");
             console.log("重置layout -> widgets");
-            this.$ramblerNotification.success("登录信息已过期, 请重新登录");
+            this.$ramblerNotification.warn("登录信息已过期, 请重新登录");
         }
-        // 加载本地书签
-        this.loadLocalBookmark();
-    },
-    mounted() {
         this.$nextTick(() => {
             this.$el.addEventListener("contextmenu", (e) => {
                 e.preventDefault();

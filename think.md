@@ -30,3 +30,8 @@ this.$event.$on("widget-contextmenu", (payload) => {
 目前设置 token 有效时间是 24 小时, 第二天需要重新登录, 对用户非常不友好, 因此根据主流解决方案, 通过 access_token 短期 token 作为请求凭证, refresh_token 作为更新 token 的票据
 access_token 过期后, 会拿 refresh_token 来更新 access_token, refresh_token 不主动过期, 只有当调用 replaceToken 接口时, 才在服务端验证票据是否过期
 因此: 只有当服务端验证 refresh_token 过期, 客户端才算真正意义上的过期 !!!!!
+
+## 续签过程
+
+当获取不到 token 或者 token_expires 时, 说明本地 token 已失效, 调用 replaceToken 并通过 promise+setInterval 阻塞其他请求, 并通过一个数组将阻塞的请求"押上断头台", 如果 replaceToken 失败, 则将阻塞的数组逐个取消请求, 并清空本地 refresh_token, 账户相关所有数据
+具体代码参见@/api/axiosConfig.js

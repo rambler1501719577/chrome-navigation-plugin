@@ -20,14 +20,16 @@ export function getToken() {
             );
         } else {
             const expirationTime = Cookies.get("token-expires");
+            const tokenValue = Cookies.get("token");
             if (expirationTime) {
                 const expireTimestamp = parseInt(expirationTime) * 1000;
-                if (expireTimestamp > nowTimestamp) {
+                if (expireTimestamp > nowTimestamp && tokenValue) {
                     resolve({
-                        value: Cookies.get("token"),
+                        value: tokenValue,
                         expirationDate: expirationTime,
                     });
                 }
+                reject("用户篡改token，token失效");
             }
             reject(new Error("js-cookie存储的token已经过期"));
         }
@@ -99,4 +101,9 @@ export function getRefreshToken() {
     } else {
         return "";
     }
+}
+
+// 移除refresh_token
+export function removeRefreshToken() {
+    localStorage.removeItem("refresh_token");
 }

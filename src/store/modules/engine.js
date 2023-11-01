@@ -10,14 +10,6 @@ export default {
                 searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
             },
         ],
-        // 远程engines配置
-        remoteEngines: [
-            {
-                id: "b75b33d4-d94b-4de4-a05e-99c7f8872fe0",
-                name: "远程Engine测试",
-                searchUrl: "https://www.baidu.com/s?ie=UTF-8&wd=搜索",
-            },
-        ],
     },
     mutations: {
         UPDATE_ENGINE(state, payload) {
@@ -101,7 +93,7 @@ export default {
             });
         },
         repairEngine({ commit, state }) {
-            // 修复默认搜索引擎百度
+            // 重置百度搜索引擎地址
             // 其余搜索引擎检测不到【搜索】关键字直接剔除
             state.engines.forEach((engine, index) => {
                 if (engine.name == "百度") {
