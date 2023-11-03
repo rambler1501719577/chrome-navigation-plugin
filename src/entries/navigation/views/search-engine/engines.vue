@@ -7,15 +7,15 @@
                     v-for="(engine, index) of engines"
                     :key="index"
                     :class="{
-                        selected: engine.name == currentEngine,
+                        selected: engine.title == currentEngine,
                         'engine-item': true,
                     }"
                     @click="handleEngineClick(engine)"
                     @contextmenu="openContextMenu($event, engine)"
                 >
-                    {{ engine.name }}
+                    {{ engine.title }}
                 </li>
-                <li @click="showDialog" @contextmenu.stop.prevent="doNothing">
+                <li @click="showDialog" @contextmenu.stop.prevent="() => {}">
                     +
                 </li>
             </ul>
@@ -25,44 +25,51 @@
             name="addSearchEngine"
             title="添加搜索引擎"
             :draggable="true"
+            @close="resetForm"
             width="600px"
             height="380px"
             :appendToBody="true"
         >
-            <rambler-alert>
-                <span style="font-weight: bold"
-                    >举例添加【哔哩哔哩】搜索引擎的几个步骤</span
+            <div class="engine-edit-container">
+                <rambler-alert style="margin-bottom: 20px">
+                    <span style="font-weight: bold"
+                        >举例添加【哔哩哔哩】搜索引擎的几个步骤</span
+                    >
+                    <ul>
+                        <li class="item">1. 打开哔哩哔哩在搜索栏输入：搜索</li>
+                        <li class="item">2. 复制搜索结果页面地址</li>
+                        <li class="item">
+                            格式：<br /><span style="color: #687bce"
+                                >https://search.bilibili.com/all?keyword=%E6%90%9C%E7%B4%A2</span
+                            >
+                        </li>
+                    </ul>
+                </rambler-alert>
+
+                <el-form
+                    :model="form"
+                    status-icon
+                    :rules="rules"
+                    ref="form"
+                    label-width="40px"
                 >
-                <ul>
-                    <li class="item">1. 打开哔哩哔哩在搜索栏输入：搜索</li>
-                    <li class="item">2. 复制搜索结果页面地址</li>
-                    <li class="item">
-                        格式：<br /><span style="color: #687bce"
-                            >https://search.bilibili.com/all?keyword=%E6%90%9C%E7%B4%A2</span
-                        >
-                    </li>
-                </ul>
-            </rambler-alert>
-            <div class="form">
-                <div class="form-item">
-                    <p class="label">
-                        名称<span class="err">{{ nameValidateResult }}</span>
-                    </p>
-                    <input type="text" v-model="data.name" />
-                </div>
-                <div class="form-item search">
-                    <p class="label">
-                        搜索地址<span class="err">{{
-                            searchUrlValidateResult
-                        }}</span>
-                    </p>
-                    <input type="text" v-model="data.searchUrl" />
-                    <favicon
-                        class="favicon"
-                        :size="20"
-                        :url="iconUrl"
-                    ></favicon>
-                </div>
+                    <el-form-item label="标题" prop="title">
+                        <el-input
+                            v-model="form.title"
+                            autocomplete="off"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="地址" prop="searchUrl">
+                        <el-input v-model="form.searchUrl" autocomplete="off">
+                        </el-input>
+                        <favicon
+                            class="favicon"
+                            :size="20"
+                            :url="iconUrl"
+                        ></favicon>
+                    </el-form-item>
+                </el-form>
+
                 <div class="footer">
                     <rambler-button @click="cancel">取消</rambler-button>
                     <rambler-button type="primary" @click="confirm"
@@ -87,23 +94,42 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { isUrl } from "@/utils";
-const { v4: uuidv4 } = require("uuid");
 export default {
     name: "SearchEngine",
     data() {
+        const titleValidator = (rule, title, cb) => {
+            if (!title) {
+                return cb(new Error("标题不能为空"));
+            }
+            cb();
+        };
+        const urlValidator = (rule, searchUrl, cb) => {
+            if (!searchUrl) {
+                return cb(new Error("标题不能为空"));
+            }
+            const decodedUrl = decodeURI(searchUrl);
+            if (decodedUrl.indexOf("搜索") == -1) {
+                return cb(
+                    new Error("未在地址中找到【搜索】关键字，请按照要求添加")
+                );
+            }
+            cb();
+        };
         return {
             dialogVisible: false,
-            data: {
-                name: "",
+            form: {
+                title: "",
                 searchUrl: "",
+            },
+            rules: {
+                title: [{ validator: titleValidator, trigger: "blur" }],
+                searchUrl: [{ validator: urlValidator, trigger: "blur" }],
             },
             choosenContextMenu: {},
             popupPosition: {
                 left: 0,
                 top: 0,
             },
-            nameValidateResult: "", // 验证结果
-            searchUrlValidateResult: "", //搜索字符串验证结果
             editType: "add", // 搜索引擎编辑类型、add | update
             showPopupmenu: false, // 搜索引擎上鼠标右键弹出的popup-menu
         };
@@ -117,30 +143,38 @@ export default {
             };
         },
         iconUrl() {
-            if (!isUrl(this.data.searchUrl)) {
+            if (!isUrl(this.form.searchUrl)) {
                 return "";
             }
-            const url = new URL(this.data.searchUrl);
+            const url = new URL(this.form.searchUrl);
             return url.origin;
         },
     },
     methods: {
-        ...mapActions("engine", ["updateCurrentEngine", "update"]),
+        ...mapActions("engine", [
+            "updateCurrentEngine",
+            "update",
+            "add",
+            "delete",
+        ]),
+        resetForm() {
+            this.form.title = "";
+            this.form.searchUrl = "";
+        },
         editEngine() {
             this.editType = "update";
             this.dialogVisible = true;
-            this.data.name = this.choosenContextMenu.name;
-            this.data.searchUrl = this.choosenContextMenu.searchUrl;
+            this.form.title = this.choosenContextMenu.title;
+            this.form.searchUrl = this.choosenContextMenu.searchUrl;
         },
         deleteEngine() {
-            this.update({
-                type: "delete",
-                data: {
-                    id: this.choosenContextMenu.id,
-                    name: this.choosenContextMenu.name,
-                },
-            });
-            this.$ramblerNotification.success(`删除成功`);
+            this.delete(this.choosenContextMenu.id)
+                .then(() => {
+                    this.$ramblerNotification.success(`删除成功`);
+                })
+                .catch((e) => {
+                    this.$ramblerNotification.danger(e);
+                });
         },
         // 鼠标右键
         openContextMenu(e, choosen) {
@@ -152,79 +186,43 @@ export default {
             this.popupPosition.top = clientY;
             this.choosenContextMenu = choosen;
         },
-        validate() {
-            if (!this.data.name) {
-                this.nameValidateResult = "名称不能为空";
-                return false;
-            } else {
-                this.nameValidateResult = "";
-            }
-            if (!this.data.searchUrl) {
-                this.searchUrlValidateResult = "搜索地址不能为空";
-                return false;
-            } else {
-                this.searchUrlValidateResult = "";
-            }
-            const decodedUrl = decodeURI(this.data.searchUrl);
-            if (decodedUrl.indexOf("搜索") == -1) {
-                this.searchUrlValidateResult =
-                    "未找到【搜索】关键字，请按照要求添加";
-                return false;
-            } else {
-                this.searchUrlValidateResult = "";
-            }
-            return true;
-        },
         confirm() {
-            if (this.validate()) {
-                // 解析查询url，获取主机
-                const data = {
-                    name: this.data.name,
-                    searchUrl: decodeURI(this.data.searchUrl),
-                    id: uuidv4(),
-                };
-                this.data.name = "";
-                this.data.searchUrl = "";
-                // 同步到vuex
-                this.update({
-                    type: this.editType,
-                    data: data,
-                });
-                if (this.editType == "add") {
-                    this.$ramblerNotification.success(
-                        `添加【${data.name}】搜索引擎成功`
-                    );
-                } else {
-                    this.$ramblerNotification.success(`保存成功`);
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    const data = {
+                        title: this.form.title,
+                        searchUrl: decodeURI(this.form.searchUrl),
+                    };
+                    const type = this.editType == "add" ? "添加" : "编辑";
+                    try {
+                        if (this.editType == "add") {
+                            await this.add(data);
+                        } else {
+                            await this.update(data);
+                        }
+                        this.$ramblerNotification.success(
+                            `${type}【${data.title}】搜索引擎成功`
+                        );
+                    } catch (e) {
+                        this.$ramblerNotification.danger(
+                            `${type}失败, 服务端异常`
+                        );
+                    } finally {
+                        this.dialogVisible = false;
+                    }
                 }
-                this.dialogVisible = false;
-            }
-        },
-        resetValidate() {
-            this.nameValidateResult = "";
-            this.searchUrlValidateResult = "";
-        },
-        // 重置表单
-        resetForm() {
-            this.data.name = "";
-            this.data.searchUrl = "";
+            });
         },
         cancel() {
             this.dialogVisible = false;
-            this.data.name = "";
-            this.data.searchUrl = "";
         },
         showDialog() {
             this.editType = "add";
             this.dialogVisible = true;
-            this.data.name = "";
-            this.data.searchUrl = "";
+            this.resetForm();
         },
         handleEngineClick: function (engine) {
-            this.updateCurrentEngine(engine.name);
-        },
-        doNothing() {
-            return;
+            this.updateCurrentEngine(engine.title);
         },
     },
     mounted() {
@@ -241,5 +239,26 @@ export default {
 </script>
 <style lang="less" scoped="scoped">
 @import url("./styles/engines.less");
-@import url("../../../../styles/form.less");
+</style>
+<style lang="less">
+.engine-edit-container {
+    padding: 20px;
+    .el-form {
+        .favicon {
+            position: absolute;
+            right: 30px;
+            bottom: 9px;
+            user-select: none;
+        }
+    }
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+
+        .rambler-button {
+            margin-left: 8px;
+        }
+    }
+}
 </style>

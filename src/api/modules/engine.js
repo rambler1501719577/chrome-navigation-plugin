@@ -30,7 +30,7 @@ export function updateEngine(data) {
 // 删除搜索引擎
 export function destroyEngine(params) {
     return instance({
-        url: engine.destory,
+        url: engine.destroy,
         method: "delete",
         params: params,
     });

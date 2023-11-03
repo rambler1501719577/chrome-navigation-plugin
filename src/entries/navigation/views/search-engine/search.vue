@@ -1,5 +1,5 @@
 <template>
-    <div class="search-container">
+    <div class="search-container" @contextmenu.prevent.stop="() => {}">
         <!-- 搜索表单 -->
         <div class="search-form">
             <input
@@ -127,7 +127,7 @@ export default {
         },
         searchEngineIcon() {
             const url = this.engines.find(
-                (item) => item.name == this.currentEngine
+                (item) => item.title == this.currentEngine
             )?.searchUrl;
             const urlObject = new URL(url);
             return urlObject.origin;
@@ -153,7 +153,7 @@ export default {
                 window.open(result.url, "_self");
             } else {
                 const engine = this.engines.find(
-                    (item) => item.name == this.currentEngine
+                    (item) => item.title == this.currentEngine
                 );
                 // 替换搜索关键字
                 window.open(

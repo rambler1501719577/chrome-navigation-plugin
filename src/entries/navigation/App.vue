@@ -182,9 +182,10 @@ export default {
         GridComponent: () => import("./layout"),
     },
     methods: {
-        ...mapActions("bookmark", ["updateRemoteBookmark", "updateBookmark"]),
+        ...mapActions("bookmark", ["updateBookmark"]),
         ...mapActions("layout", ["setWidgets", "revokeWidget"]),
         ...mapActions("todo", ["updateRemoteTodo"]),
+        ...mapActions("engine", ["setEngines"]),
         doNothing() {},
         // 通过事件总线发送事件, 弹出layout中的弹窗
         openDialog(type) {
@@ -262,12 +263,13 @@ export default {
                 this.position.top = pageY;
             }
         },
-        // 请求远程数据(不缓存)
+        // 请求远程数据
         loadRemoteData() {
             loadCloudData()
                 .then((result) => {
-                    const { bookmarks } = result;
+                    const { bookmarks, engines } = result;
                     this.setWidgets(bookmarks);
+                    this.setEngines(engines);
                     // this.updateRemoteTodo(todos);
                     this.$ramblerNotification.success("成功同步云端数据");
                 })
